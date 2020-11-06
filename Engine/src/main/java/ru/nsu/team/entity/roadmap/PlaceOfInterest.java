@@ -9,6 +9,7 @@ public class PlaceOfInterest {
     private int parkingCapacity;
     private ArrayList<Car> cars;
     private Node position;
+    private ArrayList<Node> nodes;
 
     public PlaceOfInterest(Node position, int parkingCapacity) {
         this.position = position;

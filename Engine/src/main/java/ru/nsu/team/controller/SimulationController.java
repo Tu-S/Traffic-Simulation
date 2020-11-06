@@ -4,7 +4,7 @@ import ru.nsu.team.entity.playback.PlayBackBuilder;
 import ru.nsu.team.entity.playback.Playback;
 import ru.nsu.team.entity.report.Report;
 import ru.nsu.team.entity.report.ReportBuilder;
-import ru.nsu.team.entity.roadmap.RawMapData;
+import ru.nsu.team.jsonparser.RoadMapConfigurationParser;
 
 public class SimulationController {
 
@@ -13,7 +13,11 @@ public class SimulationController {
     }
 
 
-    public void run(RawMapData roadMap) {
+    public void run(String fileName) {
+
+
+
+
     }
 
     public void stop() {

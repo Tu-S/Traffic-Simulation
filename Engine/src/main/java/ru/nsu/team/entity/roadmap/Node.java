@@ -8,6 +8,7 @@ public class Node {
     private ArrayList<Course> courses;
     private ArrayList<TrafficLight> trafficLights;
 
+
     public Node() {
         this.courses = new ArrayList<>();
         this.trafficLights = new ArrayList<>();

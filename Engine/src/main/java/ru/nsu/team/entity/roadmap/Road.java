@@ -59,4 +59,8 @@ public class Road {
         return trafficParticipants.get(n);
     }
 
+    public void addLane(Lane lane) {
+
+        lanes.add(lane);
+    }
 }

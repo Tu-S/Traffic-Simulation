@@ -1,5 +1,7 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.util.ArrayList;
+
 public class Course {
 
     private Road fromRoad;
@@ -7,7 +9,12 @@ public class Course {
     private int timeLeft;
     private int length;
 
-    public Road getFromRoad() {
+    public Course(Road fromRoad, Road toRoad){
+        this.fromRoad = fromRoad;
+        this.toRoad = toRoad;
+    }
+
+    public Road getFromRoads() {
         return fromRoad;
     }
 
@@ -23,8 +30,8 @@ public class Course {
         return length;
     }
 
-    public void setFromRoad(Road fromRoad) {
-        this.fromRoad = fromRoad;
+    public void setFromRoads(Road fromRoads) {
+        this.fromRoad = fromRoads;
     }
 
     public void setToRoad(Road toRoad) {

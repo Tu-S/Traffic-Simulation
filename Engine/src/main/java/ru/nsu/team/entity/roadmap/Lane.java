@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 public class Lane {
     private ArrayList<Car> cars;
+    private ArrayList<Sign> signs;
 
     public Lane() {
+        this.signs = new ArrayList<>();
         this.cars = new ArrayList<>();
     }
 
@@ -18,5 +20,10 @@ public class Lane {
     public Car getCarN(int n) {
         return cars.get(n);
     }
+
+    public void addSign(Sign sign){
+        signs.add(sign);
+    }
+
 
 }

@@ -1,0 +1,104 @@
+{
+	"nodes" : [
+		{
+			"roads" : [0],
+			"trafficLight" : {
+				"delayGreen" : 30,
+				"delayRed" : 30,
+				"pairsOfRoads" : [1,0]
+			}
+		},
+		{
+			"roads" : [1,2],
+			"trafficLight" : {
+				"delayGreen" : 20,
+				"delayRed" : 20,
+				"pairsOfRoads" : [1,0]
+			}
+		},
+		{
+			"roads" : [3],
+			"trafficLight" : {
+				"delayGreen" : 40,
+				"delayRed" : 40,
+				"pairsOfRoads" : [1,0]
+			}
+		}
+	],
+	"roads" : [
+		{
+			"from" : 0,
+			"to" : 1,
+			"lanes" : [
+				{
+					"signs" : [
+						{
+							"type" : "speed",
+							"limit" : 50
+						}
+					]
+				},
+				{
+					"signs" : [
+						{
+							"type" : "speed",
+							"limit" : 50
+						}
+					]
+				}
+			]
+		},
+		{
+			"from" : 1,
+			"to" : 0,
+			"lanes" : [
+				{
+					"signs" : [
+						{
+							"type" : "speed",
+							"limit" : 50
+						}
+					]
+				},
+				{
+					"signs" : [
+						{
+							"type" : "speed",
+							"limit" : 50
+						}
+					]
+				}
+			]
+		},
+		{
+			"from" : 1,
+			"to" : 2,
+			"lanes" : [
+				{
+					"signs" : [
+						{
+							"type" : "mainRoad"
+						},
+						{
+							"type" : "speed",
+							"limit" : 60
+						}
+					]
+				}
+			]
+		},
+		{
+			"from" : 2,
+			"to" : 1,
+			"lanes" : [
+				{
+					"signs" : [
+							{
+							"type" : "mainRoad"
+						}
+					]
+				}
+			]
+		}
+	]
+}

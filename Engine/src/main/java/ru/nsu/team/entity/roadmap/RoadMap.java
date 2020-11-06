@@ -11,12 +11,18 @@ public class RoadMap {
     private ArrayList<Road> calculatedRoads;
     private ArrayList<Spawner> spawners;
     private ArrayList<PlaceOfInterest> placesOfInterest;
+    private ArrayList<Road> roads;
 
     public RoadMap() {
+        this.roads = new ArrayList<>();
         this.activeRoads = new ArrayList<>();
         this.calculatedRoads = new ArrayList<>();
         this.spawners = new ArrayList<>();
         this.placesOfInterest = new ArrayList<>();
+    }
+
+    public int getRoadNumber(){
+        return roads.size();
     }
 
     public int getActiveRoadsNumber() {
@@ -62,6 +68,10 @@ public class RoadMap {
     public void addCalculatedRoad(Road calculatedRoad) {
 
         this.calculatedRoads.add(calculatedRoad);
+    }
+
+    public void addRoad(Road road){
+        roads.add(road);
     }
 
     public void addSpawner(Spawner spawner) {
