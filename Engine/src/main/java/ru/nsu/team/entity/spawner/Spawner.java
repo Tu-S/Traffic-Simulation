@@ -5,14 +5,16 @@ import ru.nsu.team.entity.roadmap.Node;
 import java.util.ArrayList;
 
 public class Spawner {
-    private Configuration configuration;
+    private int minSpawnPeriod;
+    private int maxSpawnPeriod;
     private Node node;
     private ArrayList<Node> possibleDestinations;
 
 
-    public Spawner(Configuration config, Node node) {
-        this.configuration = config;
+    public Spawner(Node node,int minSpawnPeriod,int maxSpawnPeriod) {
         this.node = node;
+        this.minSpawnPeriod = minSpawnPeriod;
+        this.maxSpawnPeriod = maxSpawnPeriod;
         this.possibleDestinations = new ArrayList<>();
     }
 

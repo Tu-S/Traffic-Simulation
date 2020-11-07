@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 
         RoadModelCreator mapCreator = new RoadModelCreator();
-        RoadMap map = mapCreator.createRoadMap("sample.json");
+        RoadMap map = mapCreator.createRoadMap("sampleUpd.json");
 
         System.out.println(map.getRoadNumber());
 

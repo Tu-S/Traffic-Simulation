@@ -1,15 +1,15 @@
 {
 	"nodes" : [
 		{
-			"roads" : [0],
-			"trafficLight" : {
-				"delayGreen" : 30,
-				"delayRed" : 30,
-				"pairsOfRoads" : [1,0]
-			}
+			"roadsFrom" : [1],
+			"roadsTo" : [0],
+			"isSpawner" : true,
+			"trafficLight" : null
 		},
 		{
-			"roads" : [1,2],
+			"roadsFrom" : [0,3],
+			"roadsTo" : [1,2],
+			"isSpawner" : false,
 			"trafficLight" : {
 				"delayGreen" : 20,
 				"delayRed" : 20,
@@ -17,16 +17,15 @@
 			}
 		},
 		{
-			"roads" : [3],
-			"trafficLight" : {
-				"delayGreen" : 40,
-				"delayRed" : 40,
-				"pairsOfRoads" : [1,0]
-			}
+			"roadsFrom" : [2],
+			"roadsTo" : [3],
+			"isSpawner" : false,
+			"trafficLight" : null
 		}
 	],
 	"roads" : [
 		{
+			"length" : 10,
 			"from" : 0,
 			"to" : 1,
 			"lanes" : [
@@ -49,6 +48,7 @@
 			]
 		},
 		{
+			"length" : 10,
 			"from" : 1,
 			"to" : 0,
 			"lanes" : [
@@ -71,6 +71,7 @@
 			]
 		},
 		{
+			"length" : 20,
 			"from" : 1,
 			"to" : 2,
 			"lanes" : [
@@ -88,17 +89,24 @@
 			]
 		},
 		{
+			"length" : 20,
 			"from" : 2,
 			"to" : 1,
 			"lanes" : [
 				{
 					"signs" : [
-							{
-							"type" : "mainRoad"
-						}
+	
 					]
 				}
 			]
 		}
-	]
+	],
+	"pointsOfInterest" : [
+		{
+			"capacity" : 10,
+			"nodes" : [2]
+		}
+	],
+	"spawnPeriodMin" : 20,
+	"spawnPeriodMax" : 30
 }

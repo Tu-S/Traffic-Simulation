@@ -1,38 +1,46 @@
 package ru.nsu.team.entity.roadmap;
 
 import ru.nsu.team.entity.trafficparticipant.Car;
-import ru.nsu.team.entity.trafficparticipant.Position;
+import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.util.ArrayList;
 
 public class PlaceOfInterest {
     private int parkingCapacity;
-    private ArrayList<Car> cars;
-    private Node position;
+    private ArrayList<TrafficParticipant> trafficParticipants;
     private ArrayList<Node> nodes;
 
-    public PlaceOfInterest(Node position, int parkingCapacity) {
-        this.position = position;
+    public PlaceOfInterest(int parkingCapacity) {
         this.parkingCapacity = parkingCapacity;
-        this.cars = new ArrayList<>();
+        this.trafficParticipants = new ArrayList<>();
+        this.nodes = new ArrayList<>();
     }
 
+    public void addNode(Node node) {
 
-    public void addCar(Car car) {
+        nodes.add(node);
+    }
+
+    public void addTrafficParticipant(TrafficParticipant car) {
+        trafficParticipants.add(car);
     }
 
     public void deleteCar(Car car) {
     }
 
-    public Node getPosition() {
-        return position;
-    }
-
     public int getCarsNumber() {
-        return cars.size();
+        return trafficParticipants.size();
     }
 
-    public Car getCarN(int n) {
-        return cars.get(n);
+    public TrafficParticipant getCarN(int n) {
+        return trafficParticipants.get(n);
+    }
+
+    public int getNodesNumber() {
+        return nodes.size();
+    }
+
+    public Node getNodeN(int n) {
+        return nodes.get(n);
     }
 }

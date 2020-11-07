@@ -1,24 +1,25 @@
 package ru.nsu.team.entity.roadmap;
 
 import ru.nsu.team.entity.trafficparticipant.Car;
+import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.util.ArrayList;
 
 public class Lane {
-    private ArrayList<Car> cars;
+    private ArrayList<TrafficParticipant> trafficParticipants;
     private ArrayList<Sign> signs;
 
     public Lane() {
         this.signs = new ArrayList<>();
-        this.cars = new ArrayList<>();
+        this.trafficParticipants = new ArrayList<>();
     }
 
-    public int getCarsNumber() {
-        return cars.size();
+    public int getTrafficParticipantsNumber() {
+        return trafficParticipants.size();
     }
 
-    public Car getCarN(int n) {
-        return cars.get(n);
+    public TrafficParticipant getCarN(int n) {
+        return trafficParticipants.get(n);
     }
 
     public void addSign(Sign sign){
