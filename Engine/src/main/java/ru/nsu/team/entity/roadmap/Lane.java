@@ -22,7 +22,7 @@ public class Lane {
         return trafficParticipants.get(n);
     }
 
-    public void addSign(Sign sign){
+    public void addSign(Sign sign) {
         signs.add(sign);
     }
 

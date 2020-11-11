@@ -9,7 +9,7 @@ public class Course {
     private int timeLeft;
     private int length;
 
-    public Course(Road fromRoad, Road toRoad){
+    public Course(Road fromRoad, Road toRoad) {
         this.fromRoad = fromRoad;
         this.toRoad = toRoad;
     }

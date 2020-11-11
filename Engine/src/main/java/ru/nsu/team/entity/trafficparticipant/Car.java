@@ -8,14 +8,31 @@ public class Car {
     private int maxSpeed;
     private Node destination;
     private Path path;
+    private int id;
 
 
-    public Car(int maxSpeed, Node destination, Path path) {
+    public Car(int id, int maxSpeed, Node destination, Path path) {
         this.destination = destination;
         this.maxSpeed = maxSpeed;
         this.path = path;
+        this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public int getDestinationId() {
+        return destination.getId();
+    }
+
+    public int getPathLength() {
+        return path.getPathLength();
+    }
+
+    public int getRoadId(int n) {
+        return path.getRoadId(n);
+    }
 
     public Path getPath() {
         return path;

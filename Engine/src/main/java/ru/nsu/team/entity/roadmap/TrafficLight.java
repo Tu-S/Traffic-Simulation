@@ -42,7 +42,8 @@ public class TrafficLight {
         time = 0;
         return time;
     }
-    public void addRoad(Road road){
+
+    public void addRoad(Road road) {
         pairsOfRoads.add(road);
     }
 

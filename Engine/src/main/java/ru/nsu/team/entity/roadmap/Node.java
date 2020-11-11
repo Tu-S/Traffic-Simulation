@@ -5,12 +5,22 @@ import java.util.ArrayList;
 
 public class Node {
 
+    private int id;
     private ArrayList<Course> courses;
     private ArrayList<TrafficLight> trafficLights;
 
-    public Node() {
+    public Node(int id) {
         this.courses = new ArrayList<>();
         this.trafficLights = new ArrayList<>();
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void addCourse(Course course) {

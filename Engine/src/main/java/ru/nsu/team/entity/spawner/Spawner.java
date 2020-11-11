@@ -11,7 +11,7 @@ public class Spawner {
     private ArrayList<Node> possibleDestinations;
 
 
-    public Spawner(Node node,int minSpawnPeriod,int maxSpawnPeriod) {
+    public Spawner(Node node, int minSpawnPeriod, int maxSpawnPeriod) {
         this.node = node;
         this.minSpawnPeriod = minSpawnPeriod;
         this.maxSpawnPeriod = maxSpawnPeriod;

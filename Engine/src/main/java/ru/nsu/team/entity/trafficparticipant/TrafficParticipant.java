@@ -6,8 +6,10 @@ public class TrafficParticipant {
     private int laneId;
     private Car car;
 
-    public TrafficParticipant(Car car) {
+    public TrafficParticipant(Car car, Position pos, int laneId) {
         this.car = car;
+        this.position = pos;
+        this.laneId = laneId;
     }
 
     public Position getPosition() {

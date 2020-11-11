@@ -13,21 +13,28 @@ public class Road {
     private int length;
     private Node from;
     private Node to;
+    private int id;
 
-    public Road(Node from, Node to, int maxSpeed, int length, int numberOfLines) {
+    public Road(int id, Node from, Node to, int maxSpeed, int length, int numberOfLines) {
         this.from = from;
         this.to = to;
         this.maxSpeed = maxSpeed;
         this.length = length;
         this.lanes = new ArrayList<>(numberOfLines);
+        this.trafficParticipants = new ArrayList<>();
+        this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
 
-    public void deleteCar(Car car) {
+    public void deleteTrafficParticipant(TrafficParticipant car) {
 
     }
 
-    public void addCar(Car car) {
+    public void addTrafficParticipant(TrafficParticipant car) {
+        trafficParticipants.add(car);
     }
 
     public int getMaxSpeed() {

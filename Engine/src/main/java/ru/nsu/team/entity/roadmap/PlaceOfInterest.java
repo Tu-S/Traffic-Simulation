@@ -9,8 +9,10 @@ public class PlaceOfInterest {
     private int parkingCapacity;
     private ArrayList<TrafficParticipant> trafficParticipants;
     private ArrayList<Node> nodes;
+    private int id;
 
-    public PlaceOfInterest(int parkingCapacity) {
+    public PlaceOfInterest(int id, int parkingCapacity) {
+        this.id = id;
         this.parkingCapacity = parkingCapacity;
         this.trafficParticipants = new ArrayList<>();
         this.nodes = new ArrayList<>();

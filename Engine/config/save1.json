@@ -1,0 +1,150 @@
+{
+  "nodes": [
+    {
+      "roadsTo": [
+        0
+      ],
+      "roadsFrom": [
+        1
+      ],
+      "isSpawner": true
+    },
+    {
+      "roadsTo": [
+        1,
+        2
+      ],
+      "roadsFrom": [
+        0,
+        3
+      ],
+      "trafficLight": {
+        "delayGreen": 20,
+        "delayRed": 20,
+        "pairsOfRoads": [
+          1,
+          0
+        ]
+      },
+      "isSpawner": false
+    },
+    {
+      "roadsTo": [
+        3
+      ],
+      "roadsFrom": [
+        2
+      ],
+      "isSpawner": false
+    }
+  ],
+  "roads": [
+    {
+      "from": 0,
+      "to": 1,
+      "length": 10,
+      "lanes": [
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": 50
+            }
+          ]
+        },
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "length": 12,
+      "lanes": [
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": 50
+            }
+          ]
+        },
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "length": 20,
+      "lanes": [
+        {
+          "signs": [
+            {
+              "type": "mainRoad",
+              "limit": 0
+            },
+            {
+              "type": "speed",
+              "limit": 60
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 2,
+      "to": 1,
+      "length": 30,
+      "lanes": [
+        {
+          "signs": []
+        }
+      ]
+    }
+  ],
+  "pointsOfInterest": [
+    {
+      "capacity": 10,
+      "nodes": [
+        2
+      ]
+    }
+  ],
+  "spawnPeriodMin": 20,
+  "spawnPeriodMax": 30,
+  "trafficParticipants": [
+    {
+      "position": {
+        "currentPlaceOfInterest": 0,
+        "currentRoad": 0
+      },
+      "laneId": 1,
+      "car": {
+        "speed": 0,
+        "timeLeft": 0,
+        "maxSpeed": 70,
+        "destination": 1,
+        "path": []
+      }
+    }
+  ],
+  "activeRoads": [
+    1
+  ],
+  "calculatedRoads": [
+    2
+  ]
+}

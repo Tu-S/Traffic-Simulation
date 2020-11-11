@@ -14,6 +14,15 @@ public class Path {
         this.roads = new ArrayList<>();
     }
 
+    public int getPathLength() {
+        return roads.size();
+    }
+
+    public int getRoadId(int n) {
+        return roads.get(n).getId();
+    }
+
+
     public void addRoadToPath(Road road) {
         roads.add(road);
     }

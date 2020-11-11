@@ -21,8 +21,19 @@ public class RoadMap {
         this.placesOfInterest = new ArrayList<>();
     }
 
-    public int getRoadNumber(){
+    public int getRoadsNumber() {
         return roads.size();
+    }
+
+    /*public ArrayList<Road> getRoads() {
+        return roads;
+    }*/
+    public Road getRoadN(int n) {
+        return roads.get(n);
+    }
+
+    public ArrayList<Spawner> getSpawners() {
+        return spawners;
     }
 
     public int getActiveRoadsNumber() {
@@ -70,7 +81,7 @@ public class RoadMap {
         this.calculatedRoads.add(calculatedRoad);
     }
 
-    public void addRoad(Road road){
+    public void addRoad(Road road) {
         roads.add(road);
     }
 

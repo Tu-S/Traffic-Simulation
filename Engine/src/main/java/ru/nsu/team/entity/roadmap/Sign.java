@@ -5,7 +5,7 @@ public class Sign {
     private int limit;
 
 
-    public Sign(String type, int limit){
+    public Sign(String type, int limit) {
         this.type = type;
         this.limit = limit;
 
