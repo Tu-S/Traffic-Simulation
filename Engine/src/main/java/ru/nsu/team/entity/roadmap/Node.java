@@ -2,6 +2,7 @@ package ru.nsu.team.entity.roadmap;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Node {
 
@@ -43,7 +44,16 @@ public class Node {
         return courses.get(n);
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
     public TrafficLight getTrafficLightN(int n) {
         return trafficLights.get(n);
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(id).hashCode();
     }
 }

@@ -4,6 +4,7 @@ import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Path {
     private ArrayList<Road> roads;
@@ -12,6 +13,11 @@ public class Path {
     public Path() {
         this.currentRoadNumber = 0;
         this.roads = new ArrayList<>();
+    }
+
+    public Path(ArrayList<Road> roads) {
+        this.currentRoadNumber = 0;
+        this.roads = roads;
     }
 
     public int getPathLength() {
@@ -25,6 +31,10 @@ public class Path {
 
     public void addRoadToPath(Road road) {
         roads.add(road);
+    }
+
+    public List<Road> getRoads() {
+        return roads;
     }
 
     public Road getNextRoad() {

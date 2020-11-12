@@ -14,7 +14,7 @@ public class Course {
         this.toRoad = toRoad;
     }
 
-    public Road getFromRoads() {
+    public Road getFromRoad() {
         return fromRoad;
     }
 
