@@ -7,9 +7,7 @@ import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.Position;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
-import ru.nsu.team.jsonparser.JsonProvider;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,8 +98,8 @@ public class RoadModelCreator {
                 }
                 node.addTrafficLight(trafficLight);
             }
-            List<Integer> toRoadId = nodeConfig.getRoadsTo();
-            List<Integer> fromRoadId = nodeConfig.getRoadsFrom();
+            List<Integer> toRoadId = nodeConfig.getRoadsOut();
+            List<Integer> fromRoadId = nodeConfig.getRoadsIn();
             for (Integer to : toRoadId) {
                 for (Integer from : fromRoadId) {
                     Course course = new Course(roads.get(from), roads.get(to));
