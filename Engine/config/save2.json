@@ -1,20 +1,20 @@
 {
   "nodes": [
     {
-      "roadsTo": [
+      "roadsOut": [
         0
       ],
-      "roadsFrom": [
+      "roadsIn": [
         1
       ],
       "isSpawner": true
     },
     {
-      "roadsTo": [
+      "roadsOut": [
         1,
         2
       ],
-      "roadsFrom": [
+      "roadsIn": [
         0,
         3
       ],
@@ -29,10 +29,10 @@
       "isSpawner": false
     },
     {
-      "roadsTo": [
+      "roadsOut": [
         3
       ],
-      "roadsFrom": [
+      "roadsIn": [
         2
       ],
       "isSpawner": false

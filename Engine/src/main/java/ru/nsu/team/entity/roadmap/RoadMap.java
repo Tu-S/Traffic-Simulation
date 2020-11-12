@@ -12,6 +12,7 @@ public class RoadMap {
     private ArrayList<Spawner> spawners;
     private ArrayList<PlaceOfInterest> placesOfInterest;
     private ArrayList<Road> roads;
+    private long start;
 
     public RoadMap() {
         this.roads = new ArrayList<>();
@@ -19,6 +20,14 @@ public class RoadMap {
         this.calculatedRoads = new ArrayList<>();
         this.spawners = new ArrayList<>();
         this.placesOfInterest = new ArrayList<>();
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
     }
 
     public int getRoadsNumber() {

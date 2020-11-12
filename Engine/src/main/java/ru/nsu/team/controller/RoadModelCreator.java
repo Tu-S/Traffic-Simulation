@@ -2,12 +2,14 @@ package ru.nsu.team.controller;
 
 import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.roadmap.configuration.*;
+import ru.nsu.team.entity.spawner.Configuration;
 import ru.nsu.team.entity.spawner.Spawner;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.Position;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,6 @@ public class RoadModelCreator {
         ArrayList<Node> nodes = new ArrayList<>(nN);
         ArrayList<Road> roads = new ArrayList<>(rN);
         for (int i = 0; i < nN; i++) {
-
             nodes.add(new Node(i));
         }
 
@@ -36,7 +37,9 @@ public class RoadModelCreator {
             int to = roadConfig.getTo();
             List<LaneConfiguration> lanes = roadConfig.getLanes();
             int lanesNumber = lanes.size();
-            Road road = new Road(i, nodes.get(from), nodes.get(to), 0, roadConfig.getLength(), lanesNumber);
+            Node fromN = nodes.get(from);
+            Node toN = nodes.get(to);
+            Road road = new Road(i, fromN, toN, 0, lanesNumber);
             for (LaneConfiguration laneConfig : lanes) {
                 Lane lane = new Lane();
                 List<SignConfiguration> signsConfig = laneConfig.getSigns();
@@ -53,7 +56,7 @@ public class RoadModelCreator {
         int len = placesOfInterests.size();
         for (int i = 0; i < len; i++) {
             PlaceOfInterestConfiguration config = placesOfInterests.get(i);
-            PlaceOfInterest place = new PlaceOfInterest(i, config.getCapacity());
+            PlaceOfInterest place = new PlaceOfInterest(i, config.getCapacity(), config.getWidth(), config.getHeight(), config.getWeight());
             List<Integer> connectedNodes = config.getNodes();
             for (Integer number : connectedNodes) {
                 place.addNode(nodes.get(number));
@@ -77,8 +80,8 @@ public class RoadModelCreator {
                 Position pos = trafficParticipantConfig.getPosition();
                 int laneId = trafficParticipantConfig.getLaneId();
                 TrafficParticipant trafficParticipant = new TrafficParticipant(car, pos, laneId);
-                Road road = roads.get(pos.getCurrentRoad());
-                PlaceOfInterest place = map.getPlaceOfInterestN(pos.getCurrentPlaceOfInterest());
+                Road road = roads.get(pos.getY());
+                PlaceOfInterest place = map.getPlaceOfInterestN(pos.getX());
                 place.addTrafficParticipant(trafficParticipant);
                 road.addTrafficParticipant(trafficParticipant);
             }
@@ -87,6 +90,7 @@ public class RoadModelCreator {
         for (int i = 0; i < nN; i++) {
             Node node = nodes.get(i);
             NodeConfiguration nodeConfig = configNodes.get(i);
+            node.setPosition(new Position(nodeConfig.getX(), nodeConfig.getY()));
             TrafficLightConfiguration trafficLightConfig = nodeConfig.getTrafficLightConfiguration();
             if (trafficLightConfig != null) {
                 int greenDuration = trafficLightConfig.getDelayGreen();
@@ -98,20 +102,38 @@ public class RoadModelCreator {
                 }
                 node.addTrafficLight(trafficLight);
             }
-            List<Integer> toRoadId = nodeConfig.getRoadsOut();
-            List<Integer> fromRoadId = nodeConfig.getRoadsIn();
-            for (Integer to : toRoadId) {
-                for (Integer from : fromRoadId) {
+            List<Integer> outRoadId = nodeConfig.getRoadsOut();
+            List<Integer> inRoadId = nodeConfig.getRoadsIn();
+            int lenIds = outRoadId.size();
+            for (int heh = 0; heh < lenIds; heh++) {
+                int in = inRoadId.get(heh);
+                int out = outRoadId.get(heh);
+                Course course = new Course(roads.get(in), roads.get(out));
+                node.addCourse(course);
+            }
+            for (Integer to : outRoadId) {
+                for (Integer from : inRoadId) {
                     Course course = new Course(roads.get(from), roads.get(to));
                     node.addCourse(course);
                 }
             }
-            if (nodeConfig.isSpawner()) {
-                map.addSpawner(new Spawner(node, roadMapConfig.getSpawnPeriodMin(), roadMapConfig.getSpawnPeriodMax()));
+            if (nodeConfig.getPeriodsOfSpawn() != null) {
+                List<SpawnConfiguration> configs = nodeConfig.getPeriodsOfSpawn();
+                Spawner spawner = new Spawner(node);
+                for (SpawnConfiguration config : configs) {
+                    long start = getValue(config.getStart());
+                    long end = getValue(config.getEnd());
+                    spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
+                }
+                map.addSpawner(spawner);
             }
 
         }
+
+
         for (Road road : roads) {
+            double length = calculateLength(road.getFrom().getPosition(), road.getTo().getPosition());
+            road.setLength(length);
             map.addRoad(road);
         }
         List<Integer> activeRoads = roadMapConfig.getActiveRoads();
@@ -128,8 +150,20 @@ public class RoadModelCreator {
             }
         }
 
-
+        map.setStart(getValue(roadMapConfig.getStart()));
         return map;
+    }
+
+    private long getValue(String time) {
+        Time t = Time.valueOf(time);
+        return t.getTime() / 1000;
+    }
+
+    private double calculateLength(Position start, Position end) {
+        double first = Math.pow(end.getX() - start.getX(), 2);
+        double second = Math.pow(end.getY() - start.getY(), 2);
+        double third = first + second;
+        return Math.sqrt(third);
     }
 
 

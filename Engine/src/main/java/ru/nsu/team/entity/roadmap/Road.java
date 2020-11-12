@@ -10,16 +10,15 @@ public class Road {
     private int maxSpeed;
     private ArrayList<Lane> lanes;
     private ArrayList<TrafficParticipant> trafficParticipants;
-    private int length;
+    private double length;
     private Node from;
     private Node to;
     private int id;
 
-    public Road(int id, Node from, Node to, int maxSpeed, int length, int numberOfLines) {
+    public Road(int id, Node from, Node to, int maxSpeed, int numberOfLines) {
         this.from = from;
         this.to = to;
         this.maxSpeed = maxSpeed;
-        this.length = length;
         this.lanes = new ArrayList<>(numberOfLines);
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
@@ -41,7 +40,7 @@ public class Road {
         return maxSpeed;
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
@@ -69,5 +68,17 @@ public class Road {
     public void addLane(Lane lane) {
 
         lanes.add(lane);
+    }
+
+    public Node getFrom() {
+        return from;
+    }
+
+    public Node getTo() {
+        return to;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
     }
 }

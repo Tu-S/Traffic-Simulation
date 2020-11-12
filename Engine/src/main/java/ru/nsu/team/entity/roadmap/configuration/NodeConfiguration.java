@@ -6,7 +6,21 @@ public class NodeConfiguration {
     private List<Integer> roadsOut;
     private List<Integer> roadsIn;
     private TrafficLightConfiguration trafficLight;
-    private boolean isSpawner;
+    private List<SpawnConfiguration>  periodsOfSpawn;
+    private int x;
+    private int y;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public List<SpawnConfiguration> getPeriodsOfSpawn() {
+        return periodsOfSpawn;
+    }
 
     public List<Integer> getRoadsOut() {
         return roadsOut;
@@ -14,10 +28,6 @@ public class NodeConfiguration {
 
     public List<Integer> getRoadsIn() {
         return roadsIn;
-    }
-
-    public boolean isSpawner() {
-        return isSpawner;
     }
 
     public TrafficLightConfiguration getTrafficLightConfiguration() {

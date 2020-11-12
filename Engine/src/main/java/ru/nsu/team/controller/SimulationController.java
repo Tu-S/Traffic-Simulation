@@ -32,7 +32,9 @@ public class SimulationController {
         Road tmpA = roadMap.getRoadN(1);
         roadMap.addActiveRoad(tmpA);
         Road tmpC = roadMap.getRoadN(2);
-        roadMap.addCalculatedRoad(tmpC);*/
+        roadMap.addCalculatedRoad(tmpC);
+        System.out.println(roadMap.getStart());
+        System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());*/
     }
 
     private void prepareMap(String fileName) {
@@ -56,11 +58,11 @@ public class SimulationController {
     }
 
 
-    public Report getReport() {
+    /*public Report getReport() {
         ReportBuilder builder = new ReportBuilder();
 
-        return builder.getReport();
-    }
+        return new Report();//builder.getReport();
+    }*/
 
     public Playback getPlayback() {
         PlayBackBuilder builder = new PlayBackBuilder();

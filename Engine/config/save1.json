@@ -1,20 +1,33 @@
 {
   "nodes": [
     {
-      "roadsTo": [
+      "roadsOut": [
         0
       ],
-      "roadsFrom": [
+      "roadsIn": [
         1
       ],
-      "isSpawner": true
+      "periodsOfSpawn": [
+        {
+          "start": "10:00:00",
+          "end": "12:00:00",
+          "spawnRate": 90
+        },
+        {
+          "start": "12:00:00",
+          "end": "17:00:00",
+          "spawnRate": 50
+        }
+      ],
+      "x": 100,
+      "y": 200
     },
     {
-      "roadsTo": [
+      "roadsOut": [
         1,
         2
       ],
-      "roadsFrom": [
+      "roadsIn": [
         0,
         3
       ],
@@ -26,23 +39,24 @@
           0
         ]
       },
-      "isSpawner": false
+      "x": 200,
+      "y": 300
     },
     {
-      "roadsTo": [
+      "roadsOut": [
         3
       ],
-      "roadsFrom": [
+      "roadsIn": [
         2
       ],
-      "isSpawner": false
+      "x": 600,
+      "y": 500
     }
   ],
   "roads": [
     {
       "from": 0,
       "to": 1,
-      "length": 10,
       "lanes": [
         {
           "signs": [
@@ -65,7 +79,6 @@
     {
       "from": 1,
       "to": 0,
-      "length": 12,
       "lanes": [
         {
           "signs": [
@@ -88,7 +101,6 @@
     {
       "from": 1,
       "to": 2,
-      "length": 20,
       "lanes": [
         {
           "signs": [
@@ -107,7 +119,6 @@
     {
       "from": 2,
       "to": 1,
-      "length": 30,
       "lanes": [
         {
           "signs": []
@@ -120,16 +131,17 @@
       "capacity": 10,
       "nodes": [
         2
-      ]
+      ],
+      "width": 100.0,
+      "height": 200.0,
+      "weight": 0.9
     }
   ],
-  "spawnPeriodMin": 20,
-  "spawnPeriodMax": 30,
   "trafficParticipants": [
     {
       "position": {
-        "currentPlaceOfInterest": 0,
-        "currentRoad": 0
+        "x": 0,
+        "y": 0
       },
       "laneId": 1,
       "car": {
@@ -146,5 +158,6 @@
   ],
   "calculatedRoads": [
     2
-  ]
+  ],
+  "start": "10:00:00"
 }

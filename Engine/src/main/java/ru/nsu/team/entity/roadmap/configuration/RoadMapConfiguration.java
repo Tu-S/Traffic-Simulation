@@ -1,18 +1,18 @@
 package ru.nsu.team.entity.roadmap.configuration;
 
-import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
-
 import java.util.List;
 
 public class RoadMapConfiguration {
     private List<NodeConfiguration> nodes;
     private List<RoadConfiguration> roads;
     private List<PlaceOfInterestConfiguration> pointsOfInterest;
-    private Integer spawnPeriodMin;
-    private Integer spawnPeriodMax;
     private List<TrafficParticipantConfiguration> trafficParticipants;
     private List<Integer> activeRoads;
     private List<Integer> calculatedRoads;
+    private String start;
+
+
+
 
     public void setTrafficParticipants(List<TrafficParticipantConfiguration> trafficParticipants) {
         this.trafficParticipants = trafficParticipants;
@@ -34,14 +34,6 @@ public class RoadMapConfiguration {
         return trafficParticipants;
     }
 
-    public Integer getSpawnPeriodMin() {
-        return spawnPeriodMin;
-    }
-
-    public Integer getSpawnPeriodMax() {
-        return spawnPeriodMax;
-    }
-
     public List<NodeConfiguration> getNodes() {
         return nodes;
     }
@@ -57,4 +49,10 @@ public class RoadMapConfiguration {
     public List<Integer> getCalculatedRoads() {
         return calculatedRoads;
     }
+
+    public String getStart() {
+        return start;
+    }
+
+
 }
