@@ -4,10 +4,7 @@ import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.roadmap.configuration.*;
 import ru.nsu.team.entity.spawner.Configuration;
 import ru.nsu.team.entity.spawner.Spawner;
-import ru.nsu.team.entity.trafficparticipant.Car;
-import ru.nsu.team.entity.trafficparticipant.Path;
-import ru.nsu.team.entity.trafficparticipant.Position;
-import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
+import ru.nsu.team.entity.trafficparticipant.*;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -77,11 +74,10 @@ public class RoadModelCreator {
                     path.addRoadToPath(roads.get(p));
                 }
                 Car car = new Car(t, carConfig.getMaxSpeed(), nodes.get(nodeId), path);
-                Position pos = trafficParticipantConfig.getPosition();
-                int laneId = trafficParticipantConfig.getLaneId();
-                TrafficParticipant trafficParticipant = new TrafficParticipant(car, pos, laneId);
-                Road road = roads.get(pos.getY());
-                PlaceOfInterest place = map.getPlaceOfInterestN(pos.getX());
+                PositionOnRoad pos = trafficParticipantConfig.getPositionOnRoad();
+                TrafficParticipant trafficParticipant = new TrafficParticipant(car);
+                Road road = roads.get(pos.getCurrentRoad());
+                PlaceOfInterest place = map.getPlaceOfInterestN(pos.getCurrentPlaceOfInterest());
                 place.addTrafficParticipant(trafficParticipant);
                 road.addTrafficParticipant(trafficParticipant);
             }
@@ -124,7 +120,11 @@ public class RoadModelCreator {
                     long start = getValue(config.getStart());
                     long end = getValue(config.getEnd());
                     spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
+
                 }
+                Road fakeRoad = new Road(-1, node, new Node(-2), 666, 1);
+                fakeRoad.setLength(Integer.MAX_VALUE);
+                roads.add(fakeRoad);
                 map.addSpawner(spawner);
             }
 
@@ -132,8 +132,10 @@ public class RoadModelCreator {
 
 
         for (Road road : roads) {
-            double length = calculateLength(road.getFrom().getPosition(), road.getTo().getPosition());
-            road.setLength(length);
+            if (road.getLength() == 0) {
+                double length = calculateLength(road.getFrom().getPosition(), road.getTo().getPosition());
+                road.setLength(length);
+            }
             map.addRoad(road);
         }
         List<Integer> activeRoads = roadMapConfig.getActiveRoads();

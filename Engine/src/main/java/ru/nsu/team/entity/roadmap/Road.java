@@ -20,6 +20,9 @@ public class Road {
         this.to = to;
         this.maxSpeed = maxSpeed;
         this.lanes = new ArrayList<>(numberOfLines);
+        for(int i = 0 ; i < numberOfLines;i++){
+            lanes.add(new Lane());
+        }
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
     }
@@ -33,6 +36,8 @@ public class Road {
     }
 
     public void addTrafficParticipant(TrafficParticipant car) {
+        Lane lane = lanes.get(car.getPosition().getCurrentLane());
+        lane.addTrafficParticipant(car);
         trafficParticipants.add(car);
     }
 

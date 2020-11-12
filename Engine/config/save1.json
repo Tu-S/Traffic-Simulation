@@ -140,10 +140,11 @@
   "trafficParticipants": [
     {
       "position": {
-        "x": 0,
-        "y": 0
+        "currentLane": 0,
+        "position": 0,
+        "currentRoad": 0,
+        "currentPlaceOfInterest": 0
       },
-      "laneId": 1,
       "car": {
         "speed": 0,
         "timeLeft": 0,
