@@ -1,6 +1,7 @@
 package ru.nsu.team.entity.roadmap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.nsu.team.entity.trafficparticipant.*;
 
@@ -8,8 +9,8 @@ import ru.nsu.team.entity.trafficparticipant.*;
 public class Road {
 
     private int maxSpeed;
-    private ArrayList<Lane> lanes;
-    private ArrayList<TrafficParticipant> trafficParticipants;
+    private List<Lane> lanes;
+    private List<TrafficParticipant> trafficParticipants;
     private double length;
     private Node from;
     private Node to;
@@ -68,6 +69,10 @@ public class Road {
 
     public TrafficParticipant getTrafficParticipantN(int n) {
         return trafficParticipants.get(n);
+    }
+
+    public List<TrafficParticipant> getTrafficParticipants() {
+        return trafficParticipants;
     }
 
     public void addLane(Lane lane) {
