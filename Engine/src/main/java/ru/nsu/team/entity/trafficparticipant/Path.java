@@ -1,6 +1,5 @@
 package ru.nsu.team.entity.trafficparticipant;
 
-import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 
 import java.util.ArrayList;
