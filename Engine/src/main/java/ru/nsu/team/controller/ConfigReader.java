@@ -11,7 +11,7 @@ public class ConfigReader {
         JsonProvider parser = new JsonProvider();
         RoadMapConfiguration roadMapConfig;
         try {
-            roadMapConfig = parser.ParseJson(fileName);
+            roadMapConfig = parser.readJson(fileName);
         } catch (FileNotFoundException ex) {
             System.out.println(ex.getMessage());
             return null;
