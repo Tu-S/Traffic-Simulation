@@ -1,6 +1,6 @@
 package ru.nsu.team.entity.trafficparticipant;
 
-public class TrafficParticipant {
+public class TrafficParticipant implements Comparable<TrafficParticipant> {
 
     private PositionOnRoad position;
     private Car car;
@@ -23,4 +23,8 @@ public class TrafficParticipant {
     }
 
 
+    @Override
+    public int compareTo(TrafficParticipant o) {
+        return position.getPosition() - o.position.getPosition();
+    }
 }

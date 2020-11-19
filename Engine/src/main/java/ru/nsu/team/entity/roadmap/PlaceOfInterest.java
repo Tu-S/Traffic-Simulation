@@ -4,6 +4,7 @@ import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaceOfInterest {
     private int parkingCapacity;
@@ -14,7 +15,7 @@ public class PlaceOfInterest {
     private double height;
     private double weight;
 
-    public PlaceOfInterest(int id, int parkingCapacity,double width,double height,double weight) {
+    public PlaceOfInterest(int id, int parkingCapacity, double width, double height, double weight) {
         this.id = id;
         this.width = width;
         this.height = height;
@@ -70,5 +71,9 @@ public class PlaceOfInterest {
 
     public Node getNodeN(int n) {
         return nodes.get(n);
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
     }
 }

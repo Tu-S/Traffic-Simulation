@@ -22,4 +22,11 @@ public interface Pathfinder {
      * @param destinations set of possible destinations
      */
     void init(Node start, Set<Node> destinations);
+
+    /**
+     * Get destinations defined in constructor or init() function that are unreachable from start position;
+     *
+     * @return set of unreachable destinations
+     */
+    Set<Node> getUnreachableDestinations();
 }

@@ -9,6 +9,7 @@ import java.util.*;
 
 public class DijkstraPathfinder implements Pathfinder {
     private final Map<Map.Entry<Node, Node>, Path> cache;
+    private final Set<Node> knownUnreachable;
     private final Set<Node> possibleDestinations;
 
     private static class PathNode implements Comparable<PathNode> {
@@ -38,13 +39,14 @@ public class DijkstraPathfinder implements Pathfinder {
 
     public DijkstraPathfinder() {
         cache = new HashMap<>();
-        possibleDestinations = new HashSet<Node>();
-
+        possibleDestinations = new HashSet<>();
+        knownUnreachable = new HashSet<>();
     }
 
     public DijkstraPathfinder(List<Node> destinations) {
         cache = new HashMap<>();
-        possibleDestinations = new HashSet<Node>(destinations);
+        knownUnreachable = new HashSet<>();
+        possibleDestinations = new HashSet<>(destinations);
     }
 
     public void init(Node start, Set<Node> destinations) throws DestinationUnreachable {
@@ -67,7 +69,7 @@ public class DijkstraPathfinder implements Pathfinder {
                     continue;
                 }
                 if (!pathNodes.containsKey(target)) {
-                    ArrayList<Road> path = new ArrayList<Road>(currentNode.path);
+                    ArrayList<Road> path = new ArrayList<>(currentNode.path);
                     path.add(road);
                     PathNode newPathNode = new PathNode(target, currentNode.distance + road.getLength(), path);
                     pathNodes.put(target, newPathNode);
@@ -76,7 +78,7 @@ public class DijkstraPathfinder implements Pathfinder {
                     if (currentNeighbour.distance > currentNode.distance + road.getLength()) {
                         unsettledNodes.remove(currentNeighbour);
                         currentNeighbour.distance = currentNode.distance + road.getLength();
-                        ArrayList<Road> path = new ArrayList<Road>(currentNode.path);
+                        ArrayList<Road> path = new ArrayList<>(currentNode.path);
                         path.add(road);
                         currentNeighbour.path = path;
                         unsettledNodes.offer(currentNeighbour);
@@ -89,15 +91,23 @@ public class DijkstraPathfinder implements Pathfinder {
         }
         for (Node destination : destinations) {
             if (!pathNodes.containsKey(destination)) {
-                throw new DestinationUnreachable();
+                knownUnreachable.add(destination);
             }
             cache.put(new AbstractMap.SimpleEntry<>(start, destination), new Path(pathNodes.get(destination).path));
         }
     }
 
     @Override
+    public Set<Node> getUnreachableDestinations() {
+        return knownUnreachable;
+    }
+
+    @Override
     public Path findPath(Node start, Node destination) throws DestinationUnreachable {
         Path cachedResult = cache.get(new AbstractMap.SimpleEntry<>(start, destination));
+        if (knownUnreachable.contains(destination)) {
+            throw new DestinationUnreachable();
+        }
         if (cachedResult != null) {
             return cachedResult;
         }

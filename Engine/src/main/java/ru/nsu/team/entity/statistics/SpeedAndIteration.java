@@ -2,9 +2,12 @@ package ru.nsu.team.entity.statistics;
 
 public class SpeedAndIteration {
   private int speed;
-  private int itearation;
+  private int iteration;
 
-  public SpeedAndIteration() { }
+  public SpeedAndIteration() {
+    speed = 0;
+    iteration = 0;
+  }
 
   public int getSpeed() {
     return speed;
@@ -14,11 +17,11 @@ public class SpeedAndIteration {
     this.speed = speed;
   }
 
-  public int getItearation() {
-    return itearation;
+  public int getIteration() {
+    return iteration;
   }
 
-  public void setItearation(int itearation) {
-    this.itearation = itearation;
+  public void setIteration(int iteration) {
+    this.iteration = iteration;
   }
 }
