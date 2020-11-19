@@ -1,6 +1,7 @@
 package ru.nsu.team.entity.roadmap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.nsu.team.entity.trafficparticipant.*;
 
@@ -8,19 +9,21 @@ import ru.nsu.team.entity.trafficparticipant.*;
 public class Road {
 
     private int maxSpeed;
-    private ArrayList<Lane> lanes;
-    private ArrayList<TrafficParticipant> trafficParticipants;
-    private int length;
+    private List<Lane> lanes;
+    private List<TrafficParticipant> trafficParticipants;
+    private double length;
     private Node from;
     private Node to;
     private int id;
 
-    public Road(int id, Node from, Node to, int maxSpeed, int length, int numberOfLines) {
+    public Road(int id, Node from, Node to, int maxSpeed, int numberOfLines) {
         this.from = from;
         this.to = to;
         this.maxSpeed = maxSpeed;
-        this.length = length;
         this.lanes = new ArrayList<>(numberOfLines);
+        for(int i = 0 ; i < numberOfLines;i++){
+            lanes.add(new Lane());
+        }
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
     }
@@ -34,6 +37,8 @@ public class Road {
     }
 
     public void addTrafficParticipant(TrafficParticipant car) {
+        Lane lane = lanes.get(car.getPosition().getCurrentLane());
+        lane.addTrafficParticipant(car);
         trafficParticipants.add(car);
     }
 
@@ -41,7 +46,7 @@ public class Road {
         return maxSpeed;
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
@@ -66,8 +71,24 @@ public class Road {
         return trafficParticipants.get(n);
     }
 
+    public List<TrafficParticipant> getTrafficParticipants() {
+        return trafficParticipants;
+    }
+
     public void addLane(Lane lane) {
 
         lanes.add(lane);
+    }
+
+    public Node getFrom() {
+        return from;
+    }
+
+    public Node getTo() {
+        return to;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
     }
 }

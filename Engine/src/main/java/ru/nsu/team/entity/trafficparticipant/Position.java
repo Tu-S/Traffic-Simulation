@@ -1,30 +1,30 @@
 package ru.nsu.team.entity.trafficparticipant;
 
 public class Position {
-    private int currentPlaceOfInterest;
-    private int currentRoad;
+    private int x;
+    private int y;
 
     public Position() {
     }
 
-    public Position(int currentPlaceOfInterest, int currentRoad) {
-        this.currentPlaceOfInterest = currentPlaceOfInterest;
-        this.currentRoad = currentRoad;
+    public Position(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public void setCurrentPlaceOfInterest(int x) {
-        this.currentPlaceOfInterest = x;
+    public void setX(int x) {
+        this.x = x;
     }
 
-    public void setCurrentRoad(int currentRoad) {
-        this.currentRoad = currentRoad;
+    public void setY(int y) {
+        this.y = y;
     }
 
-    public int getCurrentPlaceOfInterest() {
-        return currentPlaceOfInterest;
+    public int getX() {
+        return x;
     }
 
-    public int getCurrentRoad() {
-        return currentRoad;
+    public int getY() {
+        return y;
     }
 }

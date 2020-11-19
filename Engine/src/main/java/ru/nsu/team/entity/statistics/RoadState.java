@@ -1,13 +1,21 @@
 package ru.nsu.team.entity.statistics;
 
-public class RoadState {
-  private int id;
-  private int numberOfCars;
-  private long time;
+import ru.nsu.team.entity.roadmap.Road;
 
-  public RoadState(int id, int numberOfCars, long time) {
-    this.id = id;
-    this.numberOfCars = numberOfCars;
+public class RoadState {
+  private Road road;
+  private int time;
+
+  public RoadState(Road road, int time) {
+    this.road = road;
     this.time = time;
+  }
+
+  public int getId() {
+    return road.getId();
+  }
+
+  public int getTime() {
+    return time;
   }
 }

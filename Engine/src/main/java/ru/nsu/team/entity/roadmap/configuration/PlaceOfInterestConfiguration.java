@@ -5,6 +5,21 @@ import java.util.List;
 public class PlaceOfInterestConfiguration {
     private Integer capacity;
     private List<Integer> nodes;
+    private double width;
+    private double height;
+    private double weight;
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
 
     public Integer getCapacity() {
         return capacity;

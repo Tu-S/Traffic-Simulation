@@ -1,112 +1,143 @@
 {
-	"nodes" : [
-		{
-			"roadsFrom" : [1],
-			"roadsTo" : [0],
-			"isSpawner" : true,
-			"trafficLight" : null
-		},
-		{
-			"roadsFrom" : [0,3],
-			"roadsTo" : [1,2],
-			"isSpawner" : false,
-			"trafficLight" : {
-				"delayGreen" : 20,
-				"delayRed" : 20,
-				"pairsOfRoads" : [1,0]
-			}
-		},
-		{
-			"roadsFrom" : [2],
-			"roadsTo" : [3],
-			"isSpawner" : false,
-			"trafficLight" : null
-		}
-	],
-	"roads" : [
-		{
-			"length" : 10,
-			"from" : 0,
-			"to" : 1,
-			"lanes" : [
-				{
-					"signs" : [
-						{
-							"type" : "speed",
-							"limit" : 50
-						}
-					]
-				},
-				{
-					"signs" : [
-						{
-							"type" : "speed",
-							"limit" : 50
-						}
-					]
-				}
-			]
-		},
-		{
-			"length" : 12,
-			"from" : 1,
-			"to" : 0,
-			"lanes" : [
-				{
-					"signs" : [
-						{
-							"type" : "speed",
-							"limit" : 50
-						}
-					]
-				},
-				{
-					"signs" : [
-						{
-							"type" : "speed",
-							"limit" : 50
-						}
-					]
-				}
-			]
-		},
-		{
-			"length" : 20,
-			"from" : 1,
-			"to" : 2,
-			"lanes" : [
-				{
-					"signs" : [
-						{
-							"type" : "mainRoad"
-						},
-						{
-							"type" : "speed",
-							"limit" : 60
-						}
-					]
-				}
-			]
-		},
-		{
-			"length" : 30,
-			"from" : 2,
-			"to" : 1,
-			"lanes" : [
-				{
-					"signs" : [
-	
-					]
-				}
-			]
-		}
-	],
-	"pointsOfInterest" : [
-		{
-			"capacity" : 10,
-			"nodes" : [2]
-		}
-	],
-	"spawnPeriodMin" : 20,
-	"spawnPeriodMax" : 30
+  "nodes": [
+    {
+      "x": 100,
+      "y": 200,
+      "roadsIn": [
+        1
+      ],
+      "roadsOut": [
+        0
+      ],
+      "periodsOfSpawn": [
+        {
+          "start": "10:00:00",
+          "end": "12:00:00",
+          "spawnRate": 90
+        },
+        {
+          "start": "12:00:00",
+          "end": "17:00:00",
+          "spawnRate": 50
+        }
+      ],
+      "trafficLight": null
+    },
+    {
+      "x": 200,
+      "y": 300,
+      "roadsIn": [
+        0,
+        3
+      ],
+      "roadsOut": [
+        1,
+        2
+      ],
+      "trafficLight": {
+        "delayGreen": 20,
+        "delayRed": 20,
+        "pairsOfRoads": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "x": 600,
+      "y": 500,
+      "roadsIn": [
+        2
+      ],
+      "roadsOut": [
+        3
+      ],
+      "trafficLight": null
+    }
+  ],
+  "roads": [
+    {
+      "from": 0,
+      "to": 1,
+      "lanes": [
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": "50"
+            }
+          ]
+        },
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "lanes": [
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": "50"
+            }
+          ]
+        },
+        {
+          "signs": [
+            {
+              "type": "speed",
+              "limit": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "lanes": [
+        {
+          "signs": [
+            {
+              "type": "mainRoad"
+            },
+            {
+              "type": "speed",
+              "limit": "60"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": 2,
+      "to": 1,
+      "lanes": [
+        {
+          "signs": [
+          ]
+        }
+      ]
+    }
+  ],
+  "pointsOfInterest": [
+    {
+      "width": 100,
+      "height": 200,
+      "capacity": 10,
+      "weight": 0.9,
+      "nodes": [
+        2
+      ]
+    }
+  ],
+  "start": "10:00:00"
 }

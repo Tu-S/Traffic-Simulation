@@ -2,30 +2,20 @@ package ru.nsu.team.entity.trafficparticipant;
 
 public class TrafficParticipant {
 
-    private Position position;
-    private int laneId;
+    private PositionOnRoad position;
     private Car car;
 
-    public TrafficParticipant(Car car, Position pos, int laneId) {
+    public TrafficParticipant(Car car) {
         this.car = car;
-        this.position = pos;
-        this.laneId = laneId;
+        this.position = new PositionOnRoad();
     }
 
-    public Position getPosition() {
+    public PositionOnRoad getPosition() {
         return position;
     }
 
-    public int getLaneId() {
-        return laneId;
-    }
-
-    public void setPosition(Position position) {
+    public void setPositionOnRoad(PositionOnRoad position) {
         this.position = position;
-    }
-
-    public void setLaneId(int laneId) {
-        this.laneId = laneId;
     }
 
     public Car getCar() {

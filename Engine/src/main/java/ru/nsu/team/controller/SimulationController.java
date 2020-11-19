@@ -25,14 +25,16 @@ public class SimulationController {
 
     public void run(String fileName) {
         //test for load and save
-        /*prepareMap(fileName);
+        prepareMap(fileName);
         Car car = new Car(666, 70, new Node(1), new Path());
-        TrafficParticipant tr = new TrafficParticipant(car, new Position(), 1);
+        TrafficParticipant tr = new TrafficParticipant(car);
         roadMap.getRoadN(0).addTrafficParticipant(tr);
         Road tmpA = roadMap.getRoadN(1);
         roadMap.addActiveRoad(tmpA);
         Road tmpC = roadMap.getRoadN(2);
-        roadMap.addCalculatedRoad(tmpC);*/
+        roadMap.addCalculatedRoad(tmpC);
+        System.out.println(roadMap.getStart());
+        System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());
     }
 
     private void prepareMap(String fileName) {
@@ -56,11 +58,11 @@ public class SimulationController {
     }
 
 
-    public Report getReport() {
+    /*public Report getReport() {
         ReportBuilder builder = new ReportBuilder();
 
-        return builder.getReport();
-    }
+        return new Report();//builder.getReport();
+    }*/
 
     public Playback getPlayback() {
         PlayBackBuilder builder = new PlayBackBuilder();

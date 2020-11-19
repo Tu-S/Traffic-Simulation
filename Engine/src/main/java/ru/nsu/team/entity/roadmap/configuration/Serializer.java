@@ -13,7 +13,7 @@ public class Serializer {
 
     public TrafficParticipantConfiguration toTrafficParticipantConfiguration(TrafficParticipant trafficParticipant) {
         CarConfiguration car = toCarConfiguration(trafficParticipant.getCar());
-        return new TrafficParticipantConfiguration(trafficParticipant.getPosition(), trafficParticipant.getLaneId(), car);
+        return new TrafficParticipantConfiguration(trafficParticipant.getPosition(), car);
     }
 
     public int roadToInt(Road road) {

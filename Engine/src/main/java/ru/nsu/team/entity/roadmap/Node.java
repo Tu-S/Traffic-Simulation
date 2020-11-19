@@ -1,5 +1,7 @@
 package ru.nsu.team.entity.roadmap;
 
+import ru.nsu.team.entity.trafficparticipant.Position;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +11,20 @@ public class Node {
     private int id;
     private ArrayList<Course> courses;
     private ArrayList<TrafficLight> trafficLights;
+    private Position position;
 
     public Node(int id) {
         this.courses = new ArrayList<>();
         this.trafficLights = new ArrayList<>();
         this.id = id;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public int getId() {

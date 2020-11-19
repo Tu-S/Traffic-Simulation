@@ -26,5 +26,8 @@ public class Lane {
         signs.add(sign);
     }
 
+    public void addTrafficParticipant(TrafficParticipant car){
+        trafficParticipants.add(car);
+    }
 
 }

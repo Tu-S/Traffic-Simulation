@@ -1,25 +1,18 @@
 package ru.nsu.team.entity.roadmap.configuration;
 
-import ru.nsu.team.entity.trafficparticipant.Car;
-import ru.nsu.team.entity.trafficparticipant.Position;
+import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 
 public class TrafficParticipantConfiguration {
-    private Position position;
-    private int laneId;
+    private PositionOnRoad position;
     private CarConfiguration car;
 
-    public TrafficParticipantConfiguration(Position pos, int laneId, CarConfiguration car) {
+    public TrafficParticipantConfiguration(PositionOnRoad pos, CarConfiguration car) {
         this.car = car;
-        this.laneId = laneId;
         this.position = pos;
     }
 
-    public Position getPosition() {
+    public PositionOnRoad getPositionOnRoad() {
         return position;
-    }
-
-    public int getLaneId() {
-        return laneId;
     }
 
     public CarConfiguration getCar() {
