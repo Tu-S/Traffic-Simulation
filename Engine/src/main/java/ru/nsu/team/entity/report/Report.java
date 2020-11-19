@@ -1,5 +1,6 @@
 package ru.nsu.team.entity.report;
 
+import ru.nsu.team.entity.statistics.HeatMap;
 import ru.nsu.team.entity.statistics.RoadState;
 import ru.nsu.team.entity.statistics.TrafficStatistics;
 
@@ -12,12 +13,9 @@ public class Report {
     this.trafficStatistics = trafficStatistics;
   }
 
-  // make report from traffic statistics
   public void makeReport() {
     List<RoadState> roadStates = trafficStatistics.getRoadStatistics();
-    // prepare heatmap data for editor:
-    // ...
-    // HeatMap heatMap = new HeatMap(roadStates, begin, end);
-    // ...
+    HeatMap heatMap = new HeatMap(roadStates);
+    // List<RoadCongestion> roadCongestionList = heatMap.calculateCongestion(begin, end);
   }
 }

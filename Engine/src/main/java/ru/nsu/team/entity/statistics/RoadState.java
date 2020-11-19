@@ -11,8 +11,8 @@ public class RoadState {
     this.time = time;
   }
 
-  public int getId() {
-    return road.getId();
+  public Road getRoad() {
+    return road;
   }
 
   public int getTime() {
