@@ -8,7 +8,8 @@ import ru.nsu.team.entity.trafficparticipant.Path;
 import java.util.*;
 
 public class DijkstraPathfinder implements Pathfinder {
-    Map<Map.Entry<Node, Node>, Path> cache;
+    private final Map<Map.Entry<Node, Node>, Path> cache;
+    private final Set<Node> possibleDestinations;
 
     private static class PathNode implements Comparable<PathNode> {
         Node node;
@@ -37,6 +38,13 @@ public class DijkstraPathfinder implements Pathfinder {
 
     public DijkstraPathfinder() {
         cache = new HashMap<>();
+        possibleDestinations = new HashSet<Node>();
+
+    }
+
+    public DijkstraPathfinder(List<Node> destinations) {
+        cache = new HashMap<>();
+        possibleDestinations = new HashSet<Node>(destinations);
     }
 
     public void init(Node start, Set<Node> destinations) throws DestinationUnreachable {
@@ -93,9 +101,8 @@ public class DijkstraPathfinder implements Pathfinder {
         if (cachedResult != null) {
             return cachedResult;
         }
-        HashSet<Node> destinations = new HashSet<>();
-        destinations.add(destination);
-        init(start, destinations);
+        possibleDestinations.add(destination);
+        init(start, possibleDestinations);
         return cache.get(new AbstractMap.SimpleEntry<>(start, destination));
     }
 }
