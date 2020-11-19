@@ -1,44 +1,68 @@
 package ru.nsu.team.entity.statistics;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
-import java.util.*;
-
 public class HeatMap {
-  private Map<RoadState, SpeedAndIteration> map;
+  private Map<Integer, SpeedAndIteration> map;
+  private List<RoadCongestion> trafficCongestion;
+  private Map<Integer, Integer> roadIdMaxSpeed;
+  private List<RoadState> roadStates;
 
-  public HeatMap(List<RoadState> roadStates, int intervalBegin, int intervalEnd) {
+  public HeatMap(List<RoadState> roadStates) {
     map = new HashMap<>();
-    // for each road if time >= intervalBegin && time <= intervalEnd, calculate traffic congestion:
-    // ...
+    trafficCongestion = new LinkedList<>();
+    roadIdMaxSpeed = new HashMap<>();
+    this.roadStates = roadStates;
+  }
 
-    for (RoadState road : roadStates) {
-      int roadTime = road.getTime();
+  /**
+   * Calculate roads congestion by given time intervals.
+   *
+   * @param intervalBegin beginning of time interval
+   * @param intervalEnd   end of time interval
+   * @return list of elements consisting of the road identifier and its congestion.
+   */
+  public List<RoadCongestion> calculateCongestion(int intervalBegin, int intervalEnd) {
+    map.clear();
+    trafficCongestion.clear();
+    for (RoadState roadState : roadStates) {
+      int roadTime = roadState.getTime();
+      int roadId = roadState.getRoad().getId();
       if (roadTime >= intervalBegin && roadTime <= intervalEnd) {
-        if (map.containsKey(road)) {
-
+        if (map.containsKey(roadId)) {
+          SpeedAndIteration speedAndIteration = map.get(roadId);
+          speedAndIteration.setSpeed(speedAndIteration.getSpeed()
+              + averageCarsSpeed(roadState.getRoad()));
+          speedAndIteration.setIteration(speedAndIteration.getIteration() + 1);
+          map.put(roadId, speedAndIteration);
         } else {
           SpeedAndIteration speedAndIteration = new SpeedAndIteration();
-          // calculate average cars speed
-          //speedAndIteration.setSpeed();
-          //map.put(road, )
+          speedAndIteration.setSpeed(speedAndIteration.getSpeed()
+              + averageCarsSpeed(roadState.getRoad()));
+          speedAndIteration.setIteration(speedAndIteration.getIteration() + 1);
+          map.put(roadId, speedAndIteration);
+          roadIdMaxSpeed.put(roadId, roadState.getRoad().getMaxSpeed());
         }
-//        Optional<RoadIdMaxSpeed> matchedEntry =
-//            map.keySet().stream().
-//                    filter(element -> element.getId() == road.getId()).findAny();
-//
-//        if (matchedEntry.isPresent()) {
-//          RoadIdMaxSpeed roadIdMaxSpeed = matchedEntry.get();
-//
-//        }
       }
     }
+    map.forEach((k, v) -> trafficCongestion.add(
+        new RoadCongestion(k, ((v.getSpeed() / v.getIteration()) * 100) / roadIdMaxSpeed.get(k))));
+    return trafficCongestion;
   }
 
   private int averageCarsSpeed(Road road) {
-    List<TrafficParticipant> trafficParticipants = road.getTrafficParticipants();
     int averageSpeed = 0;
-    return averageSpeed;
+    int iteration = 0;
+    List<TrafficParticipant> trafficParticipants = road.getTrafficParticipants();
+    for (TrafficParticipant trafficParticipant : trafficParticipants) {
+      iteration++;
+      averageSpeed += trafficParticipant.getCar().getSpeed();
+    }
+    return averageSpeed / iteration;
   }
 }
