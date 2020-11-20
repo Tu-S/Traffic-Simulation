@@ -1,23 +1,27 @@
 package ru.nsu.team.entity.trafficparticipant;
 
+import ru.nsu.team.entity.roadmap.Road;
+
 public class PositionOnRoad {
     private int currentLane;
     private int position;
-    private int currentRoad;
-    private int currentPlaceOfInterest;
+    private Road currentRoad;
+
+    public PositionOnRoad(Road road, int distanceFromRoadExit, int lane) {
+        this.currentRoad = road;
+        this.position = distanceFromRoadExit;
+        this.currentLane = lane;
+    }
 
     public int getCurrentLane() {
         return currentLane;
     }
 
-    public int getCurrentPlaceOfInterest() {
-        return currentPlaceOfInterest;
-    }
-
     public int getPosition() {
         return position;
     }
-    public int getCurrentRoad() {
+
+    public Road getCurrentRoad() {
         return currentRoad;
     }
 
@@ -29,11 +33,7 @@ public class PositionOnRoad {
         this.position = position;
     }
 
-    public void setCurrentRoad(int currentRoad) {
-        this.currentRoad = currentRoad;
-    }
-
-    public void setCurrentPlaceOfInterest(int currentPlaceOfInterest) {
-        this.currentPlaceOfInterest = currentPlaceOfInterest;
+    public void setCurrentRoad(Road road) {
+        this.currentRoad = road;
     }
 }

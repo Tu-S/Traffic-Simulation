@@ -11,14 +11,11 @@ public class PlaceOfInterest {
     private ArrayList<TrafficParticipant> trafficParticipants;
     private ArrayList<Node> nodes;
     private int id;
-    private double width;
-    private double height;
+
     private double weight;
 
-    public PlaceOfInterest(int id, int parkingCapacity, double width, double height, double weight) {
+    public PlaceOfInterest(int id, int parkingCapacity, double weight) {
         this.id = id;
-        this.width = width;
-        this.height = height;
         this.weight = weight;
         this.parkingCapacity = parkingCapacity;
         this.trafficParticipants = new ArrayList<>();
@@ -33,13 +30,6 @@ public class PlaceOfInterest {
         return id;
     }
 
-    public double getWidth() {
-        return width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
 
     public double getWeight() {
         return weight;
@@ -63,6 +53,10 @@ public class PlaceOfInterest {
 
     public TrafficParticipant getCarN(int n) {
         return trafficParticipants.get(n);
+    }
+
+    public List<TrafficParticipant> getCars() {
+        return trafficParticipants;
     }
 
     public int getNodesNumber() {

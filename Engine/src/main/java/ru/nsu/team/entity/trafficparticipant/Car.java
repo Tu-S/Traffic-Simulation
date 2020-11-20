@@ -3,6 +3,9 @@ package ru.nsu.team.entity.trafficparticipant;
 import ru.nsu.team.entity.roadmap.Node;
 
 public class Car {
+
+    static int nextId=0;
+
     private int speed;
     private int timeLeft;
     private int maxSpeed;
@@ -72,5 +75,13 @@ public class Car {
 
     public boolean isDestination(Node node) {
         return node.equals(destination);
+    }
+
+    public static synchronized int getNextId() {
+        return nextId++;
+    }
+
+    public static synchronized void setNextId(int id) {
+        nextId = id;
     }
 }

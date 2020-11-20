@@ -5,9 +5,9 @@ public class TrafficParticipant implements Comparable<TrafficParticipant> {
     private PositionOnRoad position;
     private Car car;
 
-    public TrafficParticipant(Car car) {
+    public TrafficParticipant(Car car, PositionOnRoad position) {
         this.car = car;
-        this.position = new PositionOnRoad();
+        this.position = position;
     }
 
     public PositionOnRoad getPosition() {

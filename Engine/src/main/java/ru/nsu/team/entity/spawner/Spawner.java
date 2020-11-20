@@ -3,6 +3,8 @@ package ru.nsu.team.entity.spawner;
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.PlaceOfInterest;
 import ru.nsu.team.entity.roadmap.Road;
+import ru.nsu.team.entity.trafficparticipant.Car;
+import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.pathfinder.DestinationUnreachable;
 import ru.nsu.team.pathfinder.DijkstraPathfinder;
 import ru.nsu.team.pathfinder.Pathfinder;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.locks.Condition;
 import java.util.stream.Collectors;
 
 public class Spawner {
@@ -28,6 +31,7 @@ public class Spawner {
         this.pathfinder = new DijkstraPathfinder();
         this.configs = new ArrayList<>();
         this.spawningQueue = new Road(-1, null, node, Integer.MAX_VALUE, 1);
+        //TODO add courses
     }
 
     public Spawner(Node node, List<PlaceOfInterest> destinations) {
@@ -36,6 +40,7 @@ public class Spawner {
         this.pathfinder = new DijkstraPathfinder(destinations.stream().flatMap(poi -> poi.getNodes().stream()).collect(Collectors.toList()));
         this.configs = new ArrayList<>();
         this.spawningQueue = new Road(-1, null, node, Integer.MAX_VALUE, 1);
+        //TODO add courses
     }
 
     private PlaceOfInterest selectDestination() {
@@ -52,8 +57,17 @@ public class Spawner {
         return possibleDestinations.get(0);
     }
 
+    private Configuration getCurrentConfiguration(){
+        return configs.stream().filter(c -> c.)
+    }
+
     public void spawn() {
 
+        //TODO custom max speed
+        for (int i = 0; i < configs; i++) {
+            
+        }
+        new TrafficParticipant(new Car(Car.getNextId(),120,));
 
         //TODO actually spawn cars
     }
