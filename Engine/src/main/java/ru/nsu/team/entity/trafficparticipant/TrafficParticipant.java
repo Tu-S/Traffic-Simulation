@@ -25,6 +25,6 @@ public class TrafficParticipant implements Comparable<TrafficParticipant> {
 
     @Override
     public int compareTo(TrafficParticipant o) {
-        return position.getPosition() - o.position.getPosition();
+        return (int) position.getPosition() - (int) o.position.getPosition();
     }
 }

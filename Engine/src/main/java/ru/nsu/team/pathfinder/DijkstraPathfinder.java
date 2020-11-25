@@ -2,6 +2,7 @@ package ru.nsu.team.pathfinder;
 
 import ru.nsu.team.entity.roadmap.Course;
 import ru.nsu.team.entity.roadmap.Node;
+import ru.nsu.team.entity.roadmap.PlaceOfInterest;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Path;
 
@@ -63,7 +64,7 @@ public class DijkstraPathfinder implements Pathfinder {
             PathNode currentNode = unsettledNodes.poll();
             for (Course course :
                     currentNode.node.getCourses()) {
-                Road road = course.getFromRoad();
+                Road road = course.getFromLane().getParentRoad();
                 Node target = road.getExitNode();
                 if (settledNodes.contains(target)) {
                     continue;
@@ -104,15 +105,27 @@ public class DijkstraPathfinder implements Pathfinder {
     }
 
     @Override
-    public Path findPath(Node start, Node destination) throws DestinationUnreachable {
-        Path cachedResult = cache.get(new AbstractMap.SimpleEntry<>(start, destination));
-        if (knownUnreachable.contains(destination)) {
-            throw new DestinationUnreachable();
+    public Path findPath(Node start, PlaceOfInterest destination) throws DestinationUnreachable {
+        List<Node> nodes = destination.getNodes();
+        Path bestCachedResult = null;
+        for (Node node : nodes) {
+            Path cachedResult = cache.get(new AbstractMap.SimpleEntry<>(start, node));
+            if (cachedResult == null) {
+                continue;
+            }
+            if (bestCachedResult == null) {
+                bestCachedResult = cachedResult;
+                continue;
+            }
+            if (cachedResult.getPathLength() < bestCachedResult.getPathLength()) {
+                bestCachedResult = cachedResult;
+            }
+
         }
-        if (cachedResult != null) {
-            return cachedResult;
+        if (bestCachedResult != null) {
+            return bestCachedResult;
         }
-        possibleDestinations.add(destination);
+        possibleDestinations.addAll(destination.getNodes());
         init(start, possibleDestinations);
         return cache.get(new AbstractMap.SimpleEntry<>(start, destination));
     }

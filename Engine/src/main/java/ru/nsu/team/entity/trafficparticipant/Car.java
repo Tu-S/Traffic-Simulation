@@ -4,18 +4,21 @@ import ru.nsu.team.entity.roadmap.Node;
 
 public class Car {
 
-    static int nextId=0;
+    static int nextId = 0;
 
     private int speed;
     private int timeLeft;
-    private int maxSpeed;
-    private Node destination;
+    private double maxSpeed;
     private Path path;
-    private int id;
+    private final int id;
+
+    public static double DEFAULT_MAX_SPEED = 120;
+    public static double DEFAULT_ACCELERATION = 1.5d;
+    public static double DEFAULT_DISTANCE = 12;
+    public static double DEFAULT_CAR_SIZE = 6;
 
 
-    public Car(int id, int maxSpeed, Node destination, Path path) {
-        this.destination = destination;
+    public Car(int id, double maxSpeed, Path path) {
         this.maxSpeed = maxSpeed;
         this.path = path;
         this.id = id;
@@ -25,11 +28,7 @@ public class Car {
         return id;
     }
 
-    public int getDestinationId() {
-        return destination.getId();
-    }
-
-    public int getPathLength() {
+    public double getPathLength() {
         return path.getPathLength();
     }
 
@@ -45,10 +44,6 @@ public class Car {
         this.path = path;
     }
 
-    public void setDestination(Node destination) {
-        this.destination = destination;
-    }
-
     public int getSpeed() {
         return speed;
     }
@@ -57,7 +52,7 @@ public class Car {
         return timeLeft;
     }
 
-    public int getMaxSpeed() {
+    public double getMaxSpeed() {
         return maxSpeed;
     }
 
@@ -71,10 +66,6 @@ public class Car {
 
     public void setMaxSpeed(int maxSpeed) {
         this.maxSpeed = maxSpeed;
-    }
-
-    public boolean isDestination(Node node) {
-        return node.equals(destination);
     }
 
     public static synchronized int getNextId() {

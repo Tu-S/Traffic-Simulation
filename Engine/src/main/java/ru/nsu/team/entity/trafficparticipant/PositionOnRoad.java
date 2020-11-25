@@ -4,10 +4,10 @@ import ru.nsu.team.entity.roadmap.Road;
 
 public class PositionOnRoad {
     private int currentLane;
-    private int position;
+    private double position;
     private Road currentRoad;
 
-    public PositionOnRoad(Road road, int distanceFromRoadExit, int lane) {
+    public PositionOnRoad(Road road, double distanceFromRoadExit, int lane) {
         this.currentRoad = road;
         this.position = distanceFromRoadExit;
         this.currentLane = lane;
@@ -17,7 +17,7 @@ public class PositionOnRoad {
         return currentLane;
     }
 
-    public int getPosition() {
+    public double getPosition() {
         return position;
     }
 
@@ -29,7 +29,7 @@ public class PositionOnRoad {
         this.currentLane = currentLane;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(double position) {
         this.position = position;
     }
 

@@ -5,30 +5,30 @@ import java.util.List;
 
 public class Course {
 
-    private final Road fromRoad;
-    private final Road toRoad;
+    private final Lane fromLane;
+    private final Lane toLane;
     private int timeLeft;
     private int length;
     private final List<Intersection> intersections;
 
-    public Course(Road fromRoad, Road toRoad) {
-        this.fromRoad = fromRoad;
-        this.toRoad = toRoad;
+    public Course(Lane fromRoad, Lane toLane) {
+        this.fromLane = fromRoad;
+        this.toLane = toLane;
         intersections = new ArrayList<>();
     }
 
-    public Course(Road fromRoad, Road toRoad, List<Intersection> intersections) {
-        this.fromRoad = fromRoad;
-        this.toRoad = toRoad;
+    public Course(Lane fromLane, Lane toLane, List<Intersection> intersections) {
+        this.fromLane = fromLane;
+        this.toLane = toLane;
         this.intersections = intersections;
     }
 
-    public Road getFromRoad() {
-        return fromRoad;
+    public Lane getFromLane() {
+        return fromLane;
     }
 
-    public Road getToRoad() {
-        return toRoad;
+    public Lane getToLane() {
+        return toLane;
     }
 
     public int getLength() {

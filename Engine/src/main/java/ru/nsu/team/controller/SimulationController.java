@@ -8,6 +8,7 @@ import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
+import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 
@@ -23,8 +24,8 @@ public class SimulationController {
     public void run(String fileName) {
         //test for load and save
         prepareMap(fileName);
-        Car car = new Car(666, 70, new Node(1), new Path());
-        TrafficParticipant tr = new TrafficParticipant(car);
+        Car car = new Car(666, 70, new Path());
+        TrafficParticipant tr = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(0), 0, 0));
         roadMap.getRoadN(0).addTrafficParticipant(tr);
         Road tmpA = roadMap.getRoadN(1);
         roadMap.addActiveRoad(tmpA);

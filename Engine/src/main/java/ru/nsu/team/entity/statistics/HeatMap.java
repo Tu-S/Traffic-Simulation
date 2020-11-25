@@ -46,7 +46,7 @@ public class HeatMap {
               + averageCarsSpeed(roadState.getRoad()));
           speedAndIteration.setIteration(speedAndIteration.getIteration() + 1);
           map.put(roadId, speedAndIteration);
-          roadIdMaxSpeed.put(roadId, roadState.getRoad().getMaxSpeed());
+          roadIdMaxSpeed.put(roadId, (int)roadState.getRoad().getLaneN(0).getMaxSpeed());
         }
       }
     }

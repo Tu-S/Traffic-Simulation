@@ -18,7 +18,7 @@ public class CarConfiguration {
         this.timeLeft = car.getTimeLeft();
         this.maxSpeed = car.getMaxSpeed();
         this.destination = car.getDestinationId();
-        int pathLen = car.getPathLength();
+        int pathLen = car.getPath().getRoads().size();
         this.path = new ArrayList<>(pathLen);
         for (int i = 0; i < pathLen; i++) {
             path.add(car.getRoadId(i));

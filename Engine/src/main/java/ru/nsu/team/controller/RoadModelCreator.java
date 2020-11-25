@@ -53,7 +53,7 @@ public class RoadModelCreator {
         int len = placesOfInterests.size();
         for (int i = 0; i < len; i++) {
             PlaceOfInterestConfiguration config = placesOfInterests.get(i);
-            PlaceOfInterest place = new PlaceOfInterest(i, config.getCapacity(), config.getWidth(), config.getHeight(), config.getWeight());
+            PlaceOfInterest place = new PlaceOfInterest(i, config.getCapacity(), config.getWeight());
             List<Integer> connectedNodes = config.getNodes();
             for (Integer number : connectedNodes) {
                 place.addNode(nodes.get(number));
@@ -73,11 +73,11 @@ public class RoadModelCreator {
                 for (int p = 0; p < pathLength; p++) {
                     path.addRoadToPath(roads.get(p));
                 }
-                Car car = new Car(t, carConfig.getMaxSpeed(), nodes.get(nodeId), path);
+                Car car = new Car(t, carConfig.getMaxSpeed(), path);
                 PositionOnRoad pos = trafficParticipantConfig.getPositionOnRoad();
-                TrafficParticipant trafficParticipant = new TrafficParticipant(car);
-                Road road = roads.get(pos.getCurrentRoad());
-                PlaceOfInterest place = map.getPlaceOfInterestN(pos.getCurrentPlaceOfInterest());
+                TrafficParticipant trafficParticipant = new TrafficParticipant(car,new PositionOnRoad());
+                Road road = pos.getCurrentRoad();
+                PlaceOfInterest place = pos.getCurrentPlaceOfInterest();
                 place.addTrafficParticipant(trafficParticipant);
                 road.addTrafficParticipant(trafficParticipant);
             }
@@ -104,7 +104,8 @@ public class RoadModelCreator {
             for (int heh = 0; heh < lenIds; heh++) {
                 int in = inRoadId.get(heh);
                 int out = outRoadId.get(heh);
-                Course course = new Course(roads.get(in), roads.get(out));
+                //TODO create courses and intersections according to signs and trajectories
+                Course course = new Course(roads.get(in).getLaneN(0), roads.get(out).getLaneN(0));
                 node.addCourse(course);
             }
             for (Integer to : outRoadId) {

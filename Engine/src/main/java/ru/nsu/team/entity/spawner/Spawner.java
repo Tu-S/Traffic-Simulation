@@ -4,6 +4,8 @@ import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.PlaceOfInterest;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Car;
+import ru.nsu.team.entity.trafficparticipant.Path;
+import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.pathfinder.DestinationUnreachable;
 import ru.nsu.team.pathfinder.DijkstraPathfinder;
@@ -57,19 +59,28 @@ public class Spawner {
         return possibleDestinations.get(0);
     }
 
-    private Configuration getCurrentConfiguration(){
-        return configs.stream().filter(c -> c.)
+    private Configuration getCurrentConfiguration(int time) {
+        return configs.stream().filter(c -> c.getStart() >= time && c.getEnd() < time).findFirst().orElse(Configuration.NO_SPAWN);
     }
 
-    public void spawn() {
-
-        //TODO custom max speed
-        for (int i = 0; i < configs; i++) {
-            
+    public void spawn(int time, int duration) {
+        Random rng = new Random();
+        Configuration config = getCurrentConfiguration(time);
+        int toSpawn = (rng.nextInt(2 * (int) config.getSpawnRate()) * duration) / 60;
+        List<TrafficParticipant> queuedCars = spawningQueue.getLaneN(0).getParticipants();
+        double spawnPosition;
+        if (queuedCars.isEmpty()) {
+            spawnPosition = 0;
+        } else {
+            spawnPosition = queuedCars.get(queuedCars.size() - 1).getPosition().getPosition() + Car.DEFAULT_DISTANCE;
         }
-        new TrafficParticipant(new Car(Car.getNextId(),120,));
-
-        //TODO actually spawn cars
+        for (int i = 0; i < toSpawn; i++) {
+            PlaceOfInterest destination = selectDestination();
+            Path path = pathfinder.findPath(node, destination);
+            TrafficParticipant spawnedCar = new TrafficParticipant(new Car(Car.getNextId(), Car.DEFAULT_MAX_SPEED, path), new PositionOnRoad(spawningQueue, spawnPosition, 0));
+            spawningQueue.addTrafficParticipant(spawnedCar);
+            spawnPosition += Car.DEFAULT_DISTANCE;
+        }
     }
 
     public Configuration getConfigN(int n) {
@@ -86,6 +97,7 @@ public class Spawner {
 
     public void addConfiguration(Configuration config) {
         configs.add(config);
+        configs.sort((a, b) -> (int) (a.getStart() - b.getStart()));
     }
 
     public int getPossibleDestinationsNumber() {

@@ -8,7 +8,6 @@ import ru.nsu.team.entity.trafficparticipant.*;
 
 public class Road {
 
-    private int maxSpeed;
     private List<Lane> lanes;
     private List<TrafficParticipant> trafficParticipants;
     private double length;
@@ -16,13 +15,12 @@ public class Road {
     private Node to;
     private int id;
 
-    public Road(int id, Node from, Node to, int maxSpeed, int numberOfLines) {
+    public Road(int id, Node from, Node to, double maxSpeed, int numberOfLanes) {
         this.from = from;
         this.to = to;
-        this.maxSpeed = maxSpeed;
-        this.lanes = new ArrayList<>(numberOfLines);
-        for(int i = 0 ; i < numberOfLines;i++){
-            lanes.add(new Lane());
+        this.lanes = new ArrayList<>(numberOfLanes);
+        for (int i = 0; i < numberOfLanes; i++) {
+            lanes.add(new Lane(maxSpeed));
         }
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
@@ -40,10 +38,6 @@ public class Road {
         Lane lane = lanes.get(car.getPosition().getCurrentLane());
         lane.addTrafficParticipant(car);
         trafficParticipants.add(car);
-    }
-
-    public int getMaxSpeed() {
-        return maxSpeed;
     }
 
     public double getLength() {
