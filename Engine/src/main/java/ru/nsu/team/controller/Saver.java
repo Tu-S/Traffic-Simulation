@@ -8,6 +8,7 @@ import ru.nsu.team.entity.roadmap.configuration.Serializer;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.roadmap.configuration.TrafficParticipantConfiguration;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
+import ru.nsu.team.jsonparser.JsonProvider;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,12 +49,9 @@ public class Saver {
     }
 
     private void saveMapConfig(RoadMapConfiguration config, String fileName) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter(fileName)) {
-            gson.toJson(config, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JsonProvider writer = new JsonProvider();
+        writer.writeJson(config,fileName);
+
     }
 
 }

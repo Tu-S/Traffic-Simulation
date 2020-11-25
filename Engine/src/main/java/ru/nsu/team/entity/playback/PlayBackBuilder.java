@@ -1,5 +1,7 @@
 package ru.nsu.team.entity.playback;
 
+import ru.nsu.team.entity.statistics.CarState;
+
 public class PlayBackBuilder {
 
   private Playback playback;
