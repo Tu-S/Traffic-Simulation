@@ -11,148 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoadModelCreator {
-
+    private final List<Node> nodes = new ArrayList<>();
+    private final List<Road> roads = new ArrayList<>();
 
     public RoadMap createRoadMap(RoadMapConfiguration roadMapConfig) {
         RoadMap map = new RoadMap();
-
-
-        List<RoadConfiguration> configRoads = roadMapConfig.getRoads();
-        List<NodeConfiguration> configNodes = roadMapConfig.getNodes();
-
-        int rN = configRoads.size();
-        int nN = configNodes.size();
-        ArrayList<Node> nodes = new ArrayList<>(nN);
-        ArrayList<Road> roads = new ArrayList<>(rN);
-        for (int i = 0; i < nN; i++) {
-            nodes.add(new Node(i));
-        }
-
-        for (int i = 0; i < rN; i++) {
-            RoadConfiguration roadConfig = configRoads.get(i);
-            int from = roadConfig.getFrom();
-            int to = roadConfig.getTo();
-            List<LaneConfiguration> lanes = roadConfig.getLanes();
-            int lanesNumber = lanes.size();
-            Node fromN = nodes.get(from);
-            Node toN = nodes.get(to);
-            Road road = new Road(i, fromN, toN, 0, lanesNumber);
-            for (LaneConfiguration laneConfig : lanes) {
-                Lane lane = new Lane();
-                List<SignConfiguration> signsConfig = laneConfig.getSigns();
-                for (SignConfiguration signConfig : signsConfig) {
-                    Sign sign = new Sign(signConfig.getType(), signConfig.getLimit());
-                    lane.addSign(sign);
-                }
-                road.addLane(lane);
-            }
-
-            roads.add(road);
-        }
-        List<PlaceOfInterestConfiguration> placesOfInterests = roadMapConfig.getPointsOfInterest();
-        int len = placesOfInterests.size();
-        for (int i = 0; i < len; i++) {
-            PlaceOfInterestConfiguration config = placesOfInterests.get(i);
-            PlaceOfInterest place = new PlaceOfInterest(i, config.getCapacity(), config.getWeight());
-            List<Integer> connectedNodes = config.getNodes();
-            for (Integer number : connectedNodes) {
-                place.addNode(nodes.get(number));
-            }
-            map.addPlaceOfInterest(place);
-        }
-        List<TrafficParticipantConfiguration> trafficParticipantConfigs = roadMapConfig.getTrafficParticipants();
-        if (trafficParticipantConfigs != null) {
-            int length = trafficParticipantConfigs.size();
-            for (int t = 0; t < length; t++) {
-                TrafficParticipantConfiguration trafficParticipantConfig = trafficParticipantConfigs.get(t);
-                CarConfiguration carConfig = trafficParticipantConfig.getCar();
-                int nodeId = carConfig.getDestination();
-                Path path = new Path();
-                List<Integer> roadsInPath = carConfig.getPath();
-                int pathLength = roadsInPath.size();
-                for (int p = 0; p < pathLength; p++) {
-                    path.addRoadToPath(roads.get(p));
-                }
-                Car car = new Car(t, carConfig.getMaxSpeed(), path);
-                PositionOnRoad pos = trafficParticipantConfig.getPositionOnRoad();
-                TrafficParticipant trafficParticipant = new TrafficParticipant(car,new PositionOnRoad());
-                Road road = pos.getCurrentRoad();
-                PlaceOfInterest place = pos.getCurrentPlaceOfInterest();
-                place.addTrafficParticipant(trafficParticipant);
-                road.addTrafficParticipant(trafficParticipant);
-            }
-        }
-
-        for (int i = 0; i < nN; i++) {
-            Node node = nodes.get(i);
-            NodeConfiguration nodeConfig = configNodes.get(i);
-            node.setPosition(new Position(nodeConfig.getX(), nodeConfig.getY()));
-            TrafficLightConfiguration trafficLightConfig = nodeConfig.getTrafficLightConfiguration();
-            if (trafficLightConfig != null) {
-                int greenDuration = trafficLightConfig.getDelayGreen();
-                int redDuration = trafficLightConfig.getDelayGreen();
-                TrafficLight trafficLight = new TrafficLight(greenDuration, redDuration);
-                List<Integer> pair = trafficLightConfig.getPairsOfRoads();
-                for (Integer integer : pair) {
-                    trafficLight.addRoad(roads.get(integer));
-                }
-                node.addTrafficLight(trafficLight);
-            }
-            List<Integer> outRoadId = nodeConfig.getRoadsOut();
-            List<Integer> inRoadId = nodeConfig.getRoadsIn();
-            int lenIds = outRoadId.size();
-            for (int heh = 0; heh < lenIds; heh++) {
-                int in = inRoadId.get(heh);
-                int out = outRoadId.get(heh);
-                //TODO create courses and intersections according to signs and trajectories
-                Course course = new Course(roads.get(in).getLaneN(0), roads.get(out).getLaneN(0));
-                node.addCourse(course);
-            }
-            for (Integer to : outRoadId) {
-                for (Integer from : inRoadId) {
-                    Course course = new Course(roads.get(from), roads.get(to));
-                    node.addCourse(course);
-                }
-            }
-            if (nodeConfig.getPeriodsOfSpawn() != null) {
-                List<SpawnConfiguration> configs = nodeConfig.getPeriodsOfSpawn();
-                Spawner spawner = new Spawner(node);
-                for (SpawnConfiguration config : configs) {
-                    long start = getValue(config.getStart());
-                    long end = getValue(config.getEnd());
-                    spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
-
-                }
-                Road fakeRoad = new Road(-1, node, new Node(-2), 666, 1);
-                fakeRoad.setLength(Integer.MAX_VALUE);
-                roads.add(fakeRoad);
-                map.addSpawner(spawner);
-            }
-
-        }
-
-
+        createNodes(roadMapConfig.getNodes());
+        createRoads(roadMapConfig.getRoads());
+        createLights(roadMapConfig.getNodes());
+        createSpawners(roadMapConfig.getNodes(), map);
+        createCourses(roadMapConfig.getRoads(),roadMapConfig.getNodes());
+        createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
+        createTrafficParticipants(roadMapConfig.getTrafficParticipants());
         for (Road road : roads) {
-            if (road.getLength() == 0) {
-                double length = calculateLength(road.getFrom().getPosition(), road.getTo().getPosition());
-                road.setLength(length);
-            }
             map.addRoad(road);
         }
-        List<Integer> activeRoads = roadMapConfig.getActiveRoads();
-        List<Integer> calculatedRoads = roadMapConfig.getCalculatedRoads();
-        if (activeRoads != null) {
-            int activeLen = activeRoads.size();
-            for (int i = 0; i < activeLen; i++) {
-                map.addActiveRoad(map.getRoadN(activeRoads.get(i)));
-            }
-        }
-        if (calculatedRoads != null) {
-            for (Integer calculatedRoad : calculatedRoads) {
-                map.addCalculatedRoad(map.getRoadN(calculatedRoad));
-            }
-        }
-
         map.setStart(getValue(roadMapConfig.getStart()));
         return map;
     }
@@ -167,6 +40,152 @@ public class RoadModelCreator {
         double second = Math.pow(end.getY() - start.getY(), 2);
         double third = first + second;
         return Math.sqrt(third);
+    }
+
+    private void createNodes(List<NodeConfiguration> nodesConfig) {
+        int nodeNumber = nodesConfig.size();
+        for (int i = 0; i < nodeNumber; i++) {
+            NodeConfiguration config = nodesConfig.get(i);
+            Position pos = new Position(config.getX(), config.getY());
+            Node n = new Node(i, pos);
+            nodes.add(n);
+        }
+    }
+
+    private void createSpawners(List<NodeConfiguration> nodesConfig, RoadMap map) {
+
+        for (int i = 0; i < nodesConfig.size(); i++) {
+
+            NodeConfiguration nodeConfig = nodesConfig.get(i);
+            if (nodeConfig.getPeriodsOfSpawn() != null) {
+                Node node = this.nodes.get(i);
+                List<SpawnConfiguration> configs = nodeConfig.getPeriodsOfSpawn();
+                Spawner spawner = new Spawner(node);
+                for (SpawnConfiguration config : configs) {
+                    long start = getValue(config.getStart());
+                    long end = getValue(config.getEnd());
+                    spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
+                }
+                map.addSpawner(spawner);
+            }
+        }
+    }
+
+    private void createLights(List<NodeConfiguration> nodesConfig) {
+        int number = 0;
+        for (NodeConfiguration nodeConfig : nodesConfig) {
+            Node node = this.nodes.get(number++);
+            node.setPosition(new Position(nodeConfig.getX(), nodeConfig.getY()));
+            TrafficLightConfiguration trafficLightConfig = nodeConfig.getTrafficLightConfiguration();
+            if (trafficLightConfig != null) {
+                int greenDuration = trafficLightConfig.getDelayGreen();
+                int redDuration = trafficLightConfig.getDelayGreen();
+                TrafficLight trafficLight = new TrafficLight(greenDuration, redDuration);
+                Iterable<Integer> pair = trafficLightConfig.getPairsOfRoads();
+                for (Integer integer : pair) {
+                    trafficLight.addRoad(roads.get(integer));
+                }
+                node.addTrafficLight(trafficLight);
+            }
+        }
+    }
+
+    private void createCourses(List<RoadConfiguration> roadsConfig, List<NodeConfiguration> nodesConfig) {
+        int nodeNumber = 0;
+        nodeNumber = nodesConfig.size();
+        for (int i = 0; i < nodeNumber; i++) {
+            NodeConfiguration nodeConfig = nodesConfig.get(i);
+            List<Integer> outRoadsId = nodeConfig.getRoadsOut();
+            List<Integer> inRoadsId = nodeConfig.getRoadsIn();
+            Node node = this.nodes.get(i);
+
+            int lenIds = nodeConfig.getCoursesNumber();
+            for (int heh = 0; heh < lenIds; heh++) {
+                int in = inRoadsId.get(heh);
+                int out = outRoadsId.get(heh);
+
+                RoadConfiguration roadIn = roadsConfig.get(in);
+                RoadConfiguration roadOut = roadsConfig.get(out);
+                for (LaneConfiguration lane : roadIn.getLanes()) {
+                    for (SignConfiguration sing : lane.getSigns()) {
+
+
+                    }
+
+                }
+                for (LaneConfiguration lane : roadOut.getLanes()) {
+                    for (SignConfiguration sing : lane.getSigns()) {
+
+
+                    }
+
+                }
+                //TODO create courses and intersections according to signs and trajectories
+                Course course = new Course(roads.get(in).getLaneN(0), roads.get(out).getLaneN(0));
+                node.addCourse(course);
+            }
+
+        }
+    }
+
+
+    private void createRoads(Iterable<RoadConfiguration> roads) {
+        int rId = 0;
+        for (RoadConfiguration roadConfig : roads) {
+            int from = roadConfig.getFrom();
+            int to = roadConfig.getTo();
+            Iterable<LaneConfiguration> lanes = roadConfig.getLanes();
+            Node fromN = nodes.get(from);
+            Node toN = nodes.get(to);
+            Road road = new Road(rId, fromN, toN);
+            for (LaneConfiguration laneConfig : lanes) {
+                Lane lane = new Lane(road);
+                road.addLane(lane);
+            }
+            this.roads.add(road);
+        }
+        for (Road road : this.roads) {
+            if (road.getLength() == 0) {
+                double length = calculateLength(road.getFrom().getPosition(), road.getTo().getPosition());
+                road.setLength(length);
+            }
+        }
+    }
+
+
+    private void createPlacesOfInterest(Iterable<PlaceOfInterestConfiguration> placesOfInterests, RoadMap map) {
+        int plId = 0;
+        for (PlaceOfInterestConfiguration config : placesOfInterests) {
+            PlaceOfInterest place = new PlaceOfInterest(plId++, config.getCapacity(), config.getWeight());
+            Iterable<Integer> connectedNodes = config.getNodes();
+            for (Integer number : connectedNodes) {
+                place.addNode(nodes.get(number));
+            }
+            map.addPlaceOfInterest(place);
+        }
+
+    }
+
+    private void createTrafficParticipants(Iterable<TrafficParticipantConfiguration> trafficParticipantConfigs) {
+        if (trafficParticipantConfigs != null) {
+            int pId = 0;
+            for (TrafficParticipantConfiguration config : trafficParticipantConfigs) {
+                CarConfiguration carConfig = config.getCar();
+                Path path = new Path();
+                for (Integer rNumber : carConfig.getPath()) {
+                    path.addRoadToPath(roads.get(rNumber));
+                }
+                Car car = new Car(pId++, Car.DEFAULT_MAX_SPEED, path);
+                PositionOnRoadConfiguration pos = config.getPositionOnRoad();
+                Road road = this.roads.get(pos.getCurrentRoad());
+                double position = pos.getPosition();
+                int lane = pos.getCurrentLane();
+                PositionOnRoad positionOnRoad = new PositionOnRoad(road, position, lane);
+                TrafficParticipant trafficParticipant = new TrafficParticipant(car, positionOnRoad);
+                road.addTrafficParticipant(trafficParticipant);
+            }
+        }
+
     }
 
 

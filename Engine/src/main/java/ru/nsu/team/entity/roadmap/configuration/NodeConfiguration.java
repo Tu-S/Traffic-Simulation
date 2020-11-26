@@ -33,4 +33,14 @@ public class NodeConfiguration {
     public TrafficLightConfiguration getTrafficLightConfiguration() {
         return trafficLight;
     }
+    public Integer getInN(int n){
+        return  roadsIn.get(n);
+    }
+    public Integer getOutN(int n){
+        return roadsOut.get(n);
+    }
+
+    public int getCoursesNumber(){
+        return roadsIn.size();
+    }
 }

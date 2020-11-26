@@ -12,7 +12,14 @@ public class RoadMapConfiguration {
     private String start;
 
 
+    public int getNodeNumber() {
+        return nodes.size();
 
+    }
+
+    public int getRoadNumber() {
+        return roads.size();
+    }
 
     public void setTrafficParticipants(List<TrafficParticipantConfiguration> trafficParticipants) {
         this.trafficParticipants = trafficParticipants;

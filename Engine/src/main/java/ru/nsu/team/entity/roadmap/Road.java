@@ -1,7 +1,9 @@
 package ru.nsu.team.entity.roadmap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import ru.nsu.team.entity.trafficparticipant.*;
 
@@ -14,16 +16,18 @@ public class Road {
     private Node from;
     private Node to;
     private int id;
+    private boolean isMainRoad;
 
-    public Road(int id, Node from, Node to, double maxSpeed, int numberOfLanes) {
+    public Road(int id, Node from, Node to) {
         this.from = from;
         this.to = to;
-        this.lanes = new ArrayList<>(numberOfLanes);
-        for (int i = 0; i < numberOfLanes; i++) {
-            lanes.add(new Lane(maxSpeed));
-        }
+        this.lanes = new ArrayList<>();
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
+    }
+
+    public void setMainRoad(boolean isMainRoad) {
+        this.isMainRoad = isMainRoad;
     }
 
     public int getId() {
@@ -32,6 +36,10 @@ public class Road {
 
     public void deleteTrafficParticipant(TrafficParticipant car) {
 
+    }
+
+    public List<Lane> getLanes() {
+        return lanes;
     }
 
     public void addTrafficParticipant(TrafficParticipant car) {
@@ -55,6 +63,10 @@ public class Road {
     public Lane getLaneN(int n) {
         return lanes.get(n);
 
+    }
+
+    public List<Lane> getIterator() {
+        return lanes;
     }
 
     public int getTrafficParticipantsNumber() {

@@ -32,7 +32,7 @@ public class Spawner {
         this.possibleDestinations = new ArrayList<>();
         this.pathfinder = new DijkstraPathfinder();
         this.configs = new ArrayList<>();
-        this.spawningQueue = new Road(-1, null, node, Integer.MAX_VALUE, 1);
+        this.spawningQueue = new Road(-1, null, node);
         //TODO add courses
     }
 
@@ -41,7 +41,7 @@ public class Spawner {
         this.possibleDestinations = destinations;
         this.pathfinder = new DijkstraPathfinder(destinations.stream().flatMap(poi -> poi.getNodes().stream()).collect(Collectors.toList()));
         this.configs = new ArrayList<>();
-        this.spawningQueue = new Road(-1, null, node, Integer.MAX_VALUE, 1);
+        this.spawningQueue = new Road(-1, null, node);
         //TODO add courses
     }
 

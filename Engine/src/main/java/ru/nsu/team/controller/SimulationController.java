@@ -2,8 +2,7 @@ package ru.nsu.team.controller;
 
 import ru.nsu.team.entity.playback.PlayBackBuilder;
 import ru.nsu.team.entity.playback.Playback;
-import ru.nsu.team.entity.roadmap.Node;
-import ru.nsu.team.entity.roadmap.Road;
+
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.trafficparticipant.Car;
@@ -27,10 +26,6 @@ public class SimulationController {
         Car car = new Car(666, 70, new Path());
         TrafficParticipant tr = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(0), 0, 0));
         roadMap.getRoadN(0).addTrafficParticipant(tr);
-        Road tmpA = roadMap.getRoadN(1);
-        roadMap.addActiveRoad(tmpA);
-        Road tmpC = roadMap.getRoadN(2);
-        roadMap.addCalculatedRoad(tmpC);
         System.out.println(roadMap.getStart());
         System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());
     }

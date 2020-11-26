@@ -13,10 +13,11 @@ public class Node {
     private ArrayList<TrafficLight> trafficLights;
     private Position position;
 
-    public Node(int id) {
+    public Node(int id, Position position) {
         this.courses = new ArrayList<>();
         this.trafficLights = new ArrayList<>();
         this.id = id;
+        this.position = position;
     }
 
     public Position getPosition() {
@@ -51,17 +52,17 @@ public class Node {
         return trafficLights.size();
     }
 
-    public Course getCourseN(int n) {
+    /*public Course getCourseN(int n) {
         return courses.get(n);
-    }
+    }*/
 
     public List<Course> getCourses() {
         return courses;
     }
 
-    public TrafficLight getTrafficLightN(int n) {
+    /*public TrafficLight getTrafficLightN(int n) {
         return trafficLights.get(n);
-    }
+    }*/
 
     @Override
     public int hashCode() {

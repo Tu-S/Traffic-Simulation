@@ -6,18 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarConfiguration {
-    private int speed;
-    private int timeLeft;
-    private int maxSpeed;
-    private Integer destination;
+    private double speed;
+    private double timeLeft;
+    private double maxSpeed;
     private ArrayList<Integer> path;
 
 
     public CarConfiguration(Car car) {
         this.speed = car.getSpeed();
         this.timeLeft = car.getTimeLeft();
-        this.maxSpeed = car.getMaxSpeed();
-        this.destination = car.getDestinationId();
+        this.maxSpeed = Car.DEFAULT_MAX_SPEED;
         int pathLen = car.getPath().getRoads().size();
         this.path = new ArrayList<>(pathLen);
         for (int i = 0; i < pathLen; i++) {
@@ -25,7 +23,7 @@ public class CarConfiguration {
         }
     }
 
-    public int getSpeed() {
+    /*public int getSpeed() {
         return speed;
     }
 
@@ -35,11 +33,7 @@ public class CarConfiguration {
 
     public int getMaxSpeed() {
         return maxSpeed;
-    }
-
-    public Integer getDestination() {
-        return destination;
-    }
+    }*/
 
     public List<Integer> getPath() {
         return path;
