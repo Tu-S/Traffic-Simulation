@@ -6,7 +6,7 @@ import ru.nsu.team.entity.statistics.TrafficStatistics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Playback {
+public class  Playback {
   private List<RoadState> roadStates;
 
   public Playback(TrafficStatistics trafficStatistics) {
