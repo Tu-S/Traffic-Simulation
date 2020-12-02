@@ -57,10 +57,11 @@ public class SimulationController {
         return new Report();//builder.getReport();
     }*/
 
+    /*
     public Playback getPlayback() {
         PlayBackBuilder builder = new PlayBackBuilder();
         return builder.getPlayback();
-    }
+    }*/
 
 
 }
