@@ -23,7 +23,11 @@ public class SimulationController {
     public void run(String fileName) {
         //test for load and save
         prepareMap(fileName);
-        Car car = new Car(666, 70, new Path());
+        Path path = new Path();
+        path.addRoadToPath(roadMap.getRoadN(0));
+        path.addRoadToPath(roadMap.getRoadN(2));
+        Car car = new Car(666, 70,path);
+
         TrafficParticipant tr = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(0), 0, 0));
         roadMap.getRoadN(0).addTrafficParticipant(tr);
         System.out.println(roadMap.getStart());

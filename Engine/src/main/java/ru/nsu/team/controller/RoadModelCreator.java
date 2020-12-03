@@ -91,7 +91,7 @@ public class RoadModelCreator {
     }
 
     private void createCourses(List<RoadConfiguration> roadsConfig, List<NodeConfiguration> nodesConfig) {
-        int nodeNumber = 0;
+        int nodeNumber;
         nodeNumber = nodesConfig.size();
         for (int i = 0; i < nodeNumber; i++) {
             NodeConfiguration nodeConfig = nodesConfig.get(i);
@@ -137,7 +137,7 @@ public class RoadModelCreator {
             Iterable<LaneConfiguration> lanes = roadConfig.getLanes();
             Node fromN = nodes.get(from);
             Node toN = nodes.get(to);
-            Road road = new Road(rId, fromN, toN);
+            Road road = new Road(rId++, fromN, toN);
             for (LaneConfiguration laneConfig : lanes) {
                 Lane lane = new Lane(road);
                 road.addLane(lane);
@@ -163,7 +163,6 @@ public class RoadModelCreator {
             }
             map.addPlaceOfInterest(place);
         }
-
     }
 
     private void createTrafficParticipants(Iterable<TrafficParticipantConfiguration> trafficParticipantConfigs) {
@@ -185,8 +184,5 @@ public class RoadModelCreator {
                 road.addTrafficParticipant(trafficParticipant);
             }
         }
-
     }
-
-
 }
