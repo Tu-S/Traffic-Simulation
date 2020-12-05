@@ -188,12 +188,41 @@ public class RoadModelCreator {
 
     private final String SPEED = "speed";
     private final String MAIN_ROAD = "mainRoad";
+    private final String LEFT = "left";
+    private final String RIGHT = "right";
+    private final String FORWARD = "forward";
+    private final String FORWARD_OR_RIGHT = "forwardOrRight";
+    private final String FORWARD_OR_LEFT = "forwardOrLeft";
+    private final String LEFT_OR_RIGHT = "leftOrRight";
+
 
     private void analyzeSign(Sign sign){
         switch (sign.getType()){
             case (SPEED):
+
+
                 break;
             case (MAIN_ROAD):
+
+
+                break;
+            case (LEFT):
+
+                break;
+            case(RIGHT):
+
+                break;
+            case(FORWARD):
+
+                break;
+            case(FORWARD_OR_LEFT):
+
+                break;
+            case(FORWARD_OR_RIGHT):
+
+                break;
+            case(LEFT_OR_RIGHT):
+
                 break;
 
         }
