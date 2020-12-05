@@ -82,7 +82,6 @@ public class Road {
     }
 
     public void addLane(Lane lane) {
-
         lanes.add(lane);
     }
 

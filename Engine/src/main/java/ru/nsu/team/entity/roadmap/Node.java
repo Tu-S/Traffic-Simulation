@@ -20,6 +20,12 @@ public class Node {
         this.position = position;
     }
 
+    public Node(int id) {
+        this.courses = new ArrayList<>();
+        this.trafficLights = new ArrayList<>();
+        this.id = id;
+    }
+
     public Position getPosition() {
         return position;
     }

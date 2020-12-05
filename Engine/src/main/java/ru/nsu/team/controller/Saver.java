@@ -1,10 +1,8 @@
 package ru.nsu.team.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
-import ru.nsu.team.entity.roadmap.configuration.Serializer;
+import ru.nsu.team.entity.roadmap.configuration.serializer.Serializer;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.roadmap.configuration.TrafficParticipantConfiguration;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
@@ -26,6 +24,16 @@ public class Saver {
         }
         mapConfiguration.setTrafficParticipants(trafficParticipantConfigurationList);
         saveMapConfig(mapConfiguration, fileName);
+    }
+    //TODO
+    public void saveReporter() {
+
+
+    }
+    //TODO
+    public void savePlayback() {
+
+
     }
 
     private void saveMapConfig(RoadMapConfiguration config, String fileName) {

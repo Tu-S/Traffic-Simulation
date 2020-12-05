@@ -6,9 +6,15 @@ public class NodeConfiguration {
     private List<Integer> roadsOut;
     private List<Integer> roadsIn;
     private TrafficLightConfiguration trafficLight;
-    private List<SpawnConfiguration>  periodsOfSpawn;
+    private List<SpawnConfiguration> periodsOfSpawn;
     private int x;
     private int y;
+
+    public NodeConfiguration(List<Integer> roadsIn, List<Integer> roadsOut) {
+        this.roadsOut = roadsOut;
+        this.roadsIn = roadsIn;
+
+    }
 
     public int getX() {
         return x;
@@ -33,14 +39,16 @@ public class NodeConfiguration {
     public TrafficLightConfiguration getTrafficLightConfiguration() {
         return trafficLight;
     }
-    public Integer getInN(int n){
-        return  roadsIn.get(n);
+
+    public Integer getInN(int n) {
+        return roadsIn.get(n);
     }
-    public Integer getOutN(int n){
+
+    public Integer getOutN(int n) {
         return roadsOut.get(n);
     }
 
-    public int getCoursesNumber(){
+    public int getCoursesNumber() {
         return roadsIn.size();
     }
 }

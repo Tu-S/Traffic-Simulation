@@ -1,8 +1,5 @@
 package ru.nsu.team.entity.roadmap.configuration;
 
-import ru.nsu.team.entity.roadmap.Road;
-import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
-
 public class PositionOnRoadConfiguration {
     private int currentLane;
     private double position;

@@ -26,10 +26,18 @@ public class SimulationController {
         Path path = new Path();
         path.addRoadToPath(roadMap.getRoadN(0));
         path.addRoadToPath(roadMap.getRoadN(2));
-        Car car = new Car(666, 70,path);
+        Car car = new Car(666, 70, path);
 
         TrafficParticipant tr = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(0), 0, 0));
+        TrafficParticipant tr1 = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(4), 0, 0));
+        TrafficParticipant tr2 = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(5), 0, 0));
+
+
         roadMap.getRoadN(0).addTrafficParticipant(tr);
+        roadMap.getRoadN(4).addTrafficParticipant(tr1);
+        roadMap.getRoadN(4).addTrafficParticipant(tr1);
+        roadMap.getRoadN(5).addTrafficParticipant(tr2);
+        roadMap.getRoadN(5).addTrafficParticipant(tr2);
         System.out.println(roadMap.getStart());
         System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());
     }

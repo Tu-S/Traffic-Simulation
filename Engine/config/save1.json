@@ -39,6 +39,18 @@
           0
         ]
       },
+      "periodsOfSpawn": [
+        {
+          "start": "10:00:00",
+          "end": "12:00:00",
+          "spawnRate": 90
+        },
+        {
+          "start": "12:00:00",
+          "end": "17:00:00",
+          "spawnRate": 50
+        }
+      ],
       "x": 200,
       "y": 300
     },
@@ -143,6 +155,70 @@
         "currentLane": 0,
         "position": 0.0,
         "currentRoad": 0
+      },
+      "car": {
+        "speed": 0.0,
+        "timeLeft": 0.0,
+        "maxSpeed": 120.0,
+        "path": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "position": {
+        "currentLane": 0,
+        "position": 0.0,
+        "currentRoad": 4
+      },
+      "car": {
+        "speed": 0.0,
+        "timeLeft": 0.0,
+        "maxSpeed": 120.0,
+        "path": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "position": {
+        "currentLane": 0,
+        "position": 0.0,
+        "currentRoad": 4
+      },
+      "car": {
+        "speed": 0.0,
+        "timeLeft": 0.0,
+        "maxSpeed": 120.0,
+        "path": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "position": {
+        "currentLane": 0,
+        "position": 0.0,
+        "currentRoad": 5
+      },
+      "car": {
+        "speed": 0.0,
+        "timeLeft": 0.0,
+        "maxSpeed": 120.0,
+        "path": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "position": {
+        "currentLane": 0,
+        "position": 0.0,
+        "currentRoad": 5
       },
       "car": {
         "speed": 0.0,

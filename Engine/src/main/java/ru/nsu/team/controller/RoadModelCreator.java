@@ -13,6 +13,7 @@ import java.util.List;
 public class RoadModelCreator {
     private final List<Node> nodes = new ArrayList<>();
     private final List<Road> roads = new ArrayList<>();
+    private int rId = 0;
 
     public RoadMap createRoadMap(RoadMapConfiguration roadMapConfig) {
         RoadMap map = new RoadMap();
@@ -20,7 +21,7 @@ public class RoadModelCreator {
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
         createSpawners(roadMapConfig.getNodes(), map);
-        createCourses(roadMapConfig.getRoads(),roadMapConfig.getNodes());
+        createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
         for (Road road : roads) {
@@ -60,13 +61,17 @@ public class RoadModelCreator {
             if (nodeConfig.getPeriodsOfSpawn() != null) {
                 Node node = this.nodes.get(i);
                 List<SpawnConfiguration> configs = nodeConfig.getPeriodsOfSpawn();
-                Spawner spawner = new Spawner(node);
+                Road spawnedQueue = new Road(rId++, null, node);
+                Lane lane = new Lane(spawnedQueue);
+                spawnedQueue.addLane(lane);
+                Spawner spawner = new Spawner(node, spawnedQueue);
                 for (SpawnConfiguration config : configs) {
                     long start = getValue(config.getStart());
                     long end = getValue(config.getEnd());
                     spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
                 }
                 map.addSpawner(spawner);
+                roads.add(spawnedQueue);
             }
         }
     }
@@ -75,7 +80,6 @@ public class RoadModelCreator {
         int number = 0;
         for (NodeConfiguration nodeConfig : nodesConfig) {
             Node node = this.nodes.get(number++);
-            node.setPosition(new Position(nodeConfig.getX(), nodeConfig.getY()));
             TrafficLightConfiguration trafficLightConfig = nodeConfig.getTrafficLightConfiguration();
             if (trafficLightConfig != null) {
                 int greenDuration = trafficLightConfig.getDelayGreen();
@@ -118,19 +122,15 @@ public class RoadModelCreator {
 
 
                     }
-
                 }
                 //TODO create courses and intersections according to signs and trajectories
                 Course course = new Course(roads.get(in).getLaneN(0), roads.get(out).getLaneN(0));
                 node.addCourse(course);
             }
-
         }
     }
 
-
     private void createRoads(Iterable<RoadConfiguration> roads) {
-        int rId = 0;
         for (RoadConfiguration roadConfig : roads) {
             int from = roadConfig.getFrom();
             int to = roadConfig.getTo();
@@ -185,4 +185,23 @@ public class RoadModelCreator {
             }
         }
     }
+
+    private final String SPEED = "speed";
+    private final String MAIN_ROAD = "mainRoad";
+
+    private void analyzeSign(Sign sign){
+        switch (sign.getType()){
+            case (SPEED):
+                break;
+            case (MAIN_ROAD):
+                break;
+
+        }
+
+
+    }
+
+
+
+
 }

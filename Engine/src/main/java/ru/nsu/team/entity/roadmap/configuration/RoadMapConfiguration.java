@@ -7,8 +7,6 @@ public class RoadMapConfiguration {
     private List<RoadConfiguration> roads;
     private List<PlaceOfInterestConfiguration> pointsOfInterest;
     private List<TrafficParticipantConfiguration> trafficParticipants;
-    private List<Integer> activeRoads;
-    private List<Integer> calculatedRoads;
     private String start;
 
 
@@ -25,14 +23,6 @@ public class RoadMapConfiguration {
         this.trafficParticipants = trafficParticipants;
     }
 
-    public void setActiveRoads(List<Integer> activeRoads) {
-        this.activeRoads = activeRoads;
-    }
-
-    public void setCalculatedRoads(List<Integer> calculatedRoads) {
-        this.calculatedRoads = calculatedRoads;
-    }
-
     public List<PlaceOfInterestConfiguration> getPointsOfInterest() {
         return pointsOfInterest;
     }
@@ -47,14 +37,6 @@ public class RoadMapConfiguration {
 
     public List<RoadConfiguration> getRoads() {
         return roads;
-    }
-
-    public List<Integer> getActiveRoads() {
-        return activeRoads;
-    }
-
-    public List<Integer> getCalculatedRoads() {
-        return calculatedRoads;
     }
 
     public String getStart() {

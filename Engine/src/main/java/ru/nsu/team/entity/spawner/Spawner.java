@@ -11,12 +11,9 @@ import ru.nsu.team.pathfinder.DestinationUnreachable;
 import ru.nsu.team.pathfinder.DijkstraPathfinder;
 import ru.nsu.team.pathfinder.Pathfinder;
 
-import java.io.ObjectInputFilter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.locks.Condition;
 import java.util.stream.Collectors;
 
 public class Spawner {
@@ -26,6 +23,14 @@ public class Spawner {
     private Pathfinder pathfinder;
     private Road spawningQueue;
 
+
+    public Spawner(Node node, Road spawningQueue) {
+        this.node = node;
+        this.possibleDestinations = new ArrayList<>();
+        this.pathfinder = new DijkstraPathfinder();
+        this.configs = new ArrayList<>();
+        this.spawningQueue = spawningQueue;
+    }
 
     public Spawner(Node node) {
         this.node = node;
