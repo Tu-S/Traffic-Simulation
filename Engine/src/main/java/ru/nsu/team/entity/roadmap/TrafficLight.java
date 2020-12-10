@@ -1,50 +1,50 @@
 package ru.nsu.team.entity.roadmap;
 
-import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
-
 import java.util.ArrayList;
 
 public class TrafficLight {
-    private int greenDuration;
-    private int redDuration;
-    private Color currentColor;
-    private int currentState;
-    private ArrayList<Road> pairsOfRoads;
+    //private int greenDuration;
+    //private int redDuration;
+    //private Color currentColor;
+    //private int currentState;
+    private ArrayList<Road> roads;
+    private double delay;
 
-    public TrafficLight(int greenDuration, int redDuration) {
-        this.greenDuration = greenDuration;
-        this.redDuration = redDuration;
-        this.pairsOfRoads = new ArrayList<>(2);
+    public TrafficLight(double delay) {
+        //this.greenDuration = greenDuration;
+        //this.redDuration = redDuration;
+        this.delay = delay;
+        this.roads = new ArrayList<>(2);
 
     }
 
-    public int getGreenDuration() {
+    /*public int getGreenDuration() {
         return greenDuration;
-    }
+    }*/
 
-    public int getRedDuration() {
+    /*public int getRedDuration() {
         return redDuration;
-    }
+    }*/
 
-    public int getCurrentState() {
+    /*public int getCurrentState() {
         return currentState;
-    }
+    }*/
 
-    public Color getCurrentColor() {
+   /* public Color getCurrentColor() {
         return currentColor;
-    }
+    }*/
 
-    public void setCurrentColor(Color currentColor) {
+    /*public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
-    }
+    }*/
 
-    public int nextGreen(int time) {
+    /*public int nextGreen(int time) {
         time = 0;
         return time;
-    }
+    }*/
 
     public void addRoad(Road road) {
-        pairsOfRoads.add(road);
+        roads.add(road);
     }
 
     enum Color {GREEN, RED, YELLOW}

@@ -28,12 +28,19 @@ public class RoadModelCreator {
             map.addRoad(road);
         }
         map.setStart(getValue(roadMapConfig.getStart()));
+        long t;
+        if ((t = getValue(roadMapConfig.getCurrentTime())) < 0)
+            map.setCurrentTime(map.getStart());
+        else {
+            map.setCurrentTime(t);
+        }
+        map.setEndTime(getValue(roadMapConfig.getEnd()));
         return map;
     }
 
     private long getValue(String time) {
         Time t = Time.valueOf(time);
-        return t.getTime() / 1000;
+        return t.getTime();
     }
 
     private double calculateLength(Position start, Position end) {
@@ -80,16 +87,16 @@ public class RoadModelCreator {
         int number = 0;
         for (NodeConfiguration nodeConfig : nodesConfig) {
             Node node = this.nodes.get(number++);
-            TrafficLightConfiguration trafficLightConfig = nodeConfig.getTrafficLightConfiguration();
-            if (trafficLightConfig != null) {
-                int greenDuration = trafficLightConfig.getDelayGreen();
-                int redDuration = trafficLightConfig.getDelayGreen();
-                TrafficLight trafficLight = new TrafficLight(greenDuration, redDuration);
-                Iterable<Integer> pair = trafficLightConfig.getPairsOfRoads();
-                for (Integer integer : pair) {
-                    trafficLight.addRoad(roads.get(integer));
+            List<TrafficLightConfiguration> trafficLightConfigs = nodeConfig.getTrafficLightConfigurations();
+            if (trafficLightConfigs != null) {
+                for (TrafficLightConfiguration config : trafficLightConfigs) {
+                    TrafficLight trafficLight = new TrafficLight(config.getDelay());
+                    Iterable<Integer> pair = config.getRoads();
+                    for (Integer integer : pair) {
+                        trafficLight.addRoad(roads.get(integer));
+                    }
+                    node.addTrafficLight(trafficLight);
                 }
-                node.addTrafficLight(trafficLight);
             }
         }
     }
@@ -196,8 +203,8 @@ public class RoadModelCreator {
     private final String LEFT_OR_RIGHT = "leftOrRight";
 
 
-    private void analyzeSign(Sign sign){
-        switch (sign.getType()){
+    private void analyzeSign(Sign sign) {
+        switch (sign.getType()) {
             case (SPEED):
 
 
@@ -209,19 +216,19 @@ public class RoadModelCreator {
             case (LEFT):
 
                 break;
-            case(RIGHT):
+            case (RIGHT):
 
                 break;
-            case(FORWARD):
+            case (FORWARD):
 
                 break;
-            case(FORWARD_OR_LEFT):
+            case (FORWARD_OR_LEFT):
 
                 break;
-            case(FORWARD_OR_RIGHT):
+            case (FORWARD_OR_RIGHT):
 
                 break;
-            case(LEFT_OR_RIGHT):
+            case (LEFT_OR_RIGHT):
 
                 break;
 
@@ -229,8 +236,6 @@ public class RoadModelCreator {
 
 
     }
-
-
 
 
 }

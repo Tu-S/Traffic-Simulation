@@ -5,7 +5,7 @@ import java.util.List;
 public class NodeConfiguration {
     private List<Integer> roadsOut;
     private List<Integer> roadsIn;
-    private TrafficLightConfiguration trafficLight;
+    private List<TrafficLightConfiguration> trafficLight;
     private List<SpawnConfiguration> periodsOfSpawn;
     private int x;
     private int y;
@@ -36,7 +36,7 @@ public class NodeConfiguration {
         return roadsIn;
     }
 
-    public TrafficLightConfiguration getTrafficLightConfiguration() {
+    public List<TrafficLightConfiguration> getTrafficLightConfigurations() {
         return trafficLight;
     }
 

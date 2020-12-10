@@ -8,11 +8,28 @@ public class RoadMapConfiguration {
     private List<PlaceOfInterestConfiguration> pointsOfInterest;
     private List<TrafficParticipantConfiguration> trafficParticipants;
     private String start;
-
+    private String currentTime = "00:00:00";
+    private String end = "00:00:00";
 
     public int getNodeNumber() {
         return nodes.size();
 
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public String getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(String currentTime) {
+        this.currentTime = currentTime;
     }
 
     public int getRoadNumber() {

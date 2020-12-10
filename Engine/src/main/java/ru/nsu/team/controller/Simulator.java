@@ -153,7 +153,7 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
-        while (map.getCurrentTime() < map.getTargetTime()) {
+        while (map.getCurrentTime() < map.getEndTime()) {
             waitIfPaused();
             runCycle();
             map.setCurrentTime(map.getCurrentTime() + timeInterval);

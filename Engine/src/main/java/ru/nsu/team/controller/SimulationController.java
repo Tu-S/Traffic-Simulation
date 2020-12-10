@@ -40,6 +40,7 @@ public class SimulationController {
         roadMap.getRoadN(5).addTrafficParticipant(tr2);
         System.out.println(roadMap.getStart());
         System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());
+        //roadMap.increaseCurrentTime(1000);
     }
 
     private void prepareMap(String fileName) {

@@ -31,14 +31,15 @@
         0,
         3
       ],
-      "trafficLight": {
-        "delayGreen": 20,
-        "delayRed": 20,
-        "pairsOfRoads": [
-          1,
-          0
-        ]
-      },
+      "trafficLight": [
+        {
+          "delay": 10,
+          "roads": [
+            0,
+            1
+          ]
+        }
+      ],
       "periodsOfSpawn": [
         {
           "start": "10:00:00",
@@ -231,5 +232,7 @@
       }
     }
   ],
-  "start": "10:00:00"
+  "start": "10:00:00",
+  "currentTime": "03:00:00",
+  "end": "15:00:00"
 }

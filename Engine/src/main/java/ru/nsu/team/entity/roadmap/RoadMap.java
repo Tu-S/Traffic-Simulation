@@ -13,7 +13,7 @@ public class RoadMap {
     private ArrayList<Road> roads;
     private long start;
     private long currentTime;
-    private long targetTime;
+    private long endTime;
 
     public RoadMap() {
         this.roads = new ArrayList<>();
@@ -27,6 +27,14 @@ public class RoadMap {
 
     public void setStart(long start) {
         this.start = start;
+    }
+
+    public ArrayList<PlaceOfInterest> getPlacesOfInterest() {
+        return placesOfInterest;
+    }
+
+    public void increaseCurrentTime(long delta){
+        this.currentTime +=delta;
     }
 
     public int getRoadsNumber() {
@@ -91,11 +99,11 @@ public class RoadMap {
         this.currentTime = currentTime;
     }
 
-    public long getTargetTime() {
-        return targetTime;
+    public long getEndTime() {
+        return endTime;
     }
 
-    public void setTargetTime(long targetTime) {
-        this.targetTime = targetTime;
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 }

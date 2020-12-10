@@ -3,20 +3,14 @@ package ru.nsu.team.entity.roadmap.configuration;
 import java.util.List;
 
 public class TrafficLightConfiguration {
-    private Integer delayGreen;
-    private Integer delayRed;
-    private List<Integer> pairsOfRoads;
+    private Integer delay;
+    private List<Integer> roads;
 
-
-    public Integer getDelayGreen() {
-        return delayGreen;
+    public Integer getDelay() {
+        return delay;
     }
 
-    public Integer getDelayRed() {
-        return delayRed;
-    }
-
-    public List<Integer> getPairsOfRoads() {
-        return pairsOfRoads;
+    public List<Integer> getRoads() {
+        return roads;
     }
 }
