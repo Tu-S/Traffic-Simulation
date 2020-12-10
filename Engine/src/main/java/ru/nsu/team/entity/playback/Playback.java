@@ -1,23 +1,22 @@
 package ru.nsu.team.entity.playback;
 
-import ru.nsu.team.entity.statistics.RoadState;
-import ru.nsu.team.entity.statistics.TrafficStatistics;
-
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import ru.nsu.team.entity.statistics.CarState;
 
-public class  Playback {
-  private List<RoadState> roadStates;
+public class Playback {
+  private List<CarState> carStates;
 
-  public Playback(TrafficStatistics trafficStatistics) {
-    roadStates = new ArrayList<>(trafficStatistics.getRoadStatistics());
+  public Playback() {
+    carStates = Collections.synchronizedList(new LinkedList<>());
   }
 
-  public List<RoadState> getRoadStates() {
-    return roadStates;
+  public void addCarState(CarState carState) {
+    carStates.add(carState);
   }
 
-  public void setRoadStates(List<RoadState> roadStates) {
-    this.roadStates = roadStates;
+  public List<CarState> getCarStates() {
+    return carStates;
   }
 }

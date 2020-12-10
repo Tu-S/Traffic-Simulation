@@ -1,10 +1,13 @@
 package ru.nsu.team.entity.report;
 
-import ru.nsu.team.entity.statistics.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import ru.nsu.team.entity.statistics.HeatMap;
+import ru.nsu.team.entity.statistics.RoadCongestion;
+import ru.nsu.team.entity.statistics.RoadState;
+import ru.nsu.team.entity.statistics.Timeline;
+import ru.nsu.team.entity.statistics.TrafficStatistics;
 
 public class Report {
   private TrafficStatistics trafficStatistics;
