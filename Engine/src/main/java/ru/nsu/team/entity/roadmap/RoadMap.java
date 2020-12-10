@@ -12,6 +12,8 @@ public class RoadMap {
     private ArrayList<PlaceOfInterest> placesOfInterest;
     private ArrayList<Road> roads;
     private long start;
+    private long currentTime;
+    private long targetTime;
 
     public RoadMap() {
         this.roads = new ArrayList<>();
@@ -81,5 +83,19 @@ public class RoadMap {
     public void deserialize() {
     }
 
+    public long getCurrentTime() {
+        return currentTime;
+    }
 
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public long getTargetTime() {
+        return targetTime;
+    }
+
+    public void setTargetTime(long targetTime) {
+        this.targetTime = targetTime;
+    }
 }

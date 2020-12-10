@@ -43,4 +43,12 @@ public class Lane {
     public Road getParentRoad() {
         return parentRoad;
     }
+
+    public boolean leadsTo(Road road) {
+        return parentRoad.getExitNode().getCourses().stream().anyMatch(c -> c.getFromLane() == this && c.getToLane().parentRoad == road);
+    }
+
+    public boolean leadsTo(Lane lane) {
+        return parentRoad.getExitNode().getCourses().stream().anyMatch(c -> c.getFromLane() == this && c.getToLane() == lane);
+    }
 }

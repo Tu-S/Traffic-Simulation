@@ -43,7 +43,7 @@ public class Course {
         return intersections.stream().map(Intersection::getTimeLeft).min(Integer::compareTo).orElse(0);
     }
 
-    public void setTimeLeft(int timeLeft) {
+    public void resetTimeLeft(int timeLeft) {
         for (Intersection i : intersections) {
             i.setTimeLeft(timeLeft);
         }

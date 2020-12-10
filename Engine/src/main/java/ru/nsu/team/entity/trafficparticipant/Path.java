@@ -40,4 +40,13 @@ public class Path {
         return roads;
     }
 
+    public Road getNextRoad() {
+        return roads.get(0);
+    }
+
+    public Road popRoad() {
+        length -= getNextRoad().getLength();
+        return roads.remove(0);
+    }
+
 }
