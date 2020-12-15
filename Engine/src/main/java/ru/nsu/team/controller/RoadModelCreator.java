@@ -39,6 +39,7 @@ public class RoadModelCreator {
     }
 
     private long getValue(String time) {
+        time += ":00";
         Time t = Time.valueOf(time);
         return t.getTime();
     }

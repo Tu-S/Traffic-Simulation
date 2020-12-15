@@ -9,13 +9,13 @@
       ],
       "periodsOfSpawn": [
         {
-          "start": "10:00:00",
-          "end": "12:00:00",
+          "start": "10:00",
+          "end": "12:00",
           "spawnRate": 90
         },
         {
-          "start": "12:00:00",
-          "end": "17:00:00",
+          "start": "12:00",
+          "end": "17:00",
           "spawnRate": 50
         }
       ],
@@ -31,23 +31,24 @@
         0,
         3
       ],
-      "trafficLight": {
-        "delayGreen": 20,
-        "delayRed": 20,
-        "pairsOfRoads": [
-          1,
-          0
-        ]
-      },
+      "trafficLight": [
+        {
+          "delay": 10,
+          "roads": [
+            0,
+            1
+          ]
+        }
+      ],
       "periodsOfSpawn": [
         {
-          "start": "10:00:00",
-          "end": "12:00:00",
+          "start": "10:00",
+          "end": "12:00",
           "spawnRate": 90
         },
         {
-          "start": "12:00:00",
-          "end": "17:00:00",
+          "start": "12:00",
+          "end": "17:00",
           "spawnRate": 50
         }
       ],
@@ -311,6 +312,7 @@
       }
     }
   ],
-  "start": "10:00:00",
-  "currentTime": "03:16:40"
+  "start": "10:00",
+  "currentTime": "10:10",
+  "end": "15:00"
 }
