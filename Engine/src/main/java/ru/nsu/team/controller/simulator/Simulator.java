@@ -1,87 +1,24 @@
-package ru.nsu.team.controller;
+package ru.nsu.team.controller.simulator;
 
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
-import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 public class Simulator extends Thread {
 
-    private int timeInterval;
-    private RoadMap map;
-    private Semaphore runPermission;
+    private final int timeInterval;
+    private final RoadMap map;
+    private final Semaphore runPermission;
     private CountDownLatch latch;
     private boolean paused;
 
-    private class RoadProcessing implements Runnable {
-        Set<Node> activeNodes;
-        Road targetRoad;
-
-        public RoadProcessing(Road targetRoad, Set<Node> activeNodes) {
-            this.activeNodes = activeNodes;
-            this.targetRoad = targetRoad;
-        }
-
-        private boolean checkLaneChange(TrafficParticipant car) {
-            return !targetRoad.getLaneN(car.getPosition().getCurrentLane()).leadsTo(car.getCar().getPath().getNextRoad());
-        }
-
-        private int desiredLane(TrafficParticipant car) {
-            for (int i = 0; i < targetRoad.getLanesNumber(); i++) {
-                if (!targetRoad.getLaneN(i).leadsTo(car.getCar().getPath().getNextRoad())) {
-                    return i;
-                }
-            }
-            throw new IllegalStateException("Car is lost, no lane leads to the target");
-        }
-
-        private void processCar(TrafficParticipant car) {
-            if (checkLaneChange(car)) {
-                while (checkLaneChange(car)) {
-                    desiredLane(car);
-                }
-            }
-        }
-
-        @Override
-        public void run() {
-            List<TrafficParticipant> queue = new ArrayList<>(targetRoad.getTrafficParticipants());
-            for (TrafficParticipant car : queue) {
-                processCar(car);
-            }
-            latch.countDown();
-        }
-    }
-
-    private class NodeProcessing implements Runnable {
-        Set<Road> activeRoads;
-        Node targetNode;
-
-        public NodeProcessing(Node targetNode, Set<Road> activeRoads) {
-            this.activeRoads = activeRoads;
-            this.targetNode = targetNode;
-        }
-
-        private void processCar(TrafficParticipant car) {
-
-        }
-
-        @Override
-        public void run() {
-            List<TrafficParticipant> queue = new ArrayList<>();
-
-            for (TrafficParticipant car : queue) {
-                processCar(car);
-            }
-            latch.countDown();
-        }
-    }
 
     public Simulator(int timeInterval, RoadMap map) {
         super();
@@ -122,13 +59,13 @@ public class Simulator extends Thread {
 
     private void runCycle() {
         ExecutorService executor = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() - 1, 1));
-        Set<Road> activeRoads = Collections.synchronizedSet(new HashSet<Road>(map.getRoads()));
+        Set<Road> activeRoads = Collections.synchronizedSet(map.getRoads().parallelStream().filter(r -> r.getTrafficParticipantsNumber() > 0).collect(Collectors.toCollection(HashSet::new)));
         Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<Node>());
         while (!activeRoads.isEmpty()) {
             //TODO check for edge-cases
             latch = new CountDownLatch(activeNodes.size());
             for (Road road : activeRoads) {
-                executor.submit(new RoadProcessing(road, activeNodes));
+                executor.submit(new MinimalisticRoadProcessing(road, activeNodes, latch));
             }
             try {
                 latch.await();
@@ -139,7 +76,7 @@ public class Simulator extends Thread {
             latch = new CountDownLatch(activeNodes.size());
             activeRoads.clear();
             for (Node node : activeNodes) {
-                executor.submit(new NodeProcessing(node, activeRoads));
+                executor.submit(new MinimalisticNodeProcessing(node, activeRoads, latch));
             }
             try {
                 latch.await();
