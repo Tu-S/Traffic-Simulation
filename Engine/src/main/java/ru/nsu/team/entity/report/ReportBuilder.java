@@ -5,8 +5,8 @@ import ru.nsu.team.entity.statistics.TrafficStatistics;
 
 public class ReportBuilder {
 
-  public Report getReport(TrafficStatistics trafficStatistics) {
-    return new Report(trafficStatistics);
+  public Reporter getReport(TrafficStatistics trafficStatistics) {
+    return new Reporter(trafficStatistics);
   }
 
 }

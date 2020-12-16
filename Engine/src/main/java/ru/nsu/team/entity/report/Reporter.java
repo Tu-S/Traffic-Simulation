@@ -9,22 +9,24 @@ import ru.nsu.team.entity.statistics.RoadState;
 import ru.nsu.team.entity.statistics.Timeline;
 import ru.nsu.team.entity.statistics.TrafficStatistics;
 
-public class Report {
+public class Reporter {
   private TrafficStatistics trafficStatistics;
-  private Map<Timeline, List<RoadCongestion>> roadCongestion;
+  private Map<Timeline, List<RoadCongestion>> roadTimelineToCongestion;
 
-  public Report(TrafficStatistics trafficStatistics) {
+  public Reporter(TrafficStatistics trafficStatistics) {
     this.trafficStatistics = trafficStatistics;
-    roadCongestion = new HashMap<>();
+    roadTimelineToCongestion = new HashMap<>();
   }
 
-  public void makeReport(Timeline timeline) {
+  public List<RoadCongestion> makeReport(Timeline timeline) {
     List<RoadState> roadStates = trafficStatistics.getRoadStatistics();
     HeatMap heatMap = new HeatMap(roadStates);
-    roadCongestion.put(timeline, heatMap.calculateCongestion(timeline));
+    List<RoadCongestion> roadCongestion = heatMap.calculateCongestion(timeline);
+    roadTimelineToCongestion.put(timeline, roadCongestion);
+    return roadCongestion;
   }
 
-  public Map<Timeline, List<RoadCongestion>> getRoadCongestion() {
-    return roadCongestion;
+  public Map<Timeline, List<RoadCongestion>> getRoadTimelineToCongestion() {
+    return roadTimelineToCongestion;
   }
 }
