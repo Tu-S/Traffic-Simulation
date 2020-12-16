@@ -1,23 +1,26 @@
 package ru.nsu.team.entity.roadmap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrafficLight {
     //private int greenDuration;
     //private int redDuration;
     //private Color currentColor;
     //private int currentState;
-    private ArrayList<Road> roads;
-    private double delay;
+    private List<TrafficLightConfig> configs;
 
-    public TrafficLight(double delay) {
-        //this.greenDuration = greenDuration;
-        //this.redDuration = redDuration;
-        this.delay = delay;
-        this.roads = new ArrayList<>(2);
-
+    public TrafficLight() {
+        this.configs = new ArrayList<>();
     }
 
+    public void addConfig(TrafficLightConfig c){
+        configs.add(c);
+    }
+
+    public List<TrafficLightConfig> getConfigs() {
+        return configs;
+    }
     /*public int getGreenDuration() {
         return greenDuration;
     }*/
@@ -43,9 +46,6 @@ public class TrafficLight {
         return time;
     }*/
 
-    public void addRoad(Road road) {
-        roads.add(road);
-    }
 
     enum Color {GREEN, RED, YELLOW}
 }

@@ -90,14 +90,16 @@ public class RoadModelCreator {
             Node node = this.nodes.get(number++);
             List<TrafficLightConfiguration> trafficLightConfigs = nodeConfig.getTrafficLightConfigurations();
             if (trafficLightConfigs != null) {
+                TrafficLight trafficLight = new TrafficLight();
                 for (TrafficLightConfiguration config : trafficLightConfigs) {
-                    TrafficLight trafficLight = new TrafficLight(config.getDelay());
                     Iterable<Integer> pair = config.getRoads();
+                    TrafficLightConfig c = new TrafficLightConfig(config.getDelay());
                     for (Integer integer : pair) {
-                        trafficLight.addRoad(roads.get(integer));
+                        c.addRoad(roads.get(integer));
                     }
-                    node.addTrafficLight(trafficLight);
+                    trafficLight.addConfig(c);
                 }
+                node.addTrafficLight(trafficLight);
             }
         }
     }
