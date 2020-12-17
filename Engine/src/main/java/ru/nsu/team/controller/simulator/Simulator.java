@@ -65,7 +65,7 @@ public class Simulator extends Thread {
             //TODO check for edge-cases
             latch = new CountDownLatch(activeNodes.size());
             for (Road road : activeRoads) {
-                executor.submit(new MinimalisticRoadProcessing(road, activeNodes, latch));
+                executor.submit(new MinimalisticRoadProcessing((int) map.getCurrentTime(), road, activeNodes, latch));
             }
             try {
                 latch.await();
