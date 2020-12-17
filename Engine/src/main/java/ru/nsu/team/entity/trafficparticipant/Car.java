@@ -68,6 +68,14 @@ public class Car {
         this.maxSpeed = maxSpeed;
     }
 
+    public double getInterCarDistance() {
+        return Car.DEFAULT_DISTANCE;
+    }
+
+    public double getAcceleration() {
+        return Car.DEFAULT_ACCELERATION;
+    }
+
     public static synchronized int getNextId() {
         return nextId++;
     }

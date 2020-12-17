@@ -1,10 +1,13 @@
 package ru.nsu.team.entity.roadmap;
 
 import ru.nsu.team.entity.trafficparticipant.Position;
+import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Node {
 
@@ -12,18 +15,21 @@ public class Node {
     private ArrayList<Course> courses;
     private ArrayList<TrafficLight> trafficLights;
     private Position position;
+    private Set<TrafficParticipant> pendingCars;
 
     public Node(int id, Position position) {
         this.courses = new ArrayList<>();
         this.trafficLights = new ArrayList<>();
         this.id = id;
         this.position = position;
+        this.pendingCars = new HashSet<>();
     }
 
     public Node(int id) {
         this.courses = new ArrayList<>();
         this.trafficLights = new ArrayList<>();
         this.id = id;
+        this.pendingCars = new HashSet<>();
     }
 
     public Position getPosition() {
@@ -69,6 +75,18 @@ public class Node {
     /*public TrafficLight getTrafficLightN(int n) {
         return trafficLights.get(n);
     }*/
+
+    synchronized public void addPendingCar(TrafficParticipant car) {
+        pendingCars.add(car);
+    }
+
+    synchronized public void clearPendingCars() {
+        pendingCars.clear();
+    }
+
+    synchronized public Set<TrafficParticipant> getPendingCars() {
+        return new HashSet<>(pendingCars);
+    }
 
     @Override
     public int hashCode() {
