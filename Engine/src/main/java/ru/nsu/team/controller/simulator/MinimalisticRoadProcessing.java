@@ -67,15 +67,18 @@ public class MinimalisticRoadProcessing implements Runnable {
         if (blockingVehicles.containsKey(participant.getPosition().getCurrentLane())) {
             // Node is blocked by another car
             TrafficParticipant block = blockingVehicles.get(participant.getPosition().getCurrentLane());
-            distance = participant.getPosition().getPosition() - block.getPosition().getPosition();
+            distance = participant.getPosition().getPosition() - block.getPosition().getPosition() - block.getCar().getInterCarDistance() - car.getInterCarDistance();
             double possibleDistance = Math.min(distanceOfAcceleration * (car.getTimeLeft() - timeOfAcceleration), distance);
 
             if (car.getTimeLeft() >= timeOfAcceleration) {
                 if (distanceOfAcceleration > distance) {
-                    int timeAccelerating = (int) (distance / (acceleration * acceleration / 2 + car.getSpeed()));
+                    //TODO update time and distance
+
 
                 } else {
                     distance = Math.min(distance, possibleDistance);
+                    position.setPosition(position.getPosition() - distance);
+
                 }
             }
 
@@ -116,6 +119,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private int solveTimeSqEq(double acceleration, double speed, double distance) {
+        // TODO check solution
         double d = Math.sqrt(speed * speed + 4 * speed * distance);
         return (int) ((-speed + d) / (2 * acceleration));
     }
