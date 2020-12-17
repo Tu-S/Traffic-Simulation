@@ -4,19 +4,19 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import ru.nsu.team.entity.roadmap.Lane;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 public class HeatMap {
-  private Map<Integer, SpeedAndIteration> map;
+  private Map<Integer, CongestionAndIteration> map;
   private List<RoadCongestion> trafficCongestion;
-  private Map<Integer, Integer> roadIdMaxSpeed;
   private List<RoadState> roadStates;
 
   public HeatMap(List<RoadState> roadStates) {
     map = new HashMap<>();
     trafficCongestion = new LinkedList<>();
-    roadIdMaxSpeed = new HashMap<>();
     this.roadStates = roadStates;
   }
 
@@ -36,33 +36,43 @@ public class HeatMap {
       int roadId = roadState.getRoad().getId();
       if (roadTime >= intervalBegin && roadTime <= intervalEnd) {
         if (map.containsKey(roadId)) {
-          SpeedAndIteration speedAndIteration = map.get(roadId);
-          speedAndIteration.setSpeed(speedAndIteration.getSpeed()
-              + averageCarsSpeed(roadState.getRoad()));
-          speedAndIteration.setIteration(speedAndIteration.getIteration() + 1);
-          map.put(roadId, speedAndIteration);
+          CongestionAndIteration congestionAndIteration = map.get(roadId);
+          congestionAndIteration.setCongestion(congestionAndIteration.getCongestion()
+              + averageRoadCongestion(roadState.getRoad()));
+          congestionAndIteration.setIteration(congestionAndIteration.getIteration() + 1);
+          map.put(roadId, congestionAndIteration);
         } else {
-          SpeedAndIteration speedAndIteration = new SpeedAndIteration();
-          speedAndIteration.setSpeed(speedAndIteration.getSpeed()
-              + averageCarsSpeed(roadState.getRoad()));
-          speedAndIteration.setIteration(speedAndIteration.getIteration() + 1);
-          map.put(roadId, speedAndIteration);
-          roadIdMaxSpeed.put(roadId, (int) roadState.getRoad().getLaneN(0).getMaxSpeed());
+          CongestionAndIteration congestionAndIteration = new CongestionAndIteration();
+          congestionAndIteration.setCongestion(congestionAndIteration.getCongestion() +
+              averageRoadCongestion(roadState.getRoad()));
+          congestionAndIteration.setIteration(congestionAndIteration.getIteration() + 1);
+          map.put(roadId, congestionAndIteration);
         }
       }
     }
     map.forEach((k, v) -> trafficCongestion.add(
-        new RoadCongestion(k, ((v.getSpeed() / v.getIteration()) * 100) / roadIdMaxSpeed.get(k))));
+        new RoadCongestion(k, v.getCongestion() / v.getIteration())));
     return trafficCongestion;
   }
 
-  private int averageCarsSpeed(Road road) {
+  private int averageCarsSpeed(List<TrafficParticipant> trafficParticipants) {
     int averageSpeed = 0;
     int iteration = 0;
-    for (TrafficParticipant trafficParticipant : road.getTrafficParticipants()) {
+    for (TrafficParticipant trafficParticipant : trafficParticipants) {
       iteration++;
       averageSpeed += trafficParticipant.getCar().getSpeed();
     }
     return averageSpeed / iteration;
+  }
+
+  private int averageRoadCongestion(Road road) {
+    int fullCongestion = 0;
+    int iteration = 0;
+    for (Lane lane : road.getLanes()) {
+      int percentage = (int)((averageCarsSpeed(lane.getParticipants()) * 100) / lane.getMaxSpeed());
+      iteration++;
+      fullCongestion += percentage;
+    }
+    return fullCongestion / iteration;
   }
 }
