@@ -1,8 +1,5 @@
 package ru.nsu.team.controller;
 
-import ru.nsu.team.entity.playback.PlayBackBuilder;
-import ru.nsu.team.entity.playback.Playback;
-
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.statistics.CarState;
@@ -14,9 +11,9 @@ import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.other.KeyValuePair;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class SimulationController {
@@ -27,6 +24,29 @@ public class SimulationController {
     private List<CarState> carStates;
 
 
+    public void execute(String[] args){
+        String command = args[0];
+        switch(command){
+            case "run":
+                run(args[1]);
+                break;
+            case "pause":
+                //TODO
+                pause();
+                break;
+            case "stop":
+                stop(args[1],args[2],args[3]);
+                break;
+            case "resume":
+                resume();
+                break;
+            case "save":
+                save(args[1],args[2],args[3]);
+                break;
+        }
+
+    }
+
 
     public void pause() {
     }
@@ -35,6 +55,18 @@ public class SimulationController {
     public void run(String fileName) {
         //test for load and save
         prepareMap(fileName);
+        CarStateReader carStateReader;
+        List<CarState> statesFromFile;
+        try {
+
+            ReportReader reportReader = new ReportReader();
+            List<KeyValuePair<Timeline, List<RoadCongestion>>> report = reportReader.getReportFromJson("config/heatMap.json");
+            carStateReader = new CarStateReader();
+            statesFromFile = carStateReader.getCarStateList("config/carStates.json");
+        } catch (FileNotFoundException ex){
+            System.out.println(ex.getMessage());
+            return;
+        }
         Path path = new Path();
         path.addRoadToPath(roadMap.getRoadN(0));
         path.addRoadToPath(roadMap.getRoadN(2));
@@ -85,18 +117,31 @@ public class SimulationController {
     }
 
     private void prepareMap(String fileName) {
-        ConfigReader configReader = new ConfigReader();
-        this.mapConfig = configReader.getMapConfig(fileName);
+        RoadMapReader roadMapReader = new RoadMapReader();
+        this.mapConfig = roadMapReader.getMapConfig(fileName);
         RoadModelCreator mapCreator = new RoadModelCreator();
         assert mapConfig != null;
         this.roadMap = mapCreator.createRoadMap(mapConfig);
     }
 
-    public void stop() {
+    public void stop(String heatMapFilepath,String roadMapFilePath,String carStatesFilePath) {
+        //TODO stop calculate traffic
+        //TODO collect model data
+        // TODO make report
+        saveHeatMap(heatMapFilepath);
+        saveRoadMap(roadMapFilePath);
+        saveCarStates(carStatesFilePath);
     }
 
 
     public void resume() {
+    }
+
+
+    public void save(String roadMapFilePath,String heatMapFilePath, String playbackBuilderFilepath){
+        saveRoadMap(roadMapFilePath);
+        saveHeatMap(heatMapFilePath);
+        saveCarStates(playbackBuilderFilepath);
     }
 
     public void saveRoadMap(String fileName) {

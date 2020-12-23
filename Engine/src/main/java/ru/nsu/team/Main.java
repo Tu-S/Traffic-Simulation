@@ -5,6 +5,10 @@ import ru.nsu.team.controller.SimulationController;
 
 public class Main {
     public static void main(String[] args) {
+       /* if(args.length == 0){
+            System.out.println("No arguments exception");
+            return;
+        }*/
 
         SimulationController simulationController = new SimulationController();
         simulationController.run("config/sample_2.json");
