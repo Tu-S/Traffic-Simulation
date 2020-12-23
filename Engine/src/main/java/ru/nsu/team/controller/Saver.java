@@ -5,9 +5,12 @@ import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.serializer.Serializer;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.roadmap.configuration.TrafficParticipantConfiguration;
+import ru.nsu.team.entity.statistics.*;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.jsonparser.JsonProvider;
+import ru.nsu.team.other.KeyValuePair;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +34,27 @@ public class Saver {
         saveMapConfig(mapConfiguration, fileName);
     }
 
+    public void saveHeatMap(List<KeyValuePair<Timeline,List<RoadCongestion>>> heatMap, String fileName){
+
+        JsonProvider writer = new JsonProvider();
+        writer.writeHeatMapToJson(serializeHeatMap(heatMap), fileName);
+
+    }
+
+    private List<HeatMapConfiguration> serializeHeatMap(List<KeyValuePair<Timeline,List<RoadCongestion>>> heatMap){
+        List<HeatMapConfiguration> res = new ArrayList<>();
+        for(KeyValuePair<Timeline,List<RoadCongestion>> pair : heatMap){
+            HeatMapConfiguration heatMapConfiguration = new HeatMapConfiguration(pair.getKey().getBegin(), pair.getKey().getEnd(),pair.getValue());
+            res.add(heatMapConfiguration);
+        }
+        return res;
+    }
+
+    public void saveCarsState(List<CarState> carStates, String fileName){
+        JsonProvider writer = new JsonProvider();
+        writer.writeCarStatesToJson(carStates, fileName);
+    }
+
     private String toDate(long milliseconds){
         Date date = new Date(milliseconds);
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
@@ -52,7 +76,7 @@ public class Saver {
 
     private void saveMapConfig(RoadMapConfiguration config, String fileName) {
         JsonProvider writer = new JsonProvider();
-        writer.writeJson(config, fileName);
+        writer.writeRoadMapToJson(config, fileName);
 
     }
 

@@ -6,7 +6,6 @@ import ru.nsu.team.entity.spawner.Configuration;
 import ru.nsu.team.entity.spawner.Spawner;
 import ru.nsu.team.entity.trafficparticipant.*;
 
-import java.sql.Array;
 import java.sql.Time;
 import java.util.*;
 
@@ -21,7 +20,7 @@ public class RoadModelCreator {
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
         createSpawners(roadMapConfig.getNodes(), map);
-        TEST(roadMapConfig.getNodes(),roadMapConfig.getRoads());
+        calculateAngles(roadMapConfig.getNodes(),roadMapConfig.getRoads());
         createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
@@ -143,7 +142,7 @@ public class RoadModelCreator {
         }
     }
 
-    private void TEST(List<NodeConfiguration> nodeConfigs, List<RoadConfiguration> roadConfigs) {
+    private void calculateAngles(List<NodeConfiguration> nodeConfigs, List<RoadConfiguration> roadConfigs) {
         SortedMap<Double, Road> sm = new TreeMap<Double, Road>();
         NodeConfiguration config;
         Node node;

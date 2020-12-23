@@ -1,0 +1,66 @@
+[
+  {
+    "speed": 0,
+    "id": 666,
+    "position": 0.0,
+    "time": 11400000,
+    "currentLane": 0,
+    "currentRoad": 0,
+    "from": {
+      "x": 100,
+      "y": 200
+    },
+    "to": {
+      "x": 200,
+      "y": 300
+    }
+  },
+  {
+    "speed": 0,
+    "id": 666,
+    "position": 0.0,
+    "time": 11400000,
+    "currentLane": 0,
+    "currentRoad": 0,
+    "from": {
+      "x": 100,
+      "y": 200
+    },
+    "to": {
+      "x": 200,
+      "y": 300
+    }
+  },
+  {
+    "speed": 0,
+    "id": 666,
+    "position": 0.0,
+    "time": 11400000,
+    "currentLane": 0,
+    "currentRoad": 1,
+    "from": {
+      "x": 200,
+      "y": 300
+    },
+    "to": {
+      "x": 100,
+      "y": 200
+    }
+  },
+  {
+    "speed": 0,
+    "id": 666,
+    "position": 0.0,
+    "time": 11400000,
+    "currentLane": 0,
+    "currentRoad": 2,
+    "from": {
+      "x": 200,
+      "y": 300
+    },
+    "to": {
+      "x": 600,
+      "y": 500
+    }
+  }
+]
