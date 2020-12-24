@@ -10,6 +10,13 @@ import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.other.KeyValuePair;
+import ru.nsu.team.readers.CarStateReader;
+import ru.nsu.team.readers.ReportReader;
+import ru.nsu.team.readers.RoadMapReader;
+import ru.nsu.team.roadmodelcreator.RoadModelCreator;
+import ru.nsu.team.savers.CarStateSaver;
+import ru.nsu.team.savers.HeatMapSaver;
+import ru.nsu.team.savers.RoadMapSaver;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -145,15 +152,15 @@ public class SimulationController {
     }
 
     public void saveRoadMap(String fileName) {
-        Saver saver = new Saver();
+        RoadMapSaver saver = new RoadMapSaver();
         saver.saveMap(roadMap, mapConfig, fileName);
     }
     public void saveCarStates(String fileName){
-        Saver saver = new Saver();
+        CarStateSaver saver = new CarStateSaver();
         saver.saveCarsState(this.carStates,fileName);
     }
     public void saveHeatMap(String fileName){
-        Saver saver = new Saver();
+        HeatMapSaver saver = new HeatMapSaver();
         saver.saveHeatMap(this.heatMap,fileName);
     }
 

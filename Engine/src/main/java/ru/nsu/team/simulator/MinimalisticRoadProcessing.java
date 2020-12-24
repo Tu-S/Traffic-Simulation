@@ -1,4 +1,4 @@
-package ru.nsu.team.controller.simulator;
+package ru.nsu.team.simulator;
 
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;

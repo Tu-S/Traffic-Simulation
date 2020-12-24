@@ -1,4 +1,4 @@
-package ru.nsu.team.controller;
+package ru.nsu.team.readers;
 
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.jsonparser.JsonProvider;

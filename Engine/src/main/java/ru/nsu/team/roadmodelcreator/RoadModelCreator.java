@@ -1,4 +1,4 @@
-package ru.nsu.team.controller;
+package ru.nsu.team.roadmodelcreator;
 
 import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.roadmap.configuration.*;
