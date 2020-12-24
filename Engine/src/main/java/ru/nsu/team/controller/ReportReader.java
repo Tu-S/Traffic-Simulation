@@ -17,7 +17,7 @@ public class ReportReader {
         List<HeatMapConfiguration> configs = reader.readHeatMapConfigurationFromJson(filepath);
         List<KeyValuePair<Timeline, List<RoadCongestion>>> res = new ArrayList<>(configs.size());
         for (HeatMapConfiguration c : configs) {
-            KeyValuePair<Timeline, List<RoadCongestion>> pair = new KeyValuePair<>(new Timeline((int) c.getStart(), (int) c.getEnd()), c.getCongestionList());
+            KeyValuePair<Timeline, List<RoadCongestion>> pair = new KeyValuePair<>(new Timeline(c.getStart(),c.getEnd()), c.getCongestionList());
             res.add(pair);
         }
         return res;

@@ -20,7 +20,7 @@ public class RoadModelCreator {
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
         createSpawners(roadMapConfig.getNodes(), map);
-        calculateAngles(roadMapConfig.getNodes(),roadMapConfig.getRoads());
+        calculateAngles(roadMapConfig.getNodes(), roadMapConfig.getRoads());
         createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
@@ -201,6 +201,9 @@ public class RoadModelCreator {
             Road road = new Road(rId++, fromN, toN);
             for (LaneConfiguration laneConfig : lanes) {
                 Lane lane = new Lane(road);
+                for (SignConfiguration sing : laneConfig.getSigns()) {
+                    analyzeSign(sing,lane);
+                }
                 road.addLane(lane);
             }
             this.roads.add(road);
@@ -257,14 +260,14 @@ public class RoadModelCreator {
     private final String LEFT_OR_RIGHT = "leftOrRight";
 
 
-    private void analyzeSign(Sign sign) {
+    private void analyzeSign(SignConfiguration sign, Lane lane) {
         switch (sign.getType()) {
             case (SPEED):
-
+                lane.setMaxSpeed(sign.getLimit());
 
                 break;
             case (MAIN_ROAD):
-
+                lane.getParentRoad().setMainRoad(true);
 
                 break;
             case (LEFT):
