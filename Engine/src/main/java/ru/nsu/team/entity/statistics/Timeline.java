@@ -1,19 +1,19 @@
 package ru.nsu.team.entity.statistics;
 
 public class Timeline {
-  private int begin;
-  private int end;
+  private long begin;
+  private long end;
 
-  public Timeline(int begin, int end) {
+  public Timeline(long begin, long end) {
     this.begin = begin;
     this.end = end;
   }
 
-  public int getBegin() {
+  public long getBegin() {
     return begin;
   }
 
-  public int getEnd() {
+  public long getEnd() {
     return end;
   }
 }

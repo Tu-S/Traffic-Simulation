@@ -4,9 +4,9 @@ import ru.nsu.team.entity.roadmap.Road;
 
 public class RoadState {
   private Road road;
-  private int time;
+  private long time;
 
-  public RoadState(Road road, int time) {
+  public RoadState(Road road, long time) {
     this.road = road;
     this.time = time;
   }
@@ -15,7 +15,7 @@ public class RoadState {
     return road;
   }
 
-  public int getTime() {
+  public long getTime() {
     return time;
   }
 }

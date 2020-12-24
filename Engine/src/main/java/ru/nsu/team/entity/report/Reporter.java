@@ -16,13 +16,13 @@ public class Reporter {
     this.trafficStatistics = trafficStatistics;
   }
 
-  public List<KeyValuePair<Timeline, List<RoadCongestion>>> makeReport(Timeline timeline, int windowSize) {
+  public List<KeyValuePair<Timeline, List<RoadCongestion>>> makeReport(Timeline timeline, long windowSize) {
     List<RoadState> roadStates = trafficStatistics.getRoadStatistics();
     HeatMap heatMap = new HeatMap(roadStates);
     List<KeyValuePair<Timeline, List<RoadCongestion>>> roadTimelineToCongestion  = new LinkedList<>();
-    int timeBorder = timeline.getEnd();
-    int timeLeft = timeline.getBegin();
-    int timeRight = timeLeft + windowSize;
+    long timeBorder = timeline.getEnd();
+    long timeLeft = timeline.getBegin();
+    long timeRight = timeLeft + windowSize;
     for (; timeRight <= timeBorder; timeLeft += windowSize, timeRight += windowSize) {
       Timeline timeSplit = new Timeline(timeLeft, timeRight);
       roadTimelineToCongestion.add(new KeyValuePair<>(timeSplit, heatMap.calculateCongestion(timeSplit)));

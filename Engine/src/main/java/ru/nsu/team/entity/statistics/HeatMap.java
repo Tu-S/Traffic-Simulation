@@ -29,10 +29,10 @@ public class HeatMap {
   public List<RoadCongestion> calculateCongestion(Timeline timeline) {
     map.clear();
     trafficCongestion.clear();
-    int intervalBegin = timeline.getBegin();
-    int intervalEnd = timeline.getEnd();
+    long intervalBegin = timeline.getBegin();
+    long intervalEnd = timeline.getEnd();
     for (RoadState roadState : roadStates) {
-      int roadTime = roadState.getTime();
+      long roadTime = roadState.getTime();
       int roadId = roadState.getRoad().getId();
       if (roadTime >= intervalBegin && roadTime <= intervalEnd) {
         if (map.containsKey(roadId)) {
