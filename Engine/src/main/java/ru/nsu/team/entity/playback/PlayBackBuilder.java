@@ -10,8 +10,10 @@ public class PlayBackBuilder {
     this.playback = new Playback();
   }
 
-  public void addCarState(TrafficParticipant trafficParticipant, int time) {
-    playback.addCarState(new CarState(trafficParticipant, time));
+  public void addCarState(TrafficParticipant trafficParticipant, long time) {
+    if (trafficParticipant.getPosition().getCurrentRoad().getFrom() != null) {
+      playback.addCarState(new CarState(trafficParticipant, time));
+    }
   }
 
   public Playback getPlayback() {
