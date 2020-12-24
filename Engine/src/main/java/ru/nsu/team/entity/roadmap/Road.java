@@ -30,6 +30,10 @@ public class Road {
         this.isMainRoad = isMainRoad;
     }
 
+    public boolean isMainRoad() {
+        return isMainRoad;
+    }
+
     public int getId() {
         return id;
     }
@@ -96,4 +100,5 @@ public class Road {
     public void setLength(double length) {
         this.length = length;
     }
+
 }

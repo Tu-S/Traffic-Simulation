@@ -84,6 +84,10 @@ public class Node {
         pendingCars.clear();
     }
 
+    synchronized public void removePendingCar(TrafficParticipant car) {
+        pendingCars.remove(car);
+    }
+
     synchronized public Set<TrafficParticipant> getPendingCars() {
         return new HashSet<>(pendingCars);
     }

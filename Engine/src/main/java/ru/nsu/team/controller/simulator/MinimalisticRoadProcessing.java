@@ -83,6 +83,7 @@ public class MinimalisticRoadProcessing implements Runnable {
             if (possibleDistance >= position.getPosition()) {
                 // Car can reach the node
                 activeNodes.add(targetRoad.getExitNode());
+                targetRoad.getExitNode().addPendingCar(participant);
                 position.setPosition(0);
                 // TODO offset
                 // TODO decrease speed
