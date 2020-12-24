@@ -6,7 +6,7 @@ public class Car {
 
     static int nextId = 0;
 
-    private int speed;
+    private double speed;
     private int timeLeft;
     private double maxSpeed;
     private Path path;
@@ -44,7 +44,7 @@ public class Car {
         this.path = path;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -56,7 +56,7 @@ public class Car {
         return maxSpeed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
