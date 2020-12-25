@@ -156,14 +156,14 @@ public class SimulationController implements Runnable {
 
     public void saveCarStates(String fileName) {
         CarStateSaver saver = new CarStateSaver();
-        // saver.saveCarsState(playBackBuilder.getPlayback().getCarStates(), fileName);
-        saver.saveCarsState(this.carStates, fileName);
+        saver.saveCarsState(playbackBuilder.getPlayback().getCarStates(), fileName);
+        //saver.saveCarsState(this.carStates, fileName);
     }
 
     public void saveHeatMap(String fileName) {
         HeatMapSaver saver = new HeatMapSaver();
-        // saver.saveHeatMap(reporterBuilder.getReporter().getHeatmap(), fileName);
-        saver.saveHeatMap(this.heatMap, fileName);
+        saver.saveHeatMap(reporterBuilder.getReporter().getHeatmap(), fileName);
+        //saver.saveHeatMap(this.heatMap, fileName);
     }
 
     @Override

@@ -1,9 +1,7 @@
 package ru.nsu.team.entity.roadmap;
 
-import ru.nsu.team.entity.trafficparticipant.Position;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;

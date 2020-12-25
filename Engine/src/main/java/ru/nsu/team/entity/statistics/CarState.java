@@ -2,7 +2,7 @@ package ru.nsu.team.entity.statistics;
 
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Car;
-import ru.nsu.team.entity.trafficparticipant.Position;
+import ru.nsu.team.entity.roadmap.Position;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
