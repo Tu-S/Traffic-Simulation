@@ -19,4 +19,8 @@ public class Playback {
   public List<CarState> getCarStates() {
     return carStates;
   }
+
+  public void setCarStates(List<CarState> carStates) {
+    this.carStates = carStates;
+  }
 }

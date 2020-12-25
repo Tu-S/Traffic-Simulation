@@ -11,12 +11,14 @@ import ru.nsu.team.other.KeyValuePair;
 
 public class Reporter {
   private TrafficStatistics trafficStatistics;
+  private List<KeyValuePair<Timeline, List<RoadCongestion>>> heatmap;
 
   public Reporter(TrafficStatistics trafficStatistics) {
     this.trafficStatistics = trafficStatistics;
+    heatmap = new LinkedList<>();
   }
 
-  public List<KeyValuePair<Timeline, List<RoadCongestion>>> makeReport(Timeline timeline, long windowSize) {
+  public void makeReport(Timeline timeline, long windowSize) {
     List<RoadState> roadStates = trafficStatistics.getRoadStatistics();
     HeatMap heatMap = new HeatMap(roadStates);
     List<KeyValuePair<Timeline, List<RoadCongestion>>> roadTimelineToCongestion  = new LinkedList<>();
@@ -33,6 +35,22 @@ public class Reporter {
     }
     List<RoadCongestion> roadCongestion = heatMap.calculateCongestion(timeline);
     roadTimelineToCongestion.add(new KeyValuePair<>(timeline, roadCongestion));
-    return roadTimelineToCongestion;
+    heatmap = roadTimelineToCongestion;
+  }
+
+  public TrafficStatistics getTrafficStatistics() {
+    return trafficStatistics;
+  }
+
+  public void setTrafficStatistics(TrafficStatistics trafficStatistics) {
+    this.trafficStatistics = trafficStatistics;
+  }
+
+  public List<KeyValuePair<Timeline, List<RoadCongestion>>> getHeatmap() {
+    return heatmap;
+  }
+
+  public void setHeatmap(List<KeyValuePair<Timeline, List<RoadCongestion>>> heatmap) {
+    this.heatmap = heatmap;
   }
 }

@@ -3,10 +3,10 @@ package ru.nsu.team.entity.playback;
 import ru.nsu.team.entity.statistics.CarState;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
-public class PlayBackBuilder {
+public class PlaybackBuilder {
   private Playback playback;
 
-  public PlayBackBuilder() {
+  public PlaybackBuilder() {
     this.playback = new Playback();
   }
 

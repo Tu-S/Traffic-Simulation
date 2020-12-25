@@ -1,5 +1,7 @@
 package ru.nsu.team.controller;
 
+import ru.nsu.team.entity.playback.PlaybackBuilder;
+import ru.nsu.team.entity.report.ReporterBuilder;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.statistics.CarState;
@@ -10,15 +12,12 @@ import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.other.KeyValuePair;
-import ru.nsu.team.readers.CarStateReader;
-import ru.nsu.team.readers.ReportReader;
 import ru.nsu.team.readers.RoadMapReader;
 import ru.nsu.team.roadmodelcreator.RoadModelCreator;
 import ru.nsu.team.savers.CarStateSaver;
 import ru.nsu.team.savers.HeatMapSaver;
 import ru.nsu.team.savers.RoadMapSaver;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +28,8 @@ public class SimulationController implements Runnable {
     private RoadMap roadMap;
     private List<KeyValuePair<Timeline, List<RoadCongestion>>> heatMap;
     private List<CarState> carStates;
+    private PlaybackBuilder playbackBuilder;
+    private ReporterBuilder reporterBuilder;
     private String mapSavePath;
     private String heatMapSavePath;
     private String carStateSavaPath;
@@ -46,6 +47,9 @@ public class SimulationController implements Runnable {
 
 
     public void start() {
+        // pass builders to workers
+        playbackBuilder = new PlaybackBuilder();
+        reporterBuilder = new ReporterBuilder();
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Thread.sleep(2000);
@@ -152,11 +156,13 @@ public class SimulationController implements Runnable {
 
     public void saveCarStates(String fileName) {
         CarStateSaver saver = new CarStateSaver();
+        // saver.saveCarsState(playBackBuilder.getPlayback().getCarStates(), fileName);
         saver.saveCarsState(this.carStates, fileName);
     }
 
     public void saveHeatMap(String fileName) {
         HeatMapSaver saver = new HeatMapSaver();
+        // saver.saveHeatMap(reporterBuilder.getReporter().getHeatmap(), fileName);
         saver.saveHeatMap(this.heatMap, fileName);
     }
 
