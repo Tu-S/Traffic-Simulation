@@ -2,6 +2,8 @@ package ru.nsu.team;
 
 import ru.nsu.team.controller.SimulationController;
 
+import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -10,13 +12,15 @@ public class Main {
             return;
         }*/
 
-        SimulationController simulationController = new SimulationController();
+        /*SimulationController simulationController = new SimulationController();
         simulationController.run("config/sample_2.json");
         simulationController.saveRoadMap("config/save1.json");
         simulationController.run("config/save1.json");
         simulationController.saveRoadMap("config/save2.json");
         simulationController.saveCarStates("config/carStates.json");
-        simulationController.saveHeatMap("config/heatMap.json");
+        simulationController.saveHeatMap("config/heatMap.json");*/
+        Master master = new Master();
+        master.execute(args);
 
     }
 }

@@ -23,57 +23,62 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SimulationController {
+public class SimulationController implements Runnable {
 
     private RoadMapConfiguration mapConfig;
     private RoadMap roadMap;
     private List<KeyValuePair<Timeline, List<RoadCongestion>>> heatMap;
     private List<CarState> carStates;
+    private String mapSavePath;
+    private String heatMapSavePath;
+    private String carStateSavaPath;
+    private String mapLoadPath;
 
 
-    public void execute(String[] args){
-        String command = args[0];
-        switch(command){
-            case "run":
-                run(args[1]);
-                break;
-            case "pause":
-                //TODO
-                pause();
-                break;
-            case "stop":
-                stop(args[1],args[2],args[3]);
-                break;
-            case "resume":
-                resume();
-                break;
-            case "save":
-                save(args[1],args[2],args[3]);
-                break;
-        }
-
+    public SimulationController(String mapLoadPath, String heatMapSavePath, String carStateSavaPath) {
+        this.mapLoadPath = mapLoadPath;
+        this.heatMapSavePath = heatMapSavePath;
+        this.carStateSavaPath = carStateSavaPath;
     }
-
 
     public void pause() {
     }
 
 
-    public void run(String fileName) {
+    public void start() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                stop();
+                break;
+            }
+        }
+    }
+
+    private void prepareMap(String fileName) {
+        RoadMapReader roadMapReader = new RoadMapReader();
+        this.mapConfig = roadMapReader.getMapConfig(fileName);
+        RoadModelCreator mapCreator = new RoadModelCreator();
+        assert mapConfig != null;
+        this.roadMap = mapCreator.createRoadMap(mapConfig);
+    }
+
+    public void stop() {
         //test for load and save
-        prepareMap(fileName);
-        CarStateReader carStateReader;
-        List<CarState> statesFromFile;
-        try {
+        prepareMap(this.mapLoadPath);
+        //CarStateReader carStateReader;
+        //List<CarState> statesFromFile;
+        /*try {
 
             ReportReader reportReader = new ReportReader();
             List<KeyValuePair<Timeline, List<RoadCongestion>>> report = reportReader.getReportFromJson("config/heatMap.json");
             carStateReader = new CarStateReader();
             statesFromFile = carStateReader.getCarStateList("config/carStates.json");
-        } catch (FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             System.out.println(ex.getMessage());
             return;
-        }
+        }*/
         Path path = new Path();
         path.addRoadToPath(roadMap.getRoadN(0));
         path.addRoadToPath(roadMap.getRoadN(2));
@@ -93,7 +98,7 @@ public class SimulationController {
         TrafficParticipant trFake2 = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(6), 0, 0));
         //trs.add(trFake2);
 
-        for(TrafficParticipant p:trs){
+        for (TrafficParticipant p : trs) {
             roadMap.getRoadN(p.getPosition().getCurrentRoad().getId()).addTrafficParticipant(p);
         }
 
@@ -106,38 +111,27 @@ public class SimulationController {
         System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());
         roadMap.increaseCurrentTime(300000);
         List<CarState> states = new ArrayList<>();
-        for(TrafficParticipant p:trs){
+        for (TrafficParticipant p : trs) {
             states.add(new CarState(p, (int) roadMap.getCurrentTime()));
         }
         this.carStates = states;
         List<KeyValuePair<Timeline, List<RoadCongestion>>> heatMap = new ArrayList<>();
-        for(int i = 0 ; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             List<RoadCongestion> congestions = new ArrayList<>();
-            Timeline timeline = new Timeline((int)roadMap.getCurrentTime(),(int)roadMap.getEndTime());
-            for(int j = 0; j < 3;j++){
-                congestions.add(new RoadCongestion(j, (i+1)*10));
+            Timeline timeline = new Timeline((int) roadMap.getCurrentTime(), (int) roadMap.getEndTime());
+            for (int j = 0; j < 3; j++) {
+                congestions.add(new RoadCongestion(j, (i + 1) * 10));
             }
-            KeyValuePair<Timeline,List<RoadCongestion>> pair = new KeyValuePair<>(timeline,congestions);
+            KeyValuePair<Timeline, List<RoadCongestion>> pair = new KeyValuePair<>(timeline, congestions);
             heatMap.add(pair);
         }
         this.heatMap = heatMap;
-    }
-
-    private void prepareMap(String fileName) {
-        RoadMapReader roadMapReader = new RoadMapReader();
-        this.mapConfig = roadMapReader.getMapConfig(fileName);
-        RoadModelCreator mapCreator = new RoadModelCreator();
-        assert mapConfig != null;
-        this.roadMap = mapCreator.createRoadMap(mapConfig);
-    }
-
-    public void stop(String heatMapFilepath,String roadMapFilePath,String carStatesFilePath) {
         //TODO stop calculate traffic
         //TODO collect model data
         // TODO make report
-        saveHeatMap(heatMapFilepath);
-        saveRoadMap(roadMapFilePath);
-        saveCarStates(carStatesFilePath);
+        saveHeatMap(this.heatMapSavePath);
+        saveRoadMap(this.mapLoadPath);
+        saveCarStates(this.carStateSavaPath);
     }
 
 
@@ -145,7 +139,7 @@ public class SimulationController {
     }
 
 
-    public void save(String roadMapFilePath,String heatMapFilePath, String playbackBuilderFilepath){
+    public void save(String roadMapFilePath, String heatMapFilePath, String playbackBuilderFilepath) {
         saveRoadMap(roadMapFilePath);
         saveHeatMap(heatMapFilePath);
         saveCarStates(playbackBuilderFilepath);
@@ -155,29 +149,24 @@ public class SimulationController {
         RoadMapSaver saver = new RoadMapSaver();
         saver.saveMap(roadMap, mapConfig, fileName);
     }
-    public void saveCarStates(String fileName){
+
+    public void saveCarStates(String fileName) {
         CarStateSaver saver = new CarStateSaver();
-        saver.saveCarsState(this.carStates,fileName);
+        saver.saveCarsState(this.carStates, fileName);
     }
-    public void saveHeatMap(String fileName){
+
+    public void saveHeatMap(String fileName) {
         HeatMapSaver saver = new HeatMapSaver();
-        saver.saveHeatMap(this.heatMap,fileName);
+        saver.saveHeatMap(this.heatMap, fileName);
+    }
+
+    @Override
+    public void run() {
+        start();
     }
 
 
 
-
-    /*public Report getReport() {
-        ReportBuilder builder = new ReportBuilder();
-
-        return new Report();//builder.getReport();
-    }*/
-
-    /*
-    public Playback getPlayback() {
-        PlayBackBuilder builder = new PlayBackBuilder();
-        return builder.getPlayback();
-    }*/
 
 
 }
