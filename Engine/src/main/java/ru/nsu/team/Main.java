@@ -1,8 +1,5 @@
 package ru.nsu.team;
 
-import ru.nsu.team.controller.SimulationController;
-
-import java.util.Scanner;
 
 
 public class Main {

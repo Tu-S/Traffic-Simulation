@@ -222,6 +222,8 @@
         0,
         3
       ],
+      "x": 209.0,
+      "y": 41.0,
       "width": 76.0,
       "height": 215.0,
       "weight": 1.0
@@ -264,199 +266,7 @@
       "position": {
         "currentLane": 0,
         "position": 0.0,
-        "currentRoad": 0
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 0
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 0
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 0
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 0
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 0
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
         "currentRoad": 1
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 1
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 1
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 1
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 2
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 2
-      },
-      "car": {
-        "speed": 0.0,
-        "timeLeft": 0.0,
-        "maxSpeed": 120.0,
-        "path": [
-          0,
-          2
-        ]
-      }
-    },
-    {
-      "position": {
-        "currentLane": 0,
-        "position": 0.0,
-        "currentRoad": 2
       },
       "car": {
         "speed": 0.0,
@@ -486,6 +296,6 @@
     }
   ],
   "start": "10:00",
-  "currentTime": "10:05",
+  "currentTime": "10:10",
   "end": "15:00"
 }
