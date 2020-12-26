@@ -50,6 +50,8 @@ public class SimulationController implements Runnable {
         // pass builders to workers
         playbackBuilder = new PlaybackBuilder();
         reporterBuilder = new ReporterBuilder();
+        prepareMap(this.mapLoadPath);
+        //TODO some logic to wait for the simulator
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Thread.sleep(2000);
@@ -70,20 +72,8 @@ public class SimulationController implements Runnable {
 
     public void stop() {
         //test for load and save
-        prepareMap(this.mapLoadPath);
-        //CarStateReader carStateReader;
-        //List<CarState> statesFromFile;
-        /*try {
 
-            ReportReader reportReader = new ReportReader();
-            List<KeyValuePair<Timeline, List<RoadCongestion>>> report = reportReader.getReportFromJson("config/heatMap.json");
-            carStateReader = new CarStateReader();
-            statesFromFile = carStateReader.getCarStateList("config/carStates.json");
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex.getMessage());
-            return;
-        }*/
-        Path path = new Path();
+        /*Path path = new Path();
         path.addRoadToPath(roadMap.getRoadN(0));
         path.addRoadToPath(roadMap.getRoadN(2));
         Car car = new Car(666, 70, path);
@@ -100,18 +90,18 @@ public class SimulationController implements Runnable {
         TrafficParticipant trFake1 = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(5), 0, 0));
         //trs.add(trFake1);
         TrafficParticipant trFake2 = new TrafficParticipant(car, new PositionOnRoad(roadMap.getRoadN(6), 0, 0));
-        //trs.add(trFake2);
+        //trs.add(trFake2);*/
 
-        for (TrafficParticipant p : trs) {
+        /*for (TrafficParticipant p : trs) {
             roadMap.getRoadN(p.getPosition().getCurrentRoad().getId()).addTrafficParticipant(p);
-        }
+        }/*
 
         /*roadMap.getRoadN(0).addTrafficParticipant(tr0);
         roadMap.getRoadN(4).addTrafficParticipant(trFake1);
         roadMap.getRoadN(4).addTrafficParticipant(trFake1);
         roadMap.getRoadN(5).addTrafficParticipant(trFake2);
         roadMap.getRoadN(5).addTrafficParticipant(trFake2);*/
-        System.out.println(roadMap.getStart());
+        /*System.out.println(roadMap.getStart());
         System.out.println(roadMap.getSpawnerN(0).getConfigN(0).getStart());
         roadMap.increaseCurrentTime(300000);
         List<CarState> states = new ArrayList<>();
@@ -129,7 +119,7 @@ public class SimulationController implements Runnable {
             KeyValuePair<Timeline, List<RoadCongestion>> pair = new KeyValuePair<>(timeline, congestions);
             heatMap.add(pair);
         }
-        this.heatMap = heatMap;
+        this.heatMap = heatMap;*/
         //TODO stop calculate traffic
         //TODO collect model data
         // TODO make report
@@ -140,13 +130,6 @@ public class SimulationController implements Runnable {
 
 
     public void resume() {
-    }
-
-
-    public void save(String roadMapFilePath, String heatMapFilePath, String playbackBuilderFilepath) {
-        saveRoadMap(roadMapFilePath);
-        saveHeatMap(heatMapFilePath);
-        saveCarStates(playbackBuilderFilepath);
     }
 
     public void saveRoadMap(String fileName) {
