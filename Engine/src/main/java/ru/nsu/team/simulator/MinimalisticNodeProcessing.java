@@ -1,9 +1,6 @@
 package ru.nsu.team.simulator;
 
-import ru.nsu.team.entity.roadmap.Course;
-import ru.nsu.team.entity.roadmap.Lane;
-import ru.nsu.team.entity.roadmap.Node;
-import ru.nsu.team.entity.roadmap.Road;
+import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
@@ -44,7 +41,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         double dist = course.getLength();
         System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (timeLeft >= dist / (car.getSpeed() + 1) && course.getTimeLeft() >= dist / (car.getSpeed() + 1) && !targetBlocked(participant, course.getToLane())) {
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 1)+1));
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 1) + 1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
             course.decreaseTime((int) (dist / (car.getSpeed() + 1)));
             position.setCurrentRoad(course.getToLane().getParentRoad());

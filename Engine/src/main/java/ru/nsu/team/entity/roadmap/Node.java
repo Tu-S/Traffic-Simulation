@@ -17,7 +17,7 @@ public class Node {
     private Position position;
     private Set<TrafficParticipant> pendingCars;
     //private List<Road> roads;
-    private Map<Road,List<Road>> fromRoadToRoads = new HashMap<Road,List<Road>>();
+    private Map<Road, List<Road>> fromRoadToRoads = new HashMap<Road, List<Road>>();
 
     public Node(int id, Position position) {
         this.courses = new ArrayList<>();
@@ -29,8 +29,8 @@ public class Node {
     }
 
 
-    public void addFromTo(Road from,List<Road> to){
-        fromRoadToRoads.put(from,to);
+    public void addFromTo(Road from, List<Road> to) {
+        fromRoadToRoads.put(from, to);
     }
 
     public Node(int id) {
@@ -70,6 +70,10 @@ public class Node {
 
     public int getTrafficLightsNumber() {
         return trafficLights.size();
+    }
+
+    public List<TrafficLight> getTrafficLights() {
+        return trafficLights;
     }
 
     /*public Course getCourseN(int n) {

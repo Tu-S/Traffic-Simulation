@@ -1,4 +1,4 @@
-package ru.nsu.team.controller.simulator;
+package ru.nsu.team.simulator;
 
 import org.junit.Test;
 import ru.nsu.team.entity.roadmap.*;
@@ -31,7 +31,7 @@ public class SimulatorTest {
         nodes.get(0).addCourse(course);
         Spawner spawner = new Spawner(nodes.get(0), queue);
         spawner.addPossibleDestination(poi);
-        spawner.addConfiguration(new Configuration(0, 30, 4));
+        spawner.addConfiguration(new Configuration(0, 150, 20));
         rm.addSpawner(spawner);
 
         return rm;
