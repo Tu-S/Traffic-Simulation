@@ -28,7 +28,8 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private boolean checkLaneChange(TrafficParticipant car) {
-        return !targetRoad.getLaneN(car.getPosition().getCurrentLane()).leadsTo(car.getCar().getPath().getNextRoad());
+        boolean res = !targetRoad.getLaneN(car.getPosition().getCurrentLane()).leadsTo(car.getCar().getPath().getNextRoad());
+        return res;
     }
 
     private int desiredLane(TrafficParticipant car) { // TODO: Change data structures for better performance
@@ -41,6 +42,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void processCar(TrafficParticipant car) {
+        System.out.println(car);
         int timePassed = 0;
         if (checkLaneChange(car)) {
             int targetLane = desiredLane(car);
@@ -149,11 +151,17 @@ public class MinimalisticRoadProcessing implements Runnable {
 
     @Override
     public void run() {
-        List<TrafficParticipant> queue = new ArrayList<>(targetRoad.getTrafficParticipants());
-        for (TrafficParticipant car : queue) {
-            processCar(car);
+        try {
+            System.out.println("Running RP");
+            List<TrafficParticipant> queue = new ArrayList<>(targetRoad.getTrafficParticipants());
+            for (TrafficParticipant car : queue) {
+                processCar(car);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } finally {
+            latch.countDown();
         }
-        latch.countDown();
     }
 }
 

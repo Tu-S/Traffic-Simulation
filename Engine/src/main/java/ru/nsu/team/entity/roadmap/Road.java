@@ -26,6 +26,17 @@ public class Road {
         this.id = id;
     }
 
+    public Road(int id, Node from, Node to, int lanes, double maxSpeed) {
+        this.from = from;
+        this.to = to;
+        this.lanes = new ArrayList<>();
+        this.trafficParticipants = new ArrayList<>();
+        this.id = id;
+        for (int i = 0; i < lanes; i++) {
+            addLane(maxSpeed);
+        }
+    }
+
     public void setMainRoad(boolean isMainRoad) {
         this.isMainRoad = isMainRoad;
     }
@@ -89,6 +100,10 @@ public class Road {
         lanes.add(lane);
     }
 
+    public void addLane(double maxSpeed) {
+        lanes.add(new Lane(maxSpeed, this));
+    }
+
     public Node getFrom() {
         return from;
     }
@@ -101,4 +116,8 @@ public class Road {
         this.length = length;
     }
 
+    @Override
+    public String toString() {
+        return "Road " + id;
+    }
 }

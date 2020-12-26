@@ -58,12 +58,12 @@ public class Simulator extends Thread {
     }
 
     private void runCycle() {
-        ExecutorService executor = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() - 1, 1));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         Set<Road> activeRoads = Collections.synchronizedSet(map.getRoads().parallelStream().filter(r -> r.getTrafficParticipantsNumber() > 0).collect(Collectors.toCollection(HashSet::new)));
         Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<Node>());
         while (!activeRoads.isEmpty()) {
             //TODO check for edge-cases
-            latch = new CountDownLatch(activeNodes.size());
+            latch = new CountDownLatch(activeRoads.size());
             for (Road road : activeRoads) {
                 executor.submit(new MinimalisticRoadProcessing((int) map.getCurrentTime(), road, activeNodes, latch));
             }
@@ -84,14 +84,27 @@ public class Simulator extends Thread {
                 e.printStackTrace();
                 return;
             }
-
+            activeNodes.clear();
         }
+    }
+
+    private void resetTime(RoadMap rm) {
+        rm.getRoads().forEach(r -> r.getTrafficParticipants().forEach(p -> p.getCar().setTimeLeft(timeInterval)));
+        //TODO traffic lights
+    }
+
+
+    private void spawnCars(RoadMap rm) {
+        rm.getSpawners().forEach(s -> s.spawn((int) rm.getCurrentTime(), timeInterval));
     }
 
     @Override
     public void run() {
         while (map.getCurrentTime() < map.getEndTime()) {
+            System.out.println(map.getCurrentTime());
             waitIfPaused();
+            resetTime(map);
+            spawnCars(map);
             runCycle();
             map.setCurrentTime(map.getCurrentTime() + timeInterval);
         }

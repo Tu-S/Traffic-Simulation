@@ -27,6 +27,8 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processCar(TrafficParticipant participant) {
         //TODO add traffic lights
+        System.out.println("Node "+targetNode.getId());
+        System.out.println(participant);
         Car car = participant.getCar();
         PositionOnRoad position = participant.getPosition();
         Road road = participant.getPosition().getCurrentRoad();

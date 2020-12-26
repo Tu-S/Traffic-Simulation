@@ -65,13 +65,15 @@ public class Spawner {
     }
 
     private Configuration getCurrentConfiguration(int time) {
-        return configs.stream().filter(c -> c.getStart() >= time && c.getEnd() < time).findFirst().orElse(Configuration.NO_SPAWN);
+        return configs.stream().filter(c -> c.getStart() <= time && c.getEnd() > time).findFirst().orElse(Configuration.NO_SPAWN);
     }
 
     public void spawn(int time, int duration) {
         Random rng = new Random();
         Configuration config = getCurrentConfiguration(time);
-        int toSpawn = (rng.nextInt(2 * (int) config.getSpawnRate()) * duration) / 60;
+        int bound = 2 * (int) config.getSpawnRate();
+        int toSpawn = (rng.nextInt(bound) * duration) / 60;
+        System.out.println("Will spawn "+toSpawn);
         List<TrafficParticipant> queuedCars = spawningQueue.getLaneN(0).getParticipants();
         double spawnPosition;
         if (queuedCars.isEmpty()) {

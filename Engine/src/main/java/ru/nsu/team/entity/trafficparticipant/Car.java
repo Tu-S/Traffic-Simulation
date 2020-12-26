@@ -83,4 +83,9 @@ public class Car {
     public static synchronized void setNextId(int id) {
         nextId = id;
     }
+
+    @Override
+    public String toString() {
+        return "Car " + id;
+    }
 }

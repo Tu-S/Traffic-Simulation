@@ -7,7 +7,7 @@ import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 public class CarState {
-  private int speed;
+  private double speed;
   private final int id;
   private double position;
   private int time;
@@ -30,7 +30,7 @@ public class CarState {
     to = road.getTo().getPosition();
   }
 
-  public int getSpeed() {
+  public double getSpeed() {
     return speed;
   }
 

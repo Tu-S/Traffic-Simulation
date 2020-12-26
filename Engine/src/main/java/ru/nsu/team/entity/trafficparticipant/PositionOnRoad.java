@@ -36,4 +36,9 @@ public class PositionOnRoad {
     public void setCurrentRoad(Road road) {
         this.currentRoad = road;
     }
+
+    @Override
+    public String toString() {
+        return currentRoad.toString() + ":" + currentLane + ":" + position;
+    }
 }
