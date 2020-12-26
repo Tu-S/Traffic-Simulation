@@ -44,7 +44,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         double dist = course.getLength();
         System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (timeLeft >= dist / (car.getSpeed() + 1) && course.getTimeLeft() >= dist / (car.getSpeed() + 1) && !targetBlocked(participant, course.getToLane())) {
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 1)));
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 1)+1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
             course.decreaseTime((int) (dist / (car.getSpeed() + 1)));
             position.setCurrentRoad(course.getToLane().getParentRoad());
