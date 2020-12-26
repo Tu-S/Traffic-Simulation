@@ -13,6 +13,7 @@ public class RoadModelCreator {
     private final List<Node> nodes = new ArrayList<>();
     private final List<Road> roads = new ArrayList<>();
     private int rId = 0;
+    private final double mPerSec = 1000d/3600d;
 
     public RoadMap createRoadMap(RoadMapConfiguration roadMapConfig) {
         RoadMap map = new RoadMap();
@@ -41,14 +42,14 @@ public class RoadModelCreator {
     private long getValue(String time) {
         time += ":00";
         Time t = Time.valueOf(time);
-        return t.getTime();
+        return t.getTime()/1000;
     }
 
     private double calculateLength(Position start, Position end) {
         double first = Math.pow(end.getX() - start.getX(), 2);
         double second = Math.pow(end.getY() - start.getY(), 2);
         double third = first + second;
-        return Math.sqrt(third);
+        return Math.sqrt(third)/3;
     }
 
     private void createNodes(List<NodeConfiguration> nodesConfig) {
@@ -250,8 +251,8 @@ public class RoadModelCreator {
         }
     }
 
-    private final String SPEED = "speed";
-    private final String MAIN_ROAD = "mainRoad";
+    private final String SPEED = "SPEED_LIMIT";
+    private final String MAIN_ROAD = "MAIN_ROAD";
     private final String LEFT = "left";
     private final String RIGHT = "right";
     private final String FORWARD = "forward";
@@ -263,7 +264,7 @@ public class RoadModelCreator {
     private void analyzeSign(SignConfiguration sign, Lane lane) {
         switch (sign.getType()) {
             case (SPEED):
-                lane.setMaxSpeed(sign.getLimit());
+                lane.setMaxSpeed(sign.getLimit()*mPerSec);
 
                 break;
             case (MAIN_ROAD):
