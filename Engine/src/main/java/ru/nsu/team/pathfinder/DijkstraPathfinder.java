@@ -132,6 +132,6 @@ public class DijkstraPathfinder implements Pathfinder {
         }
         possibleDestinations.addAll(destination.getNodes());
         init(start, possibleDestinations);
-        return getBestCachedResult(start, destination);
+        return getBestCachedResult(start, destination).copy();
     }
 }

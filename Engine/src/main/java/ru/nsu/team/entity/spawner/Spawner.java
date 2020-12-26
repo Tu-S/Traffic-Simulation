@@ -72,12 +72,15 @@ public class Spawner {
         Random rng = new Random();
         Configuration config = getCurrentConfiguration(time);
         int bound = 2 * (int) config.getSpawnRate();
+        if (bound <= 0) {
+            return;
+        }
         int toSpawn = (rng.nextInt(bound) * duration) / 60;
-        System.out.println("Will spawn "+toSpawn);
+        System.out.println("Will spawn " + toSpawn);
         List<TrafficParticipant> queuedCars = spawningQueue.getLaneN(0).getParticipants();
         double spawnPosition;
         if (queuedCars.isEmpty()) {
-            spawnPosition = 0;
+            spawnPosition = Car.DEFAULT_DISTANCE * 5;
         } else {
             spawnPosition = queuedCars.get(queuedCars.size() - 1).getPosition().getPosition() + Car.DEFAULT_DISTANCE;
         }

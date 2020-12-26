@@ -49,15 +49,16 @@ public class Road {
         return id;
     }
 
-    public void deleteTrafficParticipant(TrafficParticipant car) {
-
+    synchronized public void deleteTrafficParticipant(TrafficParticipant car) {
+        lanes.get(car.getPosition().getCurrentLane()).removeTrafficParticipant(car);
+        trafficParticipants.remove(car);
     }
 
     public List<Lane> getLanes() {
         return lanes;
     }
 
-    public void addTrafficParticipant(TrafficParticipant car) {
+    synchronized public void addTrafficParticipant(TrafficParticipant car) {
         Lane lane = lanes.get(car.getPosition().getCurrentLane());
         lane.addTrafficParticipant(car);
         trafficParticipants.add(car);

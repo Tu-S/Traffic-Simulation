@@ -27,9 +27,20 @@ public class MinimalisticRoadProcessing implements Runnable {
         this.blockingVehicles = new HashMap<>();
     }
 
+    private TrafficParticipant getBlocking(int lane) {
+        return blockingVehicles.get(lane);
+    }
+
+    private void setBlocking(TrafficParticipant tp) {
+        blockingVehicles.put(tp.getPosition().getCurrentLane(), tp);
+    }
+
+
     private boolean checkLaneChange(TrafficParticipant car) {
-        boolean res = !targetRoad.getLaneN(car.getPosition().getCurrentLane()).leadsTo(car.getCar().getPath().getNextRoad());
-        return res;
+        if (car.getCar().getPath().getRoads().isEmpty()) {
+            return false;
+        }
+        return !targetRoad.getLaneN(car.getPosition().getCurrentLane()).leadsTo(car.getCar().getPath().getNextRoad());
     }
 
     private int desiredLane(TrafficParticipant car) { // TODO: Change data structures for better performance
@@ -43,9 +54,10 @@ public class MinimalisticRoadProcessing implements Runnable {
 
     private void processCar(TrafficParticipant car) {
         System.out.println(car);
-        int timePassed = 0;
+        int timePassed = 2;
         if (checkLaneChange(car)) {
             int targetLane = desiredLane(car);
+            int fromLane = car.getPosition().getCurrentLane();
             while (checkLaneChange(car)) {
                 //TODO check if space is empty
                 //TODO keep moving forward
@@ -55,20 +67,20 @@ public class MinimalisticRoadProcessing implements Runnable {
             }
         }
         moveCarStraight(car);
+        setBlocking(car);
         saveCarState(car, timeFrameStart + timePassed);
     }
 
     private void moveCarStraight(TrafficParticipant participant) {
         PositionOnRoad position = participant.getPosition();
+        System.out.println("Moving from " + position);
         Car car = participant.getCar();
         double distance;
-        double acceleration = Car.DEFAULT_ACCELERATION;
-        int timeOfAcceleration = Math.min((int) ((car.getMaxSpeed() - car.getSpeed()) / Car.DEFAULT_ACCELERATION), car.getTimeLeft());
-        double distanceOfAcceleration = acceleration * timeOfAcceleration * timeOfAcceleration / 2 + car.getSpeed() * timeOfAcceleration;
         double possibleDistance = calculateDistanceByTime(participant, car.getTimeLeft());
-        if (blockingVehicles.containsKey(participant.getPosition().getCurrentLane())) {
+        TrafficParticipant block = getBlocking(position.getCurrentLane());
+        if (block != null) {
             // Node is blocked by another car
-            TrafficParticipant block = blockingVehicles.get(participant.getPosition().getCurrentLane());
+
             distance = participant.getPosition().getPosition() - block.getPosition().getPosition() - block.getCar().getInterCarDistance() - car.getInterCarDistance();
 
             if (distance > possibleDistance) {
@@ -87,6 +99,7 @@ public class MinimalisticRoadProcessing implements Runnable {
                 activeNodes.add(targetRoad.getExitNode());
                 targetRoad.getExitNode().addPendingCar(participant);
                 position.setPosition(0);
+                updateSpeedAfterDistance(car, position.getPosition());
                 // TODO offset
                 // TODO decrease speed
                 // TODO check traffic light
@@ -97,6 +110,8 @@ public class MinimalisticRoadProcessing implements Runnable {
                 //TODO update speed
             }
         }
+
+        System.out.println("To " + position);
     }
 
     private double calculateDistanceByTime(TrafficParticipant participant, int time) {
@@ -140,8 +155,8 @@ public class MinimalisticRoadProcessing implements Runnable {
 
     private int solveTimeSqEq(double acceleration, double speed, double distance) {
         // TODO check solution
-        double d = Math.sqrt(speed * speed + 4 * speed * distance);
-        return (int) ((-speed + d) / (2 * acceleration));
+        double d = Math.sqrt(speed * speed + 2 * acceleration * distance);
+        return (int) ((-speed + d) / (acceleration));
     }
 
 
@@ -154,6 +169,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         try {
             System.out.println("Running RP");
             List<TrafficParticipant> queue = new ArrayList<>(targetRoad.getTrafficParticipants());
+            queue.sort(TrafficParticipant::compareTo);
             for (TrafficParticipant car : queue) {
                 processCar(car);
             }

@@ -7,7 +7,6 @@ public class Course {
 
     private final Lane fromLane;
     private final Lane toLane;
-    private int timeLeft;
     private int length;
     private final List<Intersection> intersections;
 
@@ -17,7 +16,7 @@ public class Course {
         intersections = new ArrayList<>();
     }
 
-    public Course(Lane fromLane, Lane toLane, List<Intersection> intersections) {
+    public Course(Lane fromLane, Lane toLane, List<Intersection> intersections, int length) {
         this.fromLane = fromLane;
         this.toLane = toLane;
         this.intersections = intersections;

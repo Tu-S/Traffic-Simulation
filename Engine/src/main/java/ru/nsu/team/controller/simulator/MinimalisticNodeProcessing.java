@@ -27,13 +27,13 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processCar(TrafficParticipant participant) {
         //TODO add traffic lights
-        System.out.println("Node "+targetNode.getId());
+        System.out.println("Node " + targetNode.getId());
         System.out.println(participant);
         Car car = participant.getCar();
         PositionOnRoad position = participant.getPosition();
         Road road = participant.getPosition().getCurrentRoad();
         Path path = participant.getCar().getPath();
-        if (path.getPathLength() == 0) {
+        if (path.getRoads().isEmpty()) {
             processDestination(participant);
             road.deleteTrafficParticipant(participant);
             return;
@@ -42,13 +42,18 @@ public class MinimalisticNodeProcessing implements Runnable {
         Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLane()), nextRoad);
         int timeLeft = car.getTimeLeft();
         double dist = course.getLength();
-        if (timeLeft >= dist / car.getSpeed() && course.getTimeLeft() >= dist / car.getSpeed() && !targetBlocked(participant, course.getToLane())) {
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / car.getSpeed()));
-            course.decreaseTime((int) (dist / car.getSpeed()));
+        System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
+        if (timeLeft >= dist / (car.getSpeed() + 1) && course.getTimeLeft() >= dist / (car.getSpeed() + 1) && !targetBlocked(participant, course.getToLane())) {
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 1)));
+            position.getCurrentRoad().deleteTrafficParticipant(participant);
+            course.decreaseTime((int) (dist / (car.getSpeed() + 1)));
             position.setCurrentRoad(course.getToLane().getParentRoad());
             position.setPosition(course.getToLane().getParentRoad().getLength());
             position.setCurrentLane(findLaneNumber(course.getToLane()));
             activeRoads.add(course.getToLane().getParentRoad());
+            position.getCurrentRoad().addTrafficParticipant(participant);
+            System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
+            car.getPath().popRoad();
             return;
         }
         // TODO deceleration
@@ -78,24 +83,30 @@ public class MinimalisticNodeProcessing implements Runnable {
     }
 
     private void processDestination(TrafficParticipant car) {
+        System.out.println("Car \"" + car.getCar() + "\" has reached destination!)");
         //TODO process point of interest
     }
 
     @Override
     public void run() {
-        List<TrafficParticipant> queue = new ArrayList<>();
-        for (TrafficParticipant participant : targetNode.getPendingCars()) {
-            if (participant.getPosition().getCurrentRoad().isMainRoad()) {
-                targetNode.removePendingCar(participant);
-                queue.add(participant);
+        try {
+            List<TrafficParticipant> queue = new ArrayList<>();
+            for (TrafficParticipant participant : targetNode.getPendingCars()) {
+                if (participant.getPosition().getCurrentRoad().isMainRoad()) {
+                    targetNode.removePendingCar(participant);
+                    queue.add(participant);
+                }
             }
+            // TODO add priorities
+            queue.addAll(targetNode.getPendingCars());
+            targetNode.clearPendingCars();
+            for (TrafficParticipant car : queue) {
+                processCar(car);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } finally {
+            latch.countDown();
         }
-        // TODO add priorities
-        queue.addAll(targetNode.getPendingCars());
-        targetNode.clearPendingCars();
-        for (TrafficParticipant car : queue) {
-            processCar(car);
-        }
-        latch.countDown();
     }
 }

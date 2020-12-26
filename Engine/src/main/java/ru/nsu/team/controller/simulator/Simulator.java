@@ -90,6 +90,7 @@ public class Simulator extends Thread {
 
     private void resetTime(RoadMap rm) {
         rm.getRoads().forEach(r -> r.getTrafficParticipants().forEach(p -> p.getCar().setTimeLeft(timeInterval)));
+        rm.getCourseSet().forEach(c -> c.resetTimeLeft(timeInterval));
         //TODO traffic lights
     }
 
@@ -100,13 +101,17 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
-        while (map.getCurrentTime() < map.getEndTime()) {
-            System.out.println(map.getCurrentTime());
-            waitIfPaused();
-            resetTime(map);
-            spawnCars(map);
-            runCycle();
-            map.setCurrentTime(map.getCurrentTime() + timeInterval);
+        try {
+            while (map.getCurrentTime() < map.getEndTime()) {
+                System.out.println(map.getCurrentTime());
+                waitIfPaused();
+                resetTime(map);
+                spawnCars(map);
+                runCycle();
+                map.setCurrentTime(map.getCurrentTime() + timeInterval);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 }

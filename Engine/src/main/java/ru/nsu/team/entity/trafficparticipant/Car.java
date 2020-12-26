@@ -86,6 +86,6 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car " + id;
+        return "Car " + id + " " + speed + "s "+timeLeft+"t";
     }
 }

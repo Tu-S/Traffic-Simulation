@@ -26,11 +26,12 @@ public class SimulatorTest {
 
         Road queue = new Road(1, null, nodes.get(0), 1, 100);
         rm.addRoad(queue);
-        Course course = new Course(queue.getLaneN(0), road.getLaneN(0), Collections.singletonList(new Intersection(0)));
+        Course course = new Course(queue.getLaneN(0), road.getLaneN(0), Collections.singletonList(new Intersection(0)), 10);
+        rm.addCourse(course);
         nodes.get(0).addCourse(course);
         Spawner spawner = new Spawner(nodes.get(0), queue);
         spawner.addPossibleDestination(poi);
-        spawner.addConfiguration(new Configuration(0, 1000, 10));
+        spawner.addConfiguration(new Configuration(0, 30, 4));
         rm.addSpawner(spawner);
 
         return rm;
