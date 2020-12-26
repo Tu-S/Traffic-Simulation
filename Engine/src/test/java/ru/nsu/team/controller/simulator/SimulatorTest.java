@@ -17,7 +17,7 @@ public class SimulatorTest {
         RoadMap rm = new RoadMap();
         rm.setStart(0);
         rm.setEndTime(1000);
-        Road road = new Road(0, nodes.get(0), nodes.get(1), 1, 100);
+        Road road = new Road(0, nodes.get(0), nodes.get(1), 1, 25);
         road.setLength(1000);
         rm.addRoad(road);
 
@@ -54,7 +54,7 @@ public class SimulatorTest {
         });
         sim.start();
         try {
-            sim.join(1000000);
+            sim.join(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail();

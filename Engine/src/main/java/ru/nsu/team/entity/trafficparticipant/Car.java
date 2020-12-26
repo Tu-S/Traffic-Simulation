@@ -12,7 +12,7 @@ public class Car {
     private Path path;
     private final int id;
 
-    public static double DEFAULT_MAX_SPEED = 120;
+    public static double DEFAULT_MAX_SPEED = 35;
     public static double DEFAULT_ACCELERATION = 1.5d;
     public static double DEFAULT_DISTANCE = 12;
     public static double DEFAULT_CAR_SIZE = 6;

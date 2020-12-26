@@ -85,10 +85,10 @@ public class MinimalisticRoadProcessing implements Runnable {
 
             if (distance > possibleDistance) {
                 position.setPosition(position.getPosition() - possibleDistance);
-                updateAfterDistance(car, possibleDistance);
+                updateAfterDistance(participant, possibleDistance);
             } else {
                 position.setPosition(position.getPosition() - distance);
-                updateAfterDistance(car, distance);
+                updateAfterDistance(participant, distance);
             }
 
 
@@ -99,14 +99,14 @@ public class MinimalisticRoadProcessing implements Runnable {
                 activeNodes.add(targetRoad.getExitNode());
                 targetRoad.getExitNode().addPendingCar(participant);
                 position.setPosition(0);
-                updateAfterDistance(car, position.getPosition());
+                updateAfterDistance(participant, position.getPosition());
                 // TODO offset
                 // TODO decrease speed
                 // TODO check traffic light
             } else {
                 // Car can't reach the node
                 position.setPosition(position.getPosition() - possibleDistance);
-                updateAfterDistance(car, possibleDistance);
+                updateAfterDistance(participant, possibleDistance);
                 //TODO update speed
             }
         }
@@ -117,27 +117,27 @@ public class MinimalisticRoadProcessing implements Runnable {
     private double calculateDistanceByTime(TrafficParticipant participant, int time) {
         Car car = participant.getCar();
         double acceleration = car.getAcceleration();
-        int timeOfAcceleration = (int) ((car.getMaxSpeed() - car.getSpeed()) / Car.DEFAULT_ACCELERATION);
+        double maxSpeed = Math.min(car.getMaxSpeed(), targetRoad.getLaneN(participant.getPosition().getCurrentLane()).getMaxSpeed());
+        int timeOfAcceleration = (int) ((maxSpeed - car.getSpeed()) / Car.DEFAULT_ACCELERATION);
         double distanceOfAcceleration = acceleration * timeOfAcceleration * timeOfAcceleration / 2 + car.getSpeed() * timeOfAcceleration;
         if (timeOfAcceleration > time) {
             return acceleration * acceleration / 2 * time + car.getSpeed() * time;
         }
-        return distanceOfAcceleration + car.getMaxSpeed() * (time - timeOfAcceleration);
+        return distanceOfAcceleration + maxSpeed * (time - timeOfAcceleration);
     }
 
-    private int calculateTimeByDistance(Car car, double distance) {
+    private int calculateTimeByDistance(TrafficParticipant participant, double distance) {
+        Car car = participant.getCar();
         double acceleration = car.getAcceleration();
-        int timeOfAcceleration = (int) ((car.getMaxSpeed() - car.getSpeed()) / car.getAcceleration());
+        double maxSpeed = Math.min(car.getMaxSpeed(), targetRoad.getLaneN(participant.getPosition().getCurrentLane()).getMaxSpeed());
+        int timeOfAcceleration = (int) ((maxSpeed - car.getSpeed()) / car.getAcceleration());
         double distanceOfAcceleration = acceleration * timeOfAcceleration * timeOfAcceleration / 2 + car.getSpeed() * timeOfAcceleration;
         if (distanceOfAcceleration > distance) {
             return solveTimeSqEq(acceleration, car.getSpeed(), distance);
         }
-        return timeOfAcceleration + (int) ((distance - distanceOfAcceleration) / car.getMaxSpeed());
+        return timeOfAcceleration + (int) ((distance - distanceOfAcceleration) / maxSpeed);
     }
 
-    private int calculateTimeByDistance(TrafficParticipant participant, double distance) {
-        return calculateTimeByDistance(participant.getCar(), distance);
-    }
 
     private void updateAfterTime(Car car, int time) {
         double speed = car.getSpeed();
@@ -145,13 +145,13 @@ public class MinimalisticRoadProcessing implements Runnable {
         int timeOfAcceleration = (int) ((car.getMaxSpeed() - speed) / acceleration);
         time = Math.min(time, timeOfAcceleration);
         speed += time * acceleration;
-        car.setTimeLeft(car.getTimeLeft()-time);
+        car.setTimeLeft(car.getTimeLeft() - time);
         car.setSpeed(speed);
     }
 
-    private void updateAfterDistance(Car car, double distance) {
-        int time = calculateTimeByDistance(car, distance);
-        updateAfterTime(car, time);
+    private void updateAfterDistance(TrafficParticipant participant, double distance) {
+        int time = calculateTimeByDistance(participant, distance);
+        updateAfterTime(participant.getCar(), time);
     }
 
     private int solveTimeSqEq(double acceleration, double speed, double distance) {
