@@ -7,6 +7,7 @@ import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 public class CarState {
+  private boolean draw;
   private int speed;
   private final int id;
   private double position;
@@ -16,7 +17,8 @@ public class CarState {
   private Position from;
   private Position to;
 
-  public CarState(TrafficParticipant trafficParticipant, long time) {
+  public CarState(TrafficParticipant trafficParticipant, long time, boolean draw) {
+    this.draw = draw;
     Car car = trafficParticipant.getCar();
     PositionOnRoad positionOnRoad = trafficParticipant.getPosition();
     speed = car.getSpeed();
@@ -28,6 +30,10 @@ public class CarState {
     currentRoad = road.getId();
     from = road.getFrom().getPosition();
     to = road.getTo().getPosition();
+  }
+
+  public boolean isDraw() {
+    return draw;
   }
 
   public int getSpeed() {
