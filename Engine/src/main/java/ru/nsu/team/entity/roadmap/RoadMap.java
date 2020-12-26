@@ -4,13 +4,16 @@ package ru.nsu.team.entity.roadmap;
 import ru.nsu.team.entity.spawner.Spawner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RoadMap {
 
     private ArrayList<Spawner> spawners;
     private ArrayList<PlaceOfInterest> placesOfInterest;
     private ArrayList<Road> roads;
+    private Set<Course> courseSet;
     private long start;
     private long currentTime;
     private long endTime;
@@ -19,6 +22,7 @@ public class RoadMap {
         this.roads = new ArrayList<>();
         this.spawners = new ArrayList<>();
         this.placesOfInterest = new ArrayList<>();
+        this.courseSet = new HashSet<>();
     }
 
     public long getStart() {
@@ -33,8 +37,8 @@ public class RoadMap {
         return placesOfInterest;
     }
 
-    public void increaseCurrentTime(long delta){
-        this.currentTime +=delta;
+    public void increaseCurrentTime(long delta) {
+        this.currentTime += delta;
     }
 
     public int getRoadsNumber() {
@@ -105,5 +109,13 @@ public class RoadMap {
 
     public void setEndTime(long endTime) {
         this.endTime = endTime;
+    }
+
+    public void addCourse(Course course) {
+        courseSet.add(course);
+    }
+
+    public Set<Course> getCourseSet() {
+        return courseSet;
     }
 }

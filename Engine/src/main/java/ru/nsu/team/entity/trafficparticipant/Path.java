@@ -19,7 +19,7 @@ public class Path {
     public Path(ArrayList<Road> roads) {
         this.currentRoadNumber = 0;
         this.roads = roads;
-        this.length = 0;
+        this.length = roads.stream().map(Road::getLength).reduce(Double::sum).orElse(0d);
     }
 
     public double getPathLength() {
@@ -49,4 +49,7 @@ public class Path {
         return roads.remove(0);
     }
 
+    public Path copy() {
+        return new Path(roads);
+    }
 }

@@ -64,7 +64,7 @@ public class DijkstraPathfinder implements Pathfinder {
             PathNode currentNode = unsettledNodes.poll();
             for (Course course :
                     currentNode.node.getCourses()) {
-                Road road = course.getFromLane().getParentRoad();
+                Road road = course.getToLane().getParentRoad();
                 Node target = road.getExitNode();
                 if (settledNodes.contains(target)) {
                     continue;
@@ -104,8 +104,7 @@ public class DijkstraPathfinder implements Pathfinder {
         return knownUnreachable;
     }
 
-    @Override
-    public Path findPath(Node start, PlaceOfInterest destination) throws DestinationUnreachable {
+    private Path getBestCachedResult(Node start, PlaceOfInterest destination) {
         List<Node> nodes = destination.getNodes();
         Path bestCachedResult = null;
         for (Node node : nodes) {
@@ -122,11 +121,17 @@ public class DijkstraPathfinder implements Pathfinder {
             }
 
         }
+        return bestCachedResult;
+    }
+
+    @Override
+    public Path findPath(Node start, PlaceOfInterest destination) throws DestinationUnreachable {
+        Path bestCachedResult = getBestCachedResult(start, destination);
         if (bestCachedResult != null) {
             return bestCachedResult;
         }
         possibleDestinations.addAll(destination.getNodes());
         init(start, possibleDestinations);
-        return cache.get(new AbstractMap.SimpleEntry<>(start, destination));
+        return getBestCachedResult(start, destination).copy();
     }
 }

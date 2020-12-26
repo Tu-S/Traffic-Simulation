@@ -1,4 +1,4 @@
-package ru.nsu.team.controller;
+package ru.nsu.team.roadmodelcreator;
 
 import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.roadmap.configuration.*;
@@ -7,8 +7,7 @@ import ru.nsu.team.entity.spawner.Spawner;
 import ru.nsu.team.entity.trafficparticipant.*;
 
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class RoadModelCreator {
     private final List<Node> nodes = new ArrayList<>();
@@ -21,6 +20,7 @@ public class RoadModelCreator {
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
         createSpawners(roadMapConfig.getNodes(), map);
+        calculateAngles(roadMapConfig.getNodes(), roadMapConfig.getRoads());
         createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
@@ -57,6 +57,8 @@ public class RoadModelCreator {
             NodeConfiguration config = nodesConfig.get(i);
             Position pos = new Position(config.getX(), config.getY());
             Node n = new Node(i, pos);
+            //n.setRoadsIn(config.getRoadsIn());
+            //n.setRoadsOut(config.getRoadsOut());
             nodes.add(n);
         }
     }
@@ -140,6 +142,55 @@ public class RoadModelCreator {
         }
     }
 
+    private void calculateAngles(List<NodeConfiguration> nodeConfigs, List<RoadConfiguration> roadConfigs) {
+        SortedMap<Double, Road> sm = new TreeMap<Double, Road>();
+        NodeConfiguration config;
+        Node node;
+        for (int i = 0; i < nodeConfigs.size(); i++) {
+            config = nodeConfigs.get(i);
+            for (Integer numberIn : config.getRoadsIn()) {
+                Road in = roads.get(numberIn);
+                RoadConfiguration configIn = roadConfigs.get(numberIn);
+                for (Integer numberOut : config.getRoadsOut()) {
+                    Road out = roads.get(numberOut);
+                    RoadConfiguration configOut = roadConfigs.get(numberOut);
+                    double angle = calculateAngle(nodeConfigs.get(configIn.getFrom()), nodeConfigs.get(configIn.getTo()), nodeConfigs.get(configOut.getTo()), nodeConfigs.get(configOut.getFrom()));
+                    sm.put(angle, out);
+
+                }
+                Road[] roads1 = sm.values().toArray(new Road[0]);
+                node = this.nodes.get(i);
+                node.addFromTo(in, Arrays.asList(roads1));
+                sm.clear();
+            }
+        }
+
+
+    }
+
+    private double calculateAngle(NodeConfiguration n1, NodeConfiguration n2, NodeConfiguration n3, NodeConfiguration duplicate) {
+        assert !n2.equals(duplicate);
+        double yDif = n3.getY() - n2.getY();
+
+        double n2n1X = n1.getX() - n2.getX();
+        double n2n1Y = n1.getY() - n2.getY();
+
+        double n2n3X = n3.getX() - n2.getX();
+        double n2n3Y = n3.getY() - n2.getY();
+
+        double ch = (n2n1X * n2n3X + n2n1Y * n2n3Y);
+        double z = Math.sqrt(Math.pow(n2n1X, 2) + Math.pow(n2n1Y, 2)) * Math.sqrt(Math.pow(n2n3X, 2) + Math.pow(n2n3Y, 2));
+        double cos = ch / z;
+
+        double sin = Math.sqrt(1 - Math.pow(cos, 2));
+        if (yDif > 0) {
+            return Math.acos(cos);
+        } else {
+            return 2 * Math.PI - Math.acos(cos);
+        }
+    }
+
+
     private void createRoads(Iterable<RoadConfiguration> roads) {
         for (RoadConfiguration roadConfig : roads) {
             int from = roadConfig.getFrom();
@@ -150,6 +201,9 @@ public class RoadModelCreator {
             Road road = new Road(rId++, fromN, toN);
             for (LaneConfiguration laneConfig : lanes) {
                 Lane lane = new Lane(road);
+                for (SignConfiguration sing : laneConfig.getSigns()) {
+                    analyzeSign(sing,lane);
+                }
                 road.addLane(lane);
             }
             this.roads.add(road);
@@ -206,14 +260,14 @@ public class RoadModelCreator {
     private final String LEFT_OR_RIGHT = "leftOrRight";
 
 
-    private void analyzeSign(Sign sign) {
+    private void analyzeSign(SignConfiguration sign, Lane lane) {
         switch (sign.getType()) {
             case (SPEED):
-
+                lane.setMaxSpeed(sign.getLimit());
 
                 break;
             case (MAIN_ROAD):
-
+                lane.getParentRoad().setMainRoad(true);
 
                 break;
             case (LEFT):

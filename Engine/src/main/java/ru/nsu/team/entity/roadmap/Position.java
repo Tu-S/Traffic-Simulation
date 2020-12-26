@@ -1,4 +1,4 @@
-package ru.nsu.team.entity.trafficparticipant;
+package ru.nsu.team.entity.roadmap;
 
 public class Position {
     private int x;

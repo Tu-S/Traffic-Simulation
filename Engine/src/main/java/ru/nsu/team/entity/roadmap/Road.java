@@ -26,23 +26,39 @@ public class Road {
         this.id = id;
     }
 
+    public Road(int id, Node from, Node to, int lanes, double maxSpeed) {
+        this.from = from;
+        this.to = to;
+        this.lanes = new ArrayList<>();
+        this.trafficParticipants = new ArrayList<>();
+        this.id = id;
+        for (int i = 0; i < lanes; i++) {
+            addLane(maxSpeed);
+        }
+    }
+
     public void setMainRoad(boolean isMainRoad) {
         this.isMainRoad = isMainRoad;
+    }
+
+    public boolean isMainRoad() {
+        return isMainRoad;
     }
 
     public int getId() {
         return id;
     }
 
-    public void deleteTrafficParticipant(TrafficParticipant car) {
-
+    synchronized public void deleteTrafficParticipant(TrafficParticipant car) {
+        lanes.get(car.getPosition().getCurrentLane()).removeTrafficParticipant(car);
+        trafficParticipants.remove(car);
     }
 
     public List<Lane> getLanes() {
         return lanes;
     }
 
-    public void addTrafficParticipant(TrafficParticipant car) {
+    synchronized public void addTrafficParticipant(TrafficParticipant car) {
         Lane lane = lanes.get(car.getPosition().getCurrentLane());
         lane.addTrafficParticipant(car);
         trafficParticipants.add(car);
@@ -85,6 +101,10 @@ public class Road {
         lanes.add(lane);
     }
 
+    public void addLane(double maxSpeed) {
+        lanes.add(new Lane(maxSpeed, this));
+    }
+
     public Node getFrom() {
         return from;
     }
@@ -95,5 +115,10 @@ public class Road {
 
     public void setLength(double length) {
         this.length = length;
+    }
+
+    @Override
+    public String toString() {
+        return "Road " + id;
     }
 }

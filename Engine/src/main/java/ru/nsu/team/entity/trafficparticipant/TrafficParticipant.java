@@ -27,4 +27,9 @@ public class TrafficParticipant implements Comparable<TrafficParticipant> {
     public int compareTo(TrafficParticipant o) {
         return (int) position.getPosition() - (int) o.position.getPosition();
     }
+
+    @Override
+    public String toString() {
+        return car.toString()+":"+position.toString();
+    }
 }

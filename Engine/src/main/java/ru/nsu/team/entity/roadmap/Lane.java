@@ -32,6 +32,10 @@ public class Lane {
         trafficParticipants.add(car);
     }
 
+    public void removeTrafficParticipant(TrafficParticipant car) {
+        trafficParticipants.remove(car);
+    }
+
     public double getMaxSpeed() {
         return maxSpeed;
     }

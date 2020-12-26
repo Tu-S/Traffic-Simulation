@@ -6,13 +6,13 @@ public class Car {
 
     static int nextId = 0;
 
-    private int speed;
+    private double speed;
     private int timeLeft;
     private double maxSpeed;
     private Path path;
     private final int id;
 
-    public static double DEFAULT_MAX_SPEED = 120;
+    public static double DEFAULT_MAX_SPEED = 35;
     public static double DEFAULT_ACCELERATION = 1.5d;
     public static double DEFAULT_DISTANCE = 12;
     public static double DEFAULT_CAR_SIZE = 6;
@@ -44,7 +44,7 @@ public class Car {
         this.path = path;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -56,7 +56,7 @@ public class Car {
         return maxSpeed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
@@ -82,5 +82,10 @@ public class Car {
 
     public static synchronized void setNextId(int id) {
         nextId = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Car " + id + " " + speed + "s "+timeLeft+"t";
     }
 }
