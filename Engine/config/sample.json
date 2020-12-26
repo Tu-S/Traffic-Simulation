@@ -7,7 +7,7 @@
         1
       ],
       "roadsOut": [
-        0
+        0,4
       ],
       "periodsOfSpawn": [
         {
@@ -130,6 +130,16 @@
     {
       "from": 2,
       "to": 1,
+      "lanes": [
+        {
+          "signs": [
+          ]
+        }
+      ]
+    },
+    {
+      "from": 0,
+      "to": 2,
       "lanes": [
         {
           "signs": [

@@ -1,4 +1,4 @@
-package ru.nsu.team.controller.simulator;
+package ru.nsu.team.simulator;
 
 import ru.nsu.team.entity.roadmap.Course;
 import ru.nsu.team.entity.roadmap.Lane;
