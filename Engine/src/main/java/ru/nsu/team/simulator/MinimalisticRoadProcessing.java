@@ -171,7 +171,7 @@ public class MinimalisticRoadProcessing implements Runnable {
 
 
     private void saveCarState(TrafficParticipant car, int time) {
-        playbackBuilder.addCarState(car, time);
+        playbackBuilder.addCarState(car, time, true);
     }
 
 

@@ -50,12 +50,12 @@ public class MinimalisticNodeProcessing implements Runnable {
         int timeLeft = car.getTimeLeft();
         double dist = course.getLength();
         car.setSpeed(car.getSpeed() * 0.7);
-        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
+        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
         //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
             car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) - 1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
-            course.decreaseTime((int) (dist / (car.getSpeed() + 5))+1);
+            course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
             position.setCurrentRoad(course.getToLane().getParentRoad());
             position.setPosition(course.getToLane().getParentRoad().getLength());
             position.setCurrentLane(findLaneNumber(course.getToLane()));
@@ -63,12 +63,12 @@ public class MinimalisticNodeProcessing implements Runnable {
             position.getCurrentRoad().addTrafficParticipant(participant);
             System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
             car.getPath().popRoad();
-            playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
+            playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
             return;
         }
         // TODO deceleration
         car.setSpeed(0);
-        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
+        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
 
     }
 
@@ -95,6 +95,7 @@ public class MinimalisticNodeProcessing implements Runnable {
     }
 
     private void processDestination(TrafficParticipant car) {
+        playbackBuilder.addCarState(car, time + timeInterval - car.getCar().getTimeLeft(), false);
         System.out.println("Car \"" + car.getCar() + "\" has reached destination " + targetNode + "!)");
         //TODO process point of interest
     }
