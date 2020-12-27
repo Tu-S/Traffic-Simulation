@@ -9,17 +9,58 @@ public class TrafficLight {
     //private Color currentColor;
     //private int currentState;
     private List<TrafficLightConfig> configs;
+    private int period;
 
     public TrafficLight() {
         this.configs = new ArrayList<>();
     }
 
-    public void addConfig(TrafficLightConfig c){
+    public void addConfig(TrafficLightConfig c) {
         configs.add(c);
+        period += c.getDelay();
     }
 
     public List<TrafficLightConfig> getConfigs() {
         return configs;
+    }
+
+    public TrafficLightConfig getCurrentConfig(int time) {
+        time %= period;
+        int start = 0;
+        for (TrafficLightConfig tlc : configs) {
+            if (start <= time && start + tlc.getDelay() >= time) {
+                return tlc;
+            }
+            start += tlc.getDelay();
+        }
+        throw new IllegalStateException("Broken traffic light configuration");
+    }
+
+    public int timeBlocked(Road road, int time) {
+        time %= period;
+        int start = 0;
+        int index = 0;
+        for (index = 0; index < configs.size(); index++) {
+            if (start <= time && start + configs.get(index).getDelay() >= time) {
+                break;
+            }
+            start += configs.get(index).getDelay();
+        }
+
+        if (configs.get(index).getRoads().contains(road)) {
+            return 0;
+        }
+        int waitTime = start + configs.get(index).getDelay() - time;
+        start += configs.get(index).getDelay();
+
+        int i;
+        for (i = (index + 1) % configs.size(); i != index; i = (i + 1) % configs.size()) {
+            if (configs.get(i).getRoads().contains(road)) {
+                return waitTime;
+            }
+            waitTime += configs.get(i).getDelay();
+        }
+        throw new IllegalArgumentException("Road is not controlled by traffic light");
     }
     /*public int getGreenDuration() {
         return greenDuration;

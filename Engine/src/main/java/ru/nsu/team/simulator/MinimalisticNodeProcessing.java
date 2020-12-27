@@ -1,5 +1,7 @@
 package ru.nsu.team.simulator;
 
+import ru.nsu.team.entity.playback.PlaybackBuilder;
+import ru.nsu.team.entity.report.ReporterBuilder;
 import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
@@ -15,11 +17,15 @@ public class MinimalisticNodeProcessing implements Runnable {
     private final Set<Road> activeRoads;
     private final Node targetNode;
     private final CountDownLatch latch;
+    private final PlaybackBuilder playbackBuilder;
+    private final ReporterBuilder reporterBuilder;
 
-    public MinimalisticNodeProcessing(Node targetNode, Set<Road> activeRoads, CountDownLatch latch) {
+    public MinimalisticNodeProcessing(Node targetNode, Set<Road> activeRoads, CountDownLatch latch, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
         this.activeRoads = activeRoads;
         this.targetNode = targetNode;
         this.latch = latch;
+        this.playbackBuilder = playbackBuilder;
+        this.reporterBuilder = reporterBuilder;
     }
 
     private void processCar(TrafficParticipant participant) {

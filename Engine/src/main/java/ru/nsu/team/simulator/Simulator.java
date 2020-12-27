@@ -1,5 +1,7 @@
 package ru.nsu.team.simulator;
 
+import ru.nsu.team.entity.playback.PlaybackBuilder;
+import ru.nsu.team.entity.report.ReporterBuilder;
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
@@ -16,16 +18,21 @@ public class Simulator extends Thread {
     private final int timeInterval;
     private final RoadMap map;
     private final Semaphore runPermission;
-    private CountDownLatch latch;
     private boolean paused;
+    private boolean alive;
+    private final ReporterBuilder reporterBuilder;
+    private final PlaybackBuilder playbackBuilder;
 
 
-    public Simulator(int timeInterval, RoadMap map) {
+    public Simulator(int timeInterval, RoadMap map, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
         super();
         this.timeInterval = timeInterval;
         this.map = map;
         this.runPermission = new Semaphore(1);
         this.paused = false;
+        this.playbackBuilder = playbackBuilder;
+        this.reporterBuilder = reporterBuilder;
+        this.alive = true;
     }
 
     public void pause() {
@@ -48,6 +55,10 @@ public class Simulator extends Thread {
         }
     }
 
+    synchronized public void stopSimulation() {
+        alive = false;
+    }
+
     private void waitIfPaused() {
         try {
             runPermission.acquire();
@@ -63,9 +74,9 @@ public class Simulator extends Thread {
         Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<Node>());
         while (!activeRoads.isEmpty()) {
             //TODO check for edge-cases
-            latch = new CountDownLatch(activeRoads.size());
+            CountDownLatch latch = new CountDownLatch(activeRoads.size());
             for (Road road : activeRoads) {
-                executor.submit(new MinimalisticRoadProcessing((int) map.getCurrentTime(), road, activeNodes, latch));
+                executor.submit(new MinimalisticRoadProcessing((int) map.getCurrentTime(), timeInterval, road, activeNodes, latch, playbackBuilder, reporterBuilder));
             }
             try {
                 latch.await();
@@ -76,7 +87,7 @@ public class Simulator extends Thread {
             latch = new CountDownLatch(activeNodes.size());
             activeRoads.clear();
             for (Node node : activeNodes) {
-                executor.submit(new MinimalisticNodeProcessing(node, activeRoads, latch));
+                executor.submit(new MinimalisticNodeProcessing(node, activeRoads, latch, playbackBuilder, reporterBuilder));
             }
             try {
                 latch.await();
@@ -99,10 +110,14 @@ public class Simulator extends Thread {
         rm.getSpawners().forEach(s -> s.spawn((int) rm.getCurrentTime(), timeInterval));
     }
 
+    synchronized public boolean isSimulating() {
+        return alive;
+    }
+
     @Override
     public void run() {
         try {
-            while (map.getCurrentTime() < map.getEndTime()) {
+            while (map.getCurrentTime() < map.getEndTime() && isSimulating()) {
                 System.out.println(map.getCurrentTime());
                 waitIfPaused();
                 resetTime(map);

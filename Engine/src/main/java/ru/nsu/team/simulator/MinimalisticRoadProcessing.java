@@ -1,5 +1,7 @@
 package ru.nsu.team.simulator;
 
+import ru.nsu.team.entity.playback.PlaybackBuilder;
+import ru.nsu.team.entity.report.ReporterBuilder;
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Car;
@@ -18,13 +20,19 @@ public class MinimalisticRoadProcessing implements Runnable {
     private final CountDownLatch latch;
     private final int timeFrameStart;
     private final HashMap<Integer, TrafficParticipant> blockingVehicles;
+    private final PlaybackBuilder playbackBuilder;
+    private final ReporterBuilder reporterBuilder;
+    private final int timeInterval;
 
-    public MinimalisticRoadProcessing(int timeFrameStart, Road targetRoad, Set<Node> activeNodes, CountDownLatch latch) {
+    public MinimalisticRoadProcessing(int timeFrameStart, int timeInterval, Road targetRoad, Set<Node> activeNodes, CountDownLatch latch, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
         this.activeNodes = activeNodes;
         this.targetRoad = targetRoad;
         this.latch = latch;
         this.timeFrameStart = timeFrameStart;
         this.blockingVehicles = new HashMap<>();
+        this.playbackBuilder = playbackBuilder;
+        this.reporterBuilder = reporterBuilder;
+        this.timeInterval = timeInterval;
     }
 
     private TrafficParticipant getBlocking(int lane) {
@@ -45,7 +53,7 @@ public class MinimalisticRoadProcessing implements Runnable {
 
     private int desiredLane(TrafficParticipant car) { // TODO: Change data structures for better performance
         for (int i = 0; i < targetRoad.getLanesNumber(); i++) {
-            if (!targetRoad.getLaneN(i).leadsTo(car.getCar().getPath().getNextRoad())) {
+            if (targetRoad.getLaneN(i).leadsTo(car.getCar().getPath().getNextRoad())) {
                 return i;
             }
         }
@@ -63,7 +71,7 @@ public class MinimalisticRoadProcessing implements Runnable {
                 //TODO keep moving forward
                 int currentLane = car.getPosition().getCurrentLane();
                 car.getPosition().setCurrentLane(currentLane + (targetLane - currentLane > 0 ? 1 : -1));
-                saveCarState(car, timeFrameStart + timePassed);
+                saveCarState(car, timeFrameStart + timeInterval - car.getCar().getTimeLeft() + timePassed);
             }
         }
         moveCarStraight(car);
@@ -110,7 +118,7 @@ public class MinimalisticRoadProcessing implements Runnable {
                 //TODO update speed
             }
         }
-
+        saveCarState(participant, participant.getCar().getTimeLeft());
         System.out.println("To " + position);
     }
 
@@ -161,7 +169,8 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
 
-    private void saveCarState(TrafficParticipant car, int time) { // This is a placeholder for sending state to playback
+    private void saveCarState(TrafficParticipant car, int time) {
+        playbackBuilder.addCarState(car, time);
     }
 
 

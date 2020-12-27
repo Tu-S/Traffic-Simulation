@@ -8,6 +8,7 @@ import ru.nsu.team.entity.trafficparticipant.*;
 
 import java.sql.Time;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RoadModelCreator {
     private final List<Node> nodes = new ArrayList<>();
@@ -19,9 +20,9 @@ public class RoadModelCreator {
         createNodes(roadMapConfig.getNodes());
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
-        createSpawners(roadMapConfig.getNodes(), map);
         calculateAngles(roadMapConfig.getNodes(), roadMapConfig.getRoads());
         createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
+        createSpawners(roadMapConfig.getNodes(), map);
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
         for (Road road : roads) {
@@ -35,13 +36,15 @@ public class RoadModelCreator {
             map.setCurrentTime(t);
         }
         map.setEndTime(getValue(roadMapConfig.getEnd()));
+        map.getSpawners().forEach(s -> s.addPossibleDestination(map.getPlacesOfInterest()));
+
         return map;
     }
 
     private long getValue(String time) {
         time += ":00";
         Time t = Time.valueOf(time);
-        return t.getTime();
+        return t.getTime()/1000;
     }
 
     private double calculateLength(Position start, Position end) {
@@ -80,6 +83,8 @@ public class RoadModelCreator {
                     long end = getValue(config.getEnd());
                     spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
                 }
+                Set<Lane> allLanes = node.getCourses().stream().map(Course::getToLane).map(Lane::getParentRoad).flatMap(r -> r.getLanes().stream()).collect(Collectors.toSet());
+                allLanes.forEach(ln -> node.addCourse(new Course(spawnedQueue.getLaneN(0),ln)));
                 map.addSpawner(spawner);
                 roads.add(spawnedQueue);
             }
@@ -120,21 +125,6 @@ public class RoadModelCreator {
                 int in = inRoadsId.get(heh);
                 int out = outRoadsId.get(heh);
 
-                RoadConfiguration roadIn = roadsConfig.get(in);
-                RoadConfiguration roadOut = roadsConfig.get(out);
-                for (LaneConfiguration lane : roadIn.getLanes()) {
-                    for (SignConfiguration sing : lane.getSigns()) {
-
-
-                    }
-
-                }
-                for (LaneConfiguration lane : roadOut.getLanes()) {
-                    for (SignConfiguration sing : lane.getSigns()) {
-
-
-                    }
-                }
                 //TODO create courses and intersections according to signs and trajectories
                 Course course = new Course(roads.get(in).getLaneN(0), roads.get(out).getLaneN(0));
                 node.addCourse(course);
@@ -202,7 +192,7 @@ public class RoadModelCreator {
             for (LaneConfiguration laneConfig : lanes) {
                 Lane lane = new Lane(road);
                 for (SignConfiguration sing : laneConfig.getSigns()) {
-                    analyzeSign(sing,lane);
+                    analyzeSign(sing, lane);
                 }
                 road.addLane(lane);
             }
@@ -211,7 +201,7 @@ public class RoadModelCreator {
         for (Road road : this.roads) {
             if (road.getLength() == 0) {
                 double length = calculateLength(road.getFrom().getPosition(), road.getTo().getPosition());
-                road.setLength(length);
+                road.setLength(length / 3); // pixel to meter
             }
         }
     }
@@ -263,7 +253,7 @@ public class RoadModelCreator {
     private void analyzeSign(SignConfiguration sign, Lane lane) {
         switch (sign.getType()) {
             case (SPEED):
-                lane.setMaxSpeed(sign.getLimit());
+                lane.setMaxSpeed(sign.getLimit() / 3.6);
 
                 break;
             case (MAIN_ROAD):

@@ -12,6 +12,7 @@ import ru.nsu.team.pathfinder.DijkstraPathfinder;
 import ru.nsu.team.pathfinder.Pathfinder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -87,6 +88,14 @@ public class Spawner {
         for (int i = 0; i < toSpawn; i++) {
             PlaceOfInterest destination = selectDestination();
             Path path = pathfinder.findPath(node, destination);
+            while (path == null && !possibleDestinations.isEmpty()) {
+                possibleDestinations.remove(destination);
+                destination = selectDestination();
+                path = pathfinder.findPath(node, destination);
+            }
+            if (path == null) {
+                throw new IllegalStateException("Spawner has no reachable destinations");
+            }
             TrafficParticipant spawnedCar = new TrafficParticipant(new Car(Car.getNextId(), Car.DEFAULT_MAX_SPEED, path), new PositionOnRoad(spawningQueue, spawnPosition, 0));
             spawningQueue.addTrafficParticipant(spawnedCar);
             spawnPosition += Car.DEFAULT_DISTANCE;
@@ -118,10 +127,12 @@ public class Spawner {
         return possibleDestinations.get(n);
     }
 
-    public void addPossibleDestination(PlaceOfInterest node) throws DestinationUnreachable {
+    public void addPossibleDestination(PlaceOfInterest node) {
         possibleDestinations.add(node);
-
     }
 
+    public void addPossibleDestination(Collection<PlaceOfInterest> pois) {
+        possibleDestinations.addAll(pois);
+    }
 
 }

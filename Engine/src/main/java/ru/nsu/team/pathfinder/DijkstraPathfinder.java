@@ -74,6 +74,7 @@ public class DijkstraPathfinder implements Pathfinder {
                     path.add(road);
                     PathNode newPathNode = new PathNode(target, currentNode.distance + road.getLength(), path);
                     pathNodes.put(target, newPathNode);
+                    unsettledNodes.offer(pathNodes.get(target));
                 } else {
                     PathNode currentNeighbour = pathNodes.get(target);
                     if (currentNeighbour.distance > currentNode.distance + road.getLength()) {
@@ -132,6 +133,7 @@ public class DijkstraPathfinder implements Pathfinder {
         }
         possibleDestinations.addAll(destination.getNodes());
         init(start, possibleDestinations);
-        return getBestCachedResult(start, destination).copy();
+        bestCachedResult = getBestCachedResult(start, destination);
+        return bestCachedResult == null ? null : bestCachedResult.copy();
     }
 }

@@ -111,4 +111,9 @@ public class Node {
     public int hashCode() {
         return Integer.valueOf(id).hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Node " + id;
+    }
 }

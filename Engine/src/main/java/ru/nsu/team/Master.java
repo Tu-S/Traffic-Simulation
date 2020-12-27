@@ -9,33 +9,31 @@ public class Master {
     public void execute(String[] args) {
 
 
-        SimulationController simulationController = new SimulationController(args[0], args[1],args[2]);
+        SimulationController simulationController = new SimulationController(args[0], args[1], args[2]);
         Thread simulatorThread = new Thread(simulationController);
         simulatorThread.start();
         System.out.println("Simulation stated");
-        //simulationController.execute(args);
         Scanner in = new Scanner(System.in);
-        while(true){
+        while (in.hasNext()) {
             System.out.print("Input command: ");
             String command = in.nextLine();
-            switch (command){
+            switch (command) {
                 case "STOP":
-                    System.out.println("STOP");
-                    simulatorThread.interrupt();
+                    simulationController.stop();
                     try {
                         simulatorThread.join();
                         System.out.println("Simulation ended");
                         return;
-                    } catch (InterruptedException ex){
+                    } catch (InterruptedException ex) {
                         System.out.println(ex.getMessage());
 
                     }
                     break;
                 case "PAUSE":
-                    System.out.println("pause");
+                    simulationController.pause();
                     break;
                 case "CONTINUE":
-                    System.out.println("continue");
+                    simulationController.resume();
             }
 
         }
