@@ -65,6 +65,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         int timePassed = 2;
         if (checkLaneChange(car)) {
             int targetLane = desiredLane(car);
+            car.getCar().setTimeLeft(car.getCar().getTimeLeft() - timePassed);
             int fromLane = car.getPosition().getCurrentLane();
             while (checkLaneChange(car)) {
                 //TODO check if space is empty
@@ -151,8 +152,8 @@ public class MinimalisticRoadProcessing implements Runnable {
         double speed = car.getSpeed();
         double acceleration = car.getAcceleration();
         int timeOfAcceleration = (int) ((car.getMaxSpeed() - speed) / acceleration);
-        time = Math.min(time, timeOfAcceleration);
-        speed += time * acceleration;
+        timeOfAcceleration = Math.min(time, timeOfAcceleration);
+        speed += timeOfAcceleration * acceleration;
         car.setTimeLeft(car.getTimeLeft() - time);
         car.setSpeed(speed);
     }

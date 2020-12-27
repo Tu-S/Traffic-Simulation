@@ -125,6 +125,9 @@ public class Simulator extends Thread {
                 resetTime(map);
                 spawnCars(map);
                 runCycle();
+                if(map.getRoads().get(0).getTrafficParticipants().size()>10){
+                    System.out.println("Bug???");
+                }
                 map.setCurrentTime(map.getCurrentTime() + timeInterval);
             }
         } catch (Throwable t) {

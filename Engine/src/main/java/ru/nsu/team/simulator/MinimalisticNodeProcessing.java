@@ -50,11 +50,12 @@ public class MinimalisticNodeProcessing implements Runnable {
         int timeLeft = car.getTimeLeft();
         double dist = course.getLength();
         car.setSpeed(car.getSpeed() * 0.7);
+        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
         //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) - 1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
-            course.decreaseTime((int) (dist / (car.getSpeed() + 5)));
+            course.decreaseTime((int) (dist / (car.getSpeed() + 5))+1);
             position.setCurrentRoad(course.getToLane().getParentRoad());
             position.setPosition(course.getToLane().getParentRoad().getLength());
             position.setCurrentLane(findLaneNumber(course.getToLane()));
@@ -67,6 +68,8 @@ public class MinimalisticNodeProcessing implements Runnable {
         }
         // TODO deceleration
         car.setSpeed(0);
+        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
+
     }
 
     private int findLaneNumber(Lane lane) {

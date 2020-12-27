@@ -21,7 +21,7 @@ public class RoadModelCreator {
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
         calculateAngles(roadMapConfig.getNodes(), roadMapConfig.getRoads());
-        createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
+        createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes(), map);
         createSpawners(roadMapConfig.getNodes(), map);
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
@@ -111,7 +111,7 @@ public class RoadModelCreator {
         }
     }
 
-    private void createCourses(List<RoadConfiguration> roadsConfig, List<NodeConfiguration> nodesConfig) {
+    private void createCourses(List<RoadConfiguration> roadsConfig, List<NodeConfiguration> nodesConfig, RoadMap map) {
         int nodeNumber;
         nodeNumber = nodesConfig.size();
         for (int i = 0; i < nodeNumber; i++) {
@@ -120,15 +120,18 @@ public class RoadModelCreator {
             List<Integer> inRoadsId = nodeConfig.getRoadsIn();
             Node node = this.nodes.get(i);
 
+            Set<Course> createdCourses = new HashSet<>();
             int lenIds = nodeConfig.getCoursesNumber();
             for (int heh = 0; heh < lenIds; heh++) {
                 int in = inRoadsId.get(heh);
                 for (Lane inLane : roads.get(in).getLanes()) {
                     for (Integer roadId : outRoadsId) {
-                        roads.get(roadId).getLanes().forEach(outLane -> node.addCourse(new Course(inLane, outLane, Collections.singletonList(new Intersection(0)), 10)));
+                        roads.get(roadId).getLanes().forEach(outLane -> createdCourses.add(new Course(inLane, outLane, Collections.singletonList(new Intersection(0)), 10)));
                     }
                 }
             }
+            createdCourses.forEach(node::addCourse);
+            map.getCourseSet().addAll(createdCourses);
         }
     }
 

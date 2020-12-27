@@ -103,6 +103,14 @@ public class Spawner {
         }
     }
 
+    public void spawnCar(){
+
+    }
+
+    public void spawnCar(double position){
+
+    }
+
     public Configuration getConfigN(int n) {
         return configs.get(n);
     }
