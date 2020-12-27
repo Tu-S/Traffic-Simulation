@@ -61,10 +61,11 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void processCar(TrafficParticipant car) {
-        System.out.println(car);
+        //System.out.println(car);
         int timePassed = 2;
         if (checkLaneChange(car)) {
             int targetLane = desiredLane(car);
+            car.getCar().setTimeLeft(car.getCar().getTimeLeft() - timePassed);
             int fromLane = car.getPosition().getCurrentLane();
             while (checkLaneChange(car)) {
                 //TODO check if space is empty
@@ -81,7 +82,7 @@ public class MinimalisticRoadProcessing implements Runnable {
 
     private void moveCarStraight(TrafficParticipant participant) {
         PositionOnRoad position = participant.getPosition();
-        System.out.println("Moving from " + position);
+        //System.out.println("Moving from " + position);
         Car car = participant.getCar();
         double distance;
         double possibleDistance = calculateDistanceByTime(participant, car.getTimeLeft());
@@ -119,7 +120,7 @@ public class MinimalisticRoadProcessing implements Runnable {
             }
         }
         saveCarState(participant, participant.getCar().getTimeLeft());
-        System.out.println("To " + position);
+        //System.out.println("To " + position);
     }
 
     private double calculateDistanceByTime(TrafficParticipant participant, int time) {
@@ -151,8 +152,8 @@ public class MinimalisticRoadProcessing implements Runnable {
         double speed = car.getSpeed();
         double acceleration = car.getAcceleration();
         int timeOfAcceleration = (int) ((car.getMaxSpeed() - speed) / acceleration);
-        time = Math.min(time, timeOfAcceleration);
-        speed += time * acceleration;
+        timeOfAcceleration = Math.min(time, timeOfAcceleration);
+        speed += timeOfAcceleration * acceleration;
         car.setTimeLeft(car.getTimeLeft() - time);
         car.setSpeed(speed);
     }
@@ -177,7 +178,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Running RP");
+            //System.out.println("Running RP");
             List<TrafficParticipant> queue = new ArrayList<>(targetRoad.getTrafficParticipants());
             queue.sort(TrafficParticipant::compareTo);
             for (TrafficParticipant car : queue) {

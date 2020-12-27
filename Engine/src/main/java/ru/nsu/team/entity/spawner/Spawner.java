@@ -23,6 +23,7 @@ public class Spawner {
     private List<PlaceOfInterest> possibleDestinations;
     private Pathfinder pathfinder;
     private Road spawningQueue;
+    private final Random rng;
 
 
     public Spawner(Node node, Road spawningQueue) {
@@ -31,6 +32,7 @@ public class Spawner {
         this.pathfinder = new DijkstraPathfinder();
         this.configs = new ArrayList<>();
         this.spawningQueue = spawningQueue;
+        this.rng = new Random();
     }
 
     public Spawner(Node node) {
@@ -39,7 +41,7 @@ public class Spawner {
         this.pathfinder = new DijkstraPathfinder();
         this.configs = new ArrayList<>();
         this.spawningQueue = new Road(-1, null, node);
-        //TODO add courses
+        this.rng = new Random();
     }
 
     public Spawner(Node node, List<PlaceOfInterest> destinations) {
@@ -48,17 +50,16 @@ public class Spawner {
         this.pathfinder = new DijkstraPathfinder(destinations.stream().flatMap(poi -> poi.getNodes().stream()).collect(Collectors.toList()));
         this.configs = new ArrayList<>();
         this.spawningQueue = new Road(-1, null, node);
-        //TODO add courses
+        this.rng = new Random();
     }
 
     private PlaceOfInterest selectDestination() {
         double weightSum = possibleDestinations.stream().map(PlaceOfInterest::getWeight).reduce(Double::sum).orElseThrow(() -> new IllegalStateException("No places of interest were provided for spawner"));
-        PlaceOfInterest destination;
-        Random rnd = new Random();
-        double selected = rnd.nextDouble() * weightSum;
+        double selected = rng.nextDouble() * weightSum;
         double accumulated = 0;
         for (PlaceOfInterest poi : possibleDestinations) {
-            if (accumulated + poi.getWeight() >= selected) {
+            accumulated += poi.getWeight();
+            if (accumulated >= selected) {
                 return poi;
             }
         }
@@ -100,6 +101,14 @@ public class Spawner {
             spawningQueue.addTrafficParticipant(spawnedCar);
             spawnPosition += Car.DEFAULT_DISTANCE;
         }
+    }
+
+    public void spawnCar(){
+
+    }
+
+    public void spawnCar(double position){
+
     }
 
     public Configuration getConfigN(int n) {

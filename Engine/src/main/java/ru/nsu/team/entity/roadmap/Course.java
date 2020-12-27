@@ -20,6 +20,7 @@ public class Course {
         this.fromLane = fromLane;
         this.toLane = toLane;
         this.intersections = intersections;
+        this.length = length;
     }
 
     public Lane getFromLane() {

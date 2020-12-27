@@ -50,6 +50,6 @@ public class Path {
     }
 
     public Path copy() {
-        return new Path(roads);
+        return new Path(new ArrayList<>(roads));
     }
 }

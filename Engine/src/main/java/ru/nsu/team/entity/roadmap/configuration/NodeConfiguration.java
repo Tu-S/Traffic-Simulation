@@ -7,8 +7,8 @@ public class NodeConfiguration {
     private List<Integer> roadsIn;
     private List<TrafficLightConfiguration> trafficLight;
     private List<SpawnConfiguration> periodsOfSpawn;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
     public NodeConfiguration(List<Integer> roadsIn, List<Integer> roadsOut) {
         this.roadsOut = roadsOut;
@@ -16,11 +16,11 @@ public class NodeConfiguration {
 
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

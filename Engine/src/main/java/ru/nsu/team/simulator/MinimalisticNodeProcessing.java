@@ -19,19 +19,23 @@ public class MinimalisticNodeProcessing implements Runnable {
     private final CountDownLatch latch;
     private final PlaybackBuilder playbackBuilder;
     private final ReporterBuilder reporterBuilder;
+    private final int time;
+    private final int timeInterval;
 
-    public MinimalisticNodeProcessing(Node targetNode, Set<Road> activeRoads, CountDownLatch latch, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
+    public MinimalisticNodeProcessing(int time, int timeInterval, Node targetNode, Set<Road> activeRoads, CountDownLatch latch, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
         this.activeRoads = activeRoads;
         this.targetNode = targetNode;
         this.latch = latch;
         this.playbackBuilder = playbackBuilder;
         this.reporterBuilder = reporterBuilder;
+        this.time = time;
+        this.timeInterval = timeInterval;
     }
 
     private void processCar(TrafficParticipant participant) {
         //TODO add traffic lights
-        System.out.println("Node " + targetNode.getId());
-        System.out.println(participant);
+        //System.out.println("Node " + targetNode.getId());
+        //System.out.println(participant);
         Car car = participant.getCar();
         PositionOnRoad position = participant.getPosition();
         Road road = participant.getPosition().getCurrentRoad();
@@ -45,11 +49,13 @@ public class MinimalisticNodeProcessing implements Runnable {
         Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLane()), nextRoad);
         int timeLeft = car.getTimeLeft();
         double dist = course.getLength();
-        System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
-        if (timeLeft >= dist / (car.getSpeed() + 1) && course.getTimeLeft() >= dist / (car.getSpeed() + 1) && !targetBlocked(participant, course.getToLane())) {
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 1) + 1));
+        car.setSpeed(car.getSpeed() * 0.7);
+        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
+        //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
+        if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) - 1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
-            course.decreaseTime((int) (dist / (car.getSpeed() + 1)));
+            course.decreaseTime((int) (dist / (car.getSpeed() + 5))+1);
             position.setCurrentRoad(course.getToLane().getParentRoad());
             position.setPosition(course.getToLane().getParentRoad().getLength());
             position.setCurrentLane(findLaneNumber(course.getToLane()));
@@ -57,10 +63,13 @@ public class MinimalisticNodeProcessing implements Runnable {
             position.getCurrentRoad().addTrafficParticipant(participant);
             System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
             car.getPath().popRoad();
+            playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
             return;
         }
         // TODO deceleration
         car.setSpeed(0);
+        playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft());
+
     }
 
     private int findLaneNumber(Lane lane) {
@@ -86,7 +95,7 @@ public class MinimalisticNodeProcessing implements Runnable {
     }
 
     private void processDestination(TrafficParticipant car) {
-        System.out.println("Car \"" + car.getCar() + "\" has reached destination!)");
+        System.out.println("Car \"" + car.getCar() + "\" has reached destination " + targetNode + "!)");
         //TODO process point of interest
     }
 

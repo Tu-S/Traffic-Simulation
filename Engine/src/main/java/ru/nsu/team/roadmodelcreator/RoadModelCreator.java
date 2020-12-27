@@ -21,7 +21,7 @@ public class RoadModelCreator {
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
         calculateAngles(roadMapConfig.getNodes(), roadMapConfig.getRoads());
-        createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes());
+        createCourses(roadMapConfig.getRoads(), roadMapConfig.getNodes(), map);
         createSpawners(roadMapConfig.getNodes(), map);
         createPlacesOfInterest(roadMapConfig.getPointsOfInterest(), map);
         createTrafficParticipants(roadMapConfig.getTrafficParticipants());
@@ -44,7 +44,7 @@ public class RoadModelCreator {
     private long getValue(String time) {
         time += ":00";
         Time t = Time.valueOf(time);
-        return t.getTime()/1000;
+        return t.getTime() / 1000;
     }
 
     private double calculateLength(Position start, Position end) {
@@ -84,7 +84,7 @@ public class RoadModelCreator {
                     spawner.addConfiguration(new Configuration(start, end, config.getSpawnRate()));
                 }
                 Set<Lane> allLanes = node.getCourses().stream().map(Course::getToLane).map(Lane::getParentRoad).flatMap(r -> r.getLanes().stream()).collect(Collectors.toSet());
-                allLanes.forEach(ln -> node.addCourse(new Course(spawnedQueue.getLaneN(0),ln)));
+                allLanes.forEach(ln -> node.addCourse(new Course(spawnedQueue.getLaneN(0), ln)));
                 map.addSpawner(spawner);
                 roads.add(spawnedQueue);
             }
@@ -111,7 +111,7 @@ public class RoadModelCreator {
         }
     }
 
-    private void createCourses(List<RoadConfiguration> roadsConfig, List<NodeConfiguration> nodesConfig) {
+    private void createCourses(List<RoadConfiguration> roadsConfig, List<NodeConfiguration> nodesConfig, RoadMap map) {
         int nodeNumber;
         nodeNumber = nodesConfig.size();
         for (int i = 0; i < nodeNumber; i++) {
@@ -120,15 +120,18 @@ public class RoadModelCreator {
             List<Integer> inRoadsId = nodeConfig.getRoadsIn();
             Node node = this.nodes.get(i);
 
+            Set<Course> createdCourses = new HashSet<>();
             int lenIds = nodeConfig.getCoursesNumber();
             for (int heh = 0; heh < lenIds; heh++) {
                 int in = inRoadsId.get(heh);
-                int out = outRoadsId.get(heh);
-
-                //TODO create courses and intersections according to signs and trajectories
-                Course course = new Course(roads.get(in).getLaneN(0), roads.get(out).getLaneN(0));
-                node.addCourse(course);
+                for (Lane inLane : roads.get(in).getLanes()) {
+                    for (Integer roadId : outRoadsId) {
+                        roads.get(roadId).getLanes().forEach(outLane -> createdCourses.add(new Course(inLane, outLane, Collections.singletonList(new Intersection(0)), 10)));
+                    }
+                }
             }
+            createdCourses.forEach(node::addCourse);
+            map.getCourseSet().addAll(createdCourses);
         }
     }
 

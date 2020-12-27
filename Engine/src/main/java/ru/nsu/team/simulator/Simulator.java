@@ -73,7 +73,9 @@ public class Simulator extends Thread {
         Set<Road> activeRoads = Collections.synchronizedSet(map.getRoads().parallelStream().filter(r -> r.getTrafficParticipantsNumber() > 0).collect(Collectors.toCollection(HashSet::new)));
         Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<Node>());
         while (!activeRoads.isEmpty()) {
+
             //TODO check for edge-cases
+            activeRoads.addAll(map.getRoads().parallelStream().filter(r -> r.getTrafficParticipants().stream().anyMatch(tp -> tp.getCar().getTimeLeft() > 0)).collect(Collectors.toSet()));
             CountDownLatch latch = new CountDownLatch(activeRoads.size());
             for (Road road : activeRoads) {
                 executor.submit(new MinimalisticRoadProcessing((int) map.getCurrentTime(), timeInterval, road, activeNodes, latch, playbackBuilder, reporterBuilder));
@@ -87,7 +89,7 @@ public class Simulator extends Thread {
             latch = new CountDownLatch(activeNodes.size());
             activeRoads.clear();
             for (Node node : activeNodes) {
-                executor.submit(new MinimalisticNodeProcessing(node, activeRoads, latch, playbackBuilder, reporterBuilder));
+                executor.submit(new MinimalisticNodeProcessing((int) map.getCurrentTime(), timeInterval, node, activeRoads, latch, playbackBuilder, reporterBuilder));
             }
             try {
                 latch.await();
@@ -123,6 +125,9 @@ public class Simulator extends Thread {
                 resetTime(map);
                 spawnCars(map);
                 runCycle();
+                if(map.getRoads().get(0).getTrafficParticipants().size()>10){
+                    System.out.println("Bug???");
+                }
                 map.setCurrentTime(map.getCurrentTime() + timeInterval);
             }
         } catch (Throwable t) {
