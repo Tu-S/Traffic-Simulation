@@ -56,7 +56,6 @@ public class SimulationController implements Runnable {
         try {
             sim.join(5000);
             saveHeatMap(this.heatMapSavePath);
-            saveRoadMap(this.mapLoadPath);
             saveCarStates(this.carStateSavePath);
 
         } catch (InterruptedException e) {
@@ -96,5 +95,10 @@ public class SimulationController implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("Saving stuff");
+        saveHeatMap(this.heatMapSavePath);
+        saveCarStates(this.carStateSavePath);
+        System.out.println("Done!");
+        System.exit(0);
     }
 }

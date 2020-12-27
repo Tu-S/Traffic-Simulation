@@ -60,6 +60,7 @@ public class DijkstraPathfinder implements Pathfinder {
 
         unsettledNodes.add(source);
         //TODO process only until all destinations are found
+        //TODO check if can move like this through the intersection
         while (unsettledNodes.size() != 0) {
             PathNode currentNode = unsettledNodes.poll();
             for (Course course :
@@ -98,6 +99,7 @@ public class DijkstraPathfinder implements Pathfinder {
                 cache.put(new AbstractMap.SimpleEntry<>(start, destination), new Path(pathNodes.get(destination).path));
             }
         }
+        cache.remove(new AbstractMap.SimpleEntry<>(start, start));
     }
 
     @Override
@@ -129,7 +131,7 @@ public class DijkstraPathfinder implements Pathfinder {
     public Path findPath(Node start, PlaceOfInterest destination) throws DestinationUnreachable {
         Path bestCachedResult = getBestCachedResult(start, destination);
         if (bestCachedResult != null) {
-            return bestCachedResult;
+            return bestCachedResult.copy();
         }
         possibleDestinations.addAll(destination.getNodes());
         init(start, possibleDestinations);
