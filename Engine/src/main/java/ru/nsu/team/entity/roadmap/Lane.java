@@ -55,4 +55,9 @@ public class Lane {
     public boolean leadsTo(Lane lane) {
         return parentRoad.getExitNode().getCourses().stream().anyMatch(c -> c.getFromLane() == this && c.getToLane() == lane);
     }
+
+    @Override
+    public String toString() {
+        return parentRoad.toString() + ":" + parentRoad.getLanes().indexOf(this);
+    }
 }
