@@ -1,7 +1,7 @@
 package ru.nsu.team.controller;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
-import ru.nsu.team.entity.report.ReporterBuilder;
+import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.statistics.CarState;
@@ -25,7 +25,7 @@ public class SimulationController implements Runnable {
     private List<KeyValuePair<Timeline, List<RoadCongestion>>> heatMap;
     private List<CarState> carStates;
     private PlaybackBuilder playbackBuilder;
-    private ReporterBuilder reporterBuilder;
+    private HeatmapBuilder reporterBuilder;
     private String mapSavePath;
     private String heatMapSavePath;
     private String carStateSavePath;
@@ -80,14 +80,14 @@ public class SimulationController implements Runnable {
 
     public void saveHeatMap(String fileName) {
         HeatMapSaver saver = new HeatMapSaver();
-        saver.saveHeatMap(reporterBuilder.getReporter().getHeatmap(), fileName);
+        saver.saveHeatMap(reporterBuilder.build(), fileName);
     }
 
     @Override
     public void run() {
         prepareMap(this.mapLoadPath);
         playbackBuilder = new PlaybackBuilder();
-        reporterBuilder = new ReporterBuilder();
+        reporterBuilder = new HeatmapBuilder(roadMap, 30 * 60);
         sim = new Simulator(30, roadMap, playbackBuilder, reporterBuilder);
         sim.start();
         try {

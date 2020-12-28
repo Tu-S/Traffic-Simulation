@@ -1,7 +1,7 @@
 package ru.nsu.team.simulator;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
-import ru.nsu.team.entity.report.ReporterBuilder;
+import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
@@ -20,11 +20,11 @@ public class Simulator extends Thread {
     private final Semaphore runPermission;
     private boolean paused;
     private boolean alive;
-    private final ReporterBuilder reporterBuilder;
+    private final HeatmapBuilder reporterBuilder;
     private final PlaybackBuilder playbackBuilder;
 
 
-    public Simulator(int timeInterval, RoadMap map, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
+    public Simulator(int timeInterval, RoadMap map, PlaybackBuilder playbackBuilder, HeatmapBuilder reporterBuilder) {
         super();
         this.timeInterval = timeInterval;
         this.map = map;
@@ -118,6 +118,7 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Simulating road map from " + map.getStart() + " to " + map.getEndTime());
         try {
             while (map.getCurrentTime() < map.getEndTime() && isSimulating()) {
                 System.out.println(map.getCurrentTime());
@@ -125,9 +126,6 @@ public class Simulator extends Thread {
                 resetTime(map);
                 spawnCars(map);
                 runCycle();
-                if(map.getRoads().get(0).getTrafficParticipants().size()>10){
-                    System.out.println("Bug???");
-                }
                 map.setCurrentTime(map.getCurrentTime() + timeInterval);
             }
         } catch (Throwable t) {

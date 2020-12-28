@@ -1,7 +1,7 @@
 package ru.nsu.team.simulator;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
-import ru.nsu.team.entity.report.ReporterBuilder;
+import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Car;
@@ -21,10 +21,10 @@ public class MinimalisticRoadProcessing implements Runnable {
     private final int timeFrameStart;
     private final HashMap<Integer, TrafficParticipant> blockingVehicles;
     private final PlaybackBuilder playbackBuilder;
-    private final ReporterBuilder reporterBuilder;
+    private final HeatmapBuilder reporterBuilder;
     private final int timeInterval;
 
-    public MinimalisticRoadProcessing(int timeFrameStart, int timeInterval, Road targetRoad, Set<Node> activeNodes, CountDownLatch latch, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
+    public MinimalisticRoadProcessing(int timeFrameStart, int timeInterval, Road targetRoad, Set<Node> activeNodes, CountDownLatch latch, PlaybackBuilder playbackBuilder, HeatmapBuilder reporterBuilder) {
         this.activeNodes = activeNodes;
         this.targetRoad = targetRoad;
         this.latch = latch;
@@ -81,8 +81,8 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void moveCarStraight(TrafficParticipant participant) {
+        System.out.println(participant);
         PositionOnRoad position = participant.getPosition();
-        //System.out.println("Moving from " + position);
         Car car = participant.getCar();
         double distance;
         double possibleDistance = calculateDistanceByTime(participant, car.getTimeLeft());
@@ -107,8 +107,9 @@ public class MinimalisticRoadProcessing implements Runnable {
                 // Car can reach the node
                 activeNodes.add(targetRoad.getExitNode());
                 targetRoad.getExitNode().addPendingCar(participant);
-                position.setPosition(0);
                 updateAfterDistance(participant, position.getPosition());
+                position.setPosition(0);
+
                 // TODO offset
                 // TODO decrease speed
                 // TODO check traffic light
@@ -119,8 +120,9 @@ public class MinimalisticRoadProcessing implements Runnable {
                 //TODO update speed
             }
         }
-        saveCarState(participant, participant.getCar().getTimeLeft());
-        //System.out.println("To " + position);
+        saveCarState(participant, timeFrameStart + timeInterval - participant.getCar().getTimeLeft());
+        System.out.println(participant);
+        System.out.println();
     }
 
     private double calculateDistanceByTime(TrafficParticipant participant, int time) {
@@ -149,6 +151,7 @@ public class MinimalisticRoadProcessing implements Runnable {
 
 
     private void updateAfterTime(Car car, int time) {
+        System.out.println(time);
         double speed = car.getSpeed();
         double acceleration = car.getAcceleration();
         int timeOfAcceleration = (int) ((car.getMaxSpeed() - speed) / acceleration);
@@ -159,7 +162,11 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void updateAfterDistance(TrafficParticipant participant, double distance) {
+        System.out.print(participant.toString() + " moved for " + distance + " in ");
         int time = calculateTimeByDistance(participant, distance);
+        if (distance > 0) {
+            time++;
+        }
         updateAfterTime(participant.getCar(), time);
     }
 

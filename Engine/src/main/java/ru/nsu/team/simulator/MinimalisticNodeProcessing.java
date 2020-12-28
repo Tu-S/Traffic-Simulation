@@ -1,7 +1,7 @@
 package ru.nsu.team.simulator;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
-import ru.nsu.team.entity.report.ReporterBuilder;
+import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
@@ -18,11 +18,11 @@ public class MinimalisticNodeProcessing implements Runnable {
     private final Node targetNode;
     private final CountDownLatch latch;
     private final PlaybackBuilder playbackBuilder;
-    private final ReporterBuilder reporterBuilder;
+    private final HeatmapBuilder reporterBuilder;
     private final int time;
     private final int timeInterval;
 
-    public MinimalisticNodeProcessing(int time, int timeInterval, Node targetNode, Set<Road> activeRoads, CountDownLatch latch, PlaybackBuilder playbackBuilder, ReporterBuilder reporterBuilder) {
+    public MinimalisticNodeProcessing(int time, int timeInterval, Node targetNode, Set<Road> activeRoads, CountDownLatch latch, PlaybackBuilder playbackBuilder, HeatmapBuilder reporterBuilder) {
         this.activeRoads = activeRoads;
         this.targetNode = targetNode;
         this.latch = latch;
@@ -42,6 +42,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         Path path = participant.getCar().getPath();
         if (path.getRoads().isEmpty()) {
             processDestination(participant);
+            reporterBuilder.markExit(participant,time + timeInterval - car.getTimeLeft());
             road.deleteTrafficParticipant(participant);
             return;
         }
@@ -53,7 +54,8 @@ public class MinimalisticNodeProcessing implements Runnable {
         playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
         //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) - 1));
+            reporterBuilder.markExit(participant,time + timeInterval - car.getTimeLeft());
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
             course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
             position.setCurrentRoad(course.getToLane().getParentRoad());
@@ -64,6 +66,7 @@ public class MinimalisticNodeProcessing implements Runnable {
             System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
             car.getPath().popRoad();
             playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
+            reporterBuilder.markEnter(participant,time + timeInterval - car.getTimeLeft());
             return;
         }
         // TODO deceleration
