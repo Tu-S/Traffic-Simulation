@@ -29,12 +29,7 @@ public class RoadModelCreator {
             map.addRoad(road);
         }
         map.setStart(getValue(roadMapConfig.getStart()));
-        long t;
-        if ((t = getValue(roadMapConfig.getCurrentTime())) < 0)
-            map.setCurrentTime(map.getStart());
-        else {
-            map.setCurrentTime(t);
-        }
+        map.setCurrentTime(map.getStart());
         map.setEndTime(getValue(roadMapConfig.getEnd()));
         map.getSpawners().forEach(s -> s.addPossibleDestination(map.getPlacesOfInterest()));
 
@@ -42,9 +37,11 @@ public class RoadModelCreator {
     }
 
     private long getValue(String time) {
-        time += ":00";
-        Time t = Time.valueOf(time);
-        return t.getTime() / 1000;
+        String[] tokens = time.split(":");
+        int res = Integer.parseInt(tokens[0]) * 3600;
+        res += Integer.parseInt(tokens[1]) * 60;
+        System.out.println(time+" is "+res);
+        return res;
     }
 
     private double calculateLength(Position start, Position end) {
