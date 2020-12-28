@@ -40,7 +40,6 @@ public class RoadModelCreator {
         String[] tokens = time.split(":");
         int res = Integer.parseInt(tokens[0]) * 3600;
         res += Integer.parseInt(tokens[1]) * 60;
-        System.out.println(time+" is "+res);
         return res;
     }
 
