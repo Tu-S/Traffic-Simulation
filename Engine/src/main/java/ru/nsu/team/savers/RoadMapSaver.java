@@ -25,7 +25,7 @@ public class RoadMapSaver {
             }
         }
         long millis = map.getCurrentTime();
-        mapConfiguration.setCurrentTime(toDate(millis));
+        mapConfiguration.setCurrentTime(toDate(millis*1000));
         mapConfiguration.setTrafficParticipants(trafficParticipantConfigurationList);
         saveMapConfig(mapConfiguration, fileName);
     }
