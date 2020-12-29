@@ -6,11 +6,9 @@ import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
 
+import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Simulator extends Thread {
@@ -103,7 +101,6 @@ public class Simulator extends Thread {
     private void resetTime(RoadMap rm) {
         rm.getRoads().forEach(r -> r.getTrafficParticipants().forEach(p -> p.getCar().setTimeLeft(timeInterval)));
         rm.getCourseSet().forEach(c -> c.resetTimeLeft(timeInterval));
-        //TODO traffic lights
     }
 
 
@@ -117,9 +114,10 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
-        ExecutorService executor = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() - 2, 1));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         System.out.println("Simulating road map from " + map.getStart() + " to " + map.getEndTime());
         try {
+            Instant start = Instant.now();
             while (map.getCurrentTime() < map.getEndTime() && isSimulating()) {
                 //System.out.println(map.getCurrentTime());
                 waitIfPaused();
@@ -128,6 +126,8 @@ public class Simulator extends Thread {
                 runCycle(executor);
                 map.setCurrentTime(map.getCurrentTime() + timeInterval);
             }
+            Instant end = Instant.now();
+            System.out.println("Simulation duration:" + (end.minusMillis(start.toEpochMilli()).toEpochMilli()) + "ms");
         } catch (Throwable t) {
             t.printStackTrace();
         }
