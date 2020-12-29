@@ -68,8 +68,7 @@ public class Simulator extends Thread {
         runPermission.release();
     }
 
-    private void runCycle() {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+    private void runCycle(ExecutorService executor) {
         Set<Road> activeRoads = Collections.synchronizedSet(map.getRoads().parallelStream().filter(r -> r.getTrafficParticipantsNumber() > 0).collect(Collectors.toCollection(HashSet::new)));
         Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<Node>());
         while (!activeRoads.isEmpty()) {
@@ -118,14 +117,15 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
+        ExecutorService executor = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() - 2, 1));
         System.out.println("Simulating road map from " + map.getStart() + " to " + map.getEndTime());
         try {
             while (map.getCurrentTime() < map.getEndTime() && isSimulating()) {
-                System.out.println(map.getCurrentTime());
+                //System.out.println(map.getCurrentTime());
                 waitIfPaused();
                 resetTime(map);
                 spawnCars(map);
-                runCycle();
+                runCycle(executor);
                 map.setCurrentTime(map.getCurrentTime() + timeInterval);
             }
         } catch (Throwable t) {

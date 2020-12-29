@@ -63,7 +63,7 @@ public class MinimalisticNodeProcessing implements Runnable {
             position.setCurrentLane(findLaneNumber(course.getToLane()));
             activeRoads.add(course.getToLane().getParentRoad());
             position.getCurrentRoad().addTrafficParticipant(participant);
-            System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
+            //System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
             car.getPath().popRoad();
             playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
             reporterBuilder.markEnter(participant,time + timeInterval - car.getTimeLeft());
@@ -99,7 +99,7 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processDestination(TrafficParticipant car) {
         playbackBuilder.addCarState(car, time + timeInterval - car.getCar().getTimeLeft(), false);
-        System.out.println("Car \"" + car.getCar() + "\" has reached destination " + targetNode + "!)");
+        //System.out.println("Car \"" + car.getCar() + "\" has reached destination " + targetNode + "!)");
         //TODO process point of interest
     }
 

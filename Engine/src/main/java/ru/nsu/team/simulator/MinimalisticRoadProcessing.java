@@ -81,7 +81,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void moveCarStraight(TrafficParticipant participant) {
-        System.out.println(participant);
+        //System.out.println(participant);
         PositionOnRoad position = participant.getPosition();
         Car car = participant.getCar();
         double distance;
@@ -121,8 +121,8 @@ public class MinimalisticRoadProcessing implements Runnable {
             }
         }
         saveCarState(participant, timeFrameStart + timeInterval - participant.getCar().getTimeLeft());
-        System.out.println(participant);
-        System.out.println();
+        //System.out.println(participant);
+        //System.out.println();
     }
 
     private double calculateDistanceByTime(TrafficParticipant participant, int time) {
@@ -151,7 +151,7 @@ public class MinimalisticRoadProcessing implements Runnable {
 
 
     private void updateAfterTime(Car car, int time) {
-        System.out.println(time);
+        //System.out.println(time);
         double speed = car.getSpeed();
         double acceleration = car.getAcceleration();
         int timeOfAcceleration = (int) ((car.getMaxSpeed() - speed) / acceleration);
@@ -162,7 +162,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void updateAfterDistance(TrafficParticipant participant, double distance) {
-        System.out.print(participant.toString() + " moved for " + distance + " in ");
+        //System.out.print(participant.toString() + " moved for " + distance + " in ");
         int time = calculateTimeByDistance(participant, distance);
         if (distance > 0) {
             time++;

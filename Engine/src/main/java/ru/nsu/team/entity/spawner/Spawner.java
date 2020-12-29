@@ -78,7 +78,7 @@ public class Spawner {
             return;
         }
         int toSpawn = (rng.nextInt(bound) * duration) / 60;
-        System.out.println("Will spawn " + toSpawn);
+        //System.out.println("Will spawn " + toSpawn);
         List<TrafficParticipant> queuedCars = spawningQueue.getLaneN(0).getParticipants();
         double spawnPosition;
         if (queuedCars.isEmpty()) {
