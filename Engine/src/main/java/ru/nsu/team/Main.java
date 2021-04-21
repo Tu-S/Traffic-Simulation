@@ -1,9 +1,12 @@
 package ru.nsu.team;
 
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
 
 public class Main {
     public static void main(String[] args) {
+        Logger.getRootLogger().addAppender(new ConsoleAppender());
        /* if(args.length == 0){
             System.out.println("No arguments exception");
             return;

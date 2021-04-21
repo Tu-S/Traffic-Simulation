@@ -80,8 +80,7 @@ public class Simulator extends Thread {
             try {
                 latch.await();
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                return;
+                throw new RuntimeException(e);
             }
             latch = new CountDownLatch(activeNodes.size());
             activeRoads.clear();
@@ -91,8 +90,7 @@ public class Simulator extends Thread {
             try {
                 latch.await();
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                return;
+                throw new RuntimeException(e);
             }
             activeNodes.clear();
         }

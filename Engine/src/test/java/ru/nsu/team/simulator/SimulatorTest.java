@@ -1,5 +1,9 @@
 package ru.nsu.team.simulator;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
@@ -14,6 +18,13 @@ import java.util.List;
 import static org.junit.Assert.fail;
 
 public class SimulatorTest {
+
+    @BeforeClass
+    public static void initLogger() {
+        Logger.getRootLogger().addAppender(
+                new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
+    }
+
     private RoadMap createSampleLineRoadMap() {
         List<Node> nodes = Arrays.asList(new Node(0), new Node(1));
         RoadMap rm = new RoadMap();
@@ -28,7 +39,8 @@ public class SimulatorTest {
 
         Road queue = new Road(1, null, nodes.get(0), 1, 100);
         rm.addRoad(queue);
-        Course course = new Course(queue.getLaneN(0), road.getLaneN(0), Collections.singletonList(new Intersection(0)), 10);
+        Course course = new Course(queue.getLaneN(0), road.getLaneN(0),
+                Collections.singletonList(new Intersection(0)), 10);
         rm.addCourse(course);
         nodes.get(0).addCourse(course);
         Spawner spawner = new Spawner(nodes.get(0), queue);
@@ -53,7 +65,8 @@ public class SimulatorTest {
 
         Road queue = new Road(1, null, nodes.get(0), 1, 100);
         rm.addRoad(queue);
-        Course course = new Course(queue.getLaneN(0), road.getLaneN(0), Collections.singletonList(new Intersection(0)), 10);
+        Course course = new Course(queue.getLaneN(0), road.getLaneN(0),
+                Collections.singletonList(new Intersection(0)), 10);
         rm.addCourse(course);
         nodes.get(0).addCourse(course);
         Spawner spawner = new Spawner(nodes.get(0), queue);
@@ -71,14 +84,14 @@ public class SimulatorTest {
     @Test
     public void testSimulator() {
         RoadMap rm = createSampleLineRoadMap();
-        Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new HeatmapBuilder(rm,100));
+        Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new HeatmapBuilder(rm, 100));
         sim.setUncaughtExceptionHandler((thread, throwable) -> {
             throwable.printStackTrace();
             failTest();
         });
         sim.start();
         try {
-            sim.join(1000);
+            sim.join(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail();

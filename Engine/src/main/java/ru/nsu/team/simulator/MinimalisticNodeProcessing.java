@@ -1,8 +1,12 @@
 package ru.nsu.team.simulator;
 
+import org.apache.log4j.Logger;
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
-import ru.nsu.team.entity.roadmap.*;
+import ru.nsu.team.entity.roadmap.Course;
+import ru.nsu.team.entity.roadmap.Lane;
+import ru.nsu.team.entity.roadmap.Node;
+import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
@@ -14,6 +18,9 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 public class MinimalisticNodeProcessing implements Runnable {
+
+    private static Logger LOG = Logger.getRootLogger();
+
     private final Set<Road> activeRoads;
     private final Node targetNode;
     private final CountDownLatch latch;
@@ -22,10 +29,12 @@ public class MinimalisticNodeProcessing implements Runnable {
     private final int time;
     private final int timeInterval;
 
-    public MinimalisticNodeProcessing(int time, int timeInterval, Node targetNode, Set<Road> activeRoads, CountDownLatch latch, PlaybackBuilder playbackBuilder, HeatmapBuilder reporterBuilder) {
+    public MinimalisticNodeProcessing(int time, int timeInterval, Node targetNode, Set<Road> activeRoads,
+                                      CountDownLatch cyclicBarrier, PlaybackBuilder playbackBuilder,
+                                      HeatmapBuilder reporterBuilder) {
         this.activeRoads = activeRoads;
         this.targetNode = targetNode;
-        this.latch = latch;
+        this.latch = cyclicBarrier;
         this.playbackBuilder = playbackBuilder;
         this.reporterBuilder = reporterBuilder;
         this.time = time;
@@ -42,7 +51,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         Path path = participant.getCar().getPath();
         if (path.getRoads().isEmpty()) {
             processDestination(participant);
-            reporterBuilder.markExit(participant,time + timeInterval - car.getTimeLeft());
+            reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
             road.deleteTrafficParticipant(participant);
             return;
         }
@@ -52,9 +61,10 @@ public class MinimalisticNodeProcessing implements Runnable {
         double dist = course.getLength();
         car.setSpeed(car.getSpeed() * 0.7);
         playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
-        //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist / (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
+        //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist /
+        // (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
-            reporterBuilder.markExit(participant,time + timeInterval - car.getTimeLeft());
+            reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
             car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
             position.getCurrentRoad().deleteTrafficParticipant(participant);
             course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
@@ -66,7 +76,7 @@ public class MinimalisticNodeProcessing implements Runnable {
             //System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
             car.getPath().popRoad();
             playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
-            reporterBuilder.markEnter(participant,time + timeInterval - car.getTimeLeft());
+            reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
             return;
         }
         // TODO deceleration
