@@ -26,7 +26,7 @@ public class Simulator extends Thread {
         super();
         this.timeInterval = timeInterval;
         this.map = map;
-        this.runPermission = new Semaphore(1);
+        this.runPermission = new Semaphore(1,true);
         this.paused = false;
         this.playbackBuilder = playbackBuilder;
         this.reporterBuilder = reporterBuilder;
