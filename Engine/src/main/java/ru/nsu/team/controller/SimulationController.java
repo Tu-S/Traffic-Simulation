@@ -38,8 +38,19 @@ public class SimulationController implements Runnable {
         this.heatMapSavePath = heatMapSavePath;
         this.carStateSavePath = carStateSavePath;
     }
+    public SimulationController() {
+    }
 
     public void pause() {
+    }
+
+
+    public void testRun(String path){
+        RoadMapReader roadMapReader = new RoadMapReader();
+        this.mapConfig = roadMapReader.getMapConfig(path);
+        RoadModelCreator mapCreator = new RoadModelCreator();
+        assert mapConfig != null;
+        this.roadMap = mapCreator.createRoadMap(mapConfig);
     }
 
 

@@ -115,18 +115,54 @@ public class RoadModelCreator {
             List<Integer> outRoadsId = nodeConfig.getRoadsOut();
             List<Integer> inRoadsId = nodeConfig.getRoadsIn();
             Node node = this.nodes.get(i);
-
+            //все курсы для одной lane
+            List<KeyValue> lanesCourses = new ArrayList<>();
             Set<Course> createdCourses = new HashSet<>();
-            int lenIds = nodeConfig.getCoursesNumber();
-            for (int heh = 0; heh < lenIds; heh++) {
-                int in = inRoadsId.get(heh);
-                for (Lane inLane : roads.get(in).getLanes()) {
-                    for (Integer roadId : outRoadsId) {
-                        roads.get(roadId).getLanes().forEach(outLane -> createdCourses.add(new Course(inLane, outLane, Collections.singletonList(new Intersection(0)), 10)));
+            int coursesNumber = nodeConfig.getCoursesNumber();
+            for (int inId = 0; inId < coursesNumber; inId++) {
+                int inRoadId = inRoadsId.get(inId);
+                for (Lane inLane : roads.get(inRoadId).getLanes()) {
+                    var curCourses = new ArrayList<Course>();
+                    for (int outId = 0; outId < outRoadsId.size(); outId++) {
+                        //убираем случай с зеркальной дорогой(развоороты запрещены)
+                        if (inId == outId) {
+                            continue;
+                        }
+                        var outRoadId = outRoadsId.get(outId);
+                        roads.get(outRoadId).getLanes().forEach(outLane -> {
+                            if (outLane.getLaneId() == inLane.getLaneId()) {
+                                createdCourses.add(new Course(inLane, outLane, 10));
+                                curCourses.add(new Course(inLane, outLane, 10));
+                            }
+                        });
+                    }
+                    lanesCourses.add(new KeyValue(inLane, curCourses));
+                }
+            }
+            //если входных дорог меньше 3, то пересечений не будет
+            if (coursesNumber > 2) {
+                for (int from = 0; from < lanesCourses.size(); from++) {
+                    var coursesFromLane = lanesCourses.get(from).courses;
+                    for (Course crFromLane : coursesFromLane) {
+                        for (int another = 0; another < lanesCourses.size(); another++) {
+                            if (from == another) {
+                                continue;
+                            }
+                            var anotherLaneCourses = lanesCourses.get(another).courses;
+                            for (var cr : anotherLaneCourses) {
+                                if (cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId()) {
+                                    var intersection = new Intersection(5);
+                                    crFromLane.addIntersection(intersection);
+                                    cr.addIntersection(intersection);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
-            createdCourses.forEach(node::addCourse);
+            lanesCourses.forEach(pair -> pair.courses.forEach(node::addCourse));
+            //createdCourses.forEach(node::addCourse);
             map.getCourseSet().addAll(createdCourses);
         }
     }
@@ -283,5 +319,15 @@ public class RoadModelCreator {
 
     }
 
+    private class KeyValue {
+        Lane key;
+        List<Course> courses;
+
+        public KeyValue(Lane key, List<Course> courses) {
+            this.key = key;
+            this.courses = courses;
+        }
+
+    }
 
 }

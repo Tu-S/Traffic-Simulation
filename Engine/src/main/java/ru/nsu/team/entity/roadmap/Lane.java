@@ -9,6 +9,7 @@ import java.util.Queue;
 
 public class Lane {
     double maxSpeed;
+    private int laneId;
     private Road parentRoad;
     private List<TrafficParticipant> trafficParticipants;
 
@@ -18,10 +19,16 @@ public class Lane {
         this.parentRoad = parentRoad;
     }
 
-    public Lane(double maxSpeed, Road parentRoad) {
+    public Lane(int laneId,double maxSpeed, Road parentRoad) {
+        this.laneId = laneId;
         this.trafficParticipants = new ArrayList<>();
         this.maxSpeed = maxSpeed;
         this.parentRoad = parentRoad;
+    }
+
+
+    public int getLaneId(){
+        return  this.laneId;
     }
 
     public List<TrafficParticipant> getParticipants() {

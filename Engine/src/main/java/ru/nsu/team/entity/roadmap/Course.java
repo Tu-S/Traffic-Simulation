@@ -10,9 +10,17 @@ public class Course {
     private int length;
     private final List<Intersection> intersections;
 
-    public Course(Lane fromRoad, Lane toLane) {
-        this.fromLane = fromRoad;
+
+    public Course(Lane fromLane, Lane toLane) {
+        this.fromLane = fromLane;
         this.toLane = toLane;
+        intersections = new ArrayList<>();
+    }
+
+    public Course(Lane fromLane, Lane toLane, int length) {
+        this.fromLane = fromLane;
+        this.toLane = toLane;
+        this.length = length;
         intersections = new ArrayList<>();
     }
 
@@ -21,6 +29,11 @@ public class Course {
         this.toLane = toLane;
         this.intersections = intersections;
         this.length = length;
+    }
+
+
+    public void addIntersection(Intersection intersection) {
+        this.intersections.add(intersection);
     }
 
     public Lane getFromLane() {

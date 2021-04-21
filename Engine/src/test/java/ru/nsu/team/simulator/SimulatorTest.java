@@ -2,7 +2,7 @@ package ru.nsu.team.simulator;
 
 import org.junit.Test;
 import ru.nsu.team.entity.playback.PlaybackBuilder;
-import ru.nsu.team.entity.report.ReporterBuilder;
+import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.spawner.Configuration;
 import ru.nsu.team.entity.spawner.Spawner;
@@ -71,7 +71,7 @@ public class SimulatorTest {
     @Test
     public void testSimulator() {
         RoadMap rm = createSampleLineRoadMap();
-        Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new ReporterBuilder());
+        Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new HeatmapBuilder(rm,100));
         sim.setUncaughtExceptionHandler((thread, throwable) -> {
             throwable.printStackTrace();
             failTest();

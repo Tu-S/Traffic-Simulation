@@ -33,7 +33,7 @@ public class Road {
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
         for (int i = 0; i < lanes; i++) {
-            addLane(maxSpeed);
+            addLane(i, maxSpeed);
         }
     }
 
@@ -101,8 +101,8 @@ public class Road {
         lanes.add(lane);
     }
 
-    public void addLane(double maxSpeed) {
-        lanes.add(new Lane(maxSpeed, this));
+    public void addLane(int id, double maxSpeed) {
+        lanes.add(new Lane(id, maxSpeed, this));
     }
 
     public Node getFrom() {
