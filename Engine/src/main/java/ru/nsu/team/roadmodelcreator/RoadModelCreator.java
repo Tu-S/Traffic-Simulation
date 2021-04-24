@@ -6,7 +6,6 @@ import ru.nsu.team.entity.spawner.Configuration;
 import ru.nsu.team.entity.spawner.Spawner;
 import ru.nsu.team.entity.trafficparticipant.*;
 
-import java.sql.Time;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -150,11 +149,10 @@ public class RoadModelCreator {
                             }
                             var anotherLaneCourses = lanesCourses.get(another).courses;
                             for (var cr : anotherLaneCourses) {
-                                if (cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId()) {
+                                if (cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId() && !haveSameIntersection(crFromLane, cr)) {
                                     var intersection = new Intersection(5);
                                     crFromLane.addIntersection(intersection);
                                     cr.addIntersection(intersection);
-                                    break;
                                 }
                             }
                         }
@@ -165,6 +163,18 @@ public class RoadModelCreator {
             //createdCourses.forEach(node::addCourse);
             map.getCourseSet().addAll(createdCourses);
         }
+    }
+
+    private boolean haveSameIntersection(Course f, Course s) {
+        for (var fI : f.getIntersections()) {
+            for (var sI : s.getIntersections()) {
+                if (fI.equals(sI)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 
     private void calculateAngles(List<NodeConfiguration> nodeConfigs, List<RoadConfiguration> roadConfigs) {

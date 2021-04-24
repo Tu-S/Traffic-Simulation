@@ -31,6 +31,9 @@ public class Course {
         this.length = length;
     }
 
+    public List<Intersection> getIntersections() {
+        return intersections;
+    }
 
     public void addIntersection(Intersection intersection) {
         this.intersections.add(intersection);
