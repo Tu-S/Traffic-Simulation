@@ -17,7 +17,6 @@ dependencies {
     //compile 'org.apache.commons:commons-math3:3.6.1'
     compile 'com.google.code.gson:gson:2.8.6'
 
-
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     testImplementation 'com.google.guava:guava:28.0-jre'
     testImplementation 'com.yugabyte:junit:4.12-yb-1'

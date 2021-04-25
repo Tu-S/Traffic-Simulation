@@ -5,6 +5,7 @@ import ru.nsu.team.entity.roadmap.configuration.*;
 import ru.nsu.team.entity.spawner.Configuration;
 import ru.nsu.team.entity.spawner.Spawner;
 import ru.nsu.team.entity.trafficparticipant.*;
+import ru.nsu.team.other.KeyValuePair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -115,7 +116,7 @@ public class RoadModelCreator {
             List<Integer> inRoadsId = nodeConfig.getRoadsIn();
             Node node = this.nodes.get(i);
             //все курсы для одной lane
-            List<KeyValue> lanesCourses = new ArrayList<>();
+            List<KeyValuePair<Lane, List<Course>>> lanesCourses = new ArrayList<>();
             Set<Course> createdCourses = new HashSet<>();
             int coursesNumber = nodeConfig.getCoursesNumber();
             for (int inId = 0; inId < coursesNumber; inId++) {
@@ -135,19 +136,19 @@ public class RoadModelCreator {
                             }
                         });
                     }
-                    lanesCourses.add(new KeyValue(inLane, curCourses));
+                    lanesCourses.add(new KeyValuePair(inLane, curCourses));
                 }
             }
             //если входных дорог меньше 3, то пересечений не будет
             if (coursesNumber > 2) {
                 for (int from = 0; from < lanesCourses.size(); from++) {
-                    var coursesFromLane = lanesCourses.get(from).courses;
+                    var coursesFromLane = lanesCourses.get(from).getValue();
                     for (Course crFromLane : coursesFromLane) {
                         for (int another = 0; another < lanesCourses.size(); another++) {
                             if (from == another) {
                                 continue;
                             }
-                            var anotherLaneCourses = lanesCourses.get(another).courses;
+                            var anotherLaneCourses = lanesCourses.get(another).getValue();
                             for (var cr : anotherLaneCourses) {
                                 if (cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId() && !haveSameIntersection(crFromLane, cr)) {
                                     var intersection = new Intersection(5);
@@ -159,22 +160,17 @@ public class RoadModelCreator {
                     }
                 }
             }
-            lanesCourses.forEach(pair -> pair.courses.forEach(node::addCourse));
+            lanesCourses.forEach(pair -> pair.getValue().forEach(node::addCourse));
             //createdCourses.forEach(node::addCourse);
             map.getCourseSet().addAll(createdCourses);
         }
     }
 
     private boolean haveSameIntersection(Course f, Course s) {
-        for (var fI : f.getIntersections()) {
-            for (var sI : s.getIntersections()) {
-                if (fI.equals(sI)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-
+        Set<Intersection> res = new HashSet<>(f.getIntersections());
+        Set<Intersection> sSet = new HashSet<>(s.getIntersections());
+        res.retainAll(sSet);
+        return !res.isEmpty();
     }
 
     private void calculateAngles(List<NodeConfiguration> nodeConfigs, List<RoadConfiguration> roadConfigs) {
@@ -329,15 +325,5 @@ public class RoadModelCreator {
 
     }
 
-    private class KeyValue {
-        Lane key;
-        List<Course> courses;
-
-        public KeyValue(Lane key, List<Course> courses) {
-            this.key = key;
-            this.courses = courses;
-        }
-
-    }
 
 }
