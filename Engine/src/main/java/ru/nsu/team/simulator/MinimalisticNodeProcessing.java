@@ -3,10 +3,7 @@ package ru.nsu.team.simulator;
 import org.apache.log4j.Logger;
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
-import ru.nsu.team.entity.roadmap.Course;
-import ru.nsu.team.entity.roadmap.Lane;
-import ru.nsu.team.entity.roadmap.Node;
-import ru.nsu.team.entity.roadmap.Road;
+import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
@@ -48,12 +45,16 @@ public class MinimalisticNodeProcessing implements Runnable {
         Car car = participant.getCar();
         PositionOnRoad position = participant.getPosition();
         Road road = participant.getPosition().getCurrentRoad();
+        TrafficLight trafficLight = null;
         Path path = participant.getCar().getPath();
         if (path.getRoads().isEmpty()) {
             processDestination(participant);
             reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
             road.deleteTrafficParticipant(participant);
             return;
+        }
+        if (road.getTo().getTrafficLightsNumber() > 0) {
+            trafficLight = road.getTo().getTrafficLights().get(0);
         }
         Road nextRoad = path.getNextRoad();
         Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLane()), nextRoad);
@@ -63,21 +64,23 @@ public class MinimalisticNodeProcessing implements Runnable {
         playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
         //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist /
         // (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
-        if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
-            reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
-            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
-            position.getCurrentRoad().deleteTrafficParticipant(participant);
-            course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
-            position.setCurrentRoad(course.getToLane().getParentRoad());
-            position.setPosition(course.getToLane().getParentRoad().getLength());
-            position.setCurrentLane(findLaneNumber(course.getToLane()));
-            activeRoads.add(course.getToLane().getParentRoad());
-            position.getCurrentRoad().addTrafficParticipant(participant);
-            //System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
-            car.getPath().popRoad();
-            playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
-            reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
-            return;
+        if (trafficLight == null || trafficLight.timeBlocked(road, time) == 0) {
+            if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
+                reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
+                car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
+                position.getCurrentRoad().deleteTrafficParticipant(participant);
+                course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
+                position.setCurrentRoad(course.getToLane().getParentRoad());
+                position.setPosition(course.getToLane().getParentRoad().getLength());
+                position.setCurrentLane(findLaneNumber(course.getToLane()));
+                activeRoads.add(course.getToLane().getParentRoad());
+                position.getCurrentRoad().addTrafficParticipant(participant);
+                //System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
+                car.getPath().popRoad();
+                playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
+                reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
+                return;
+            }
         }
         // TODO deceleration
         car.setSpeed(0);
