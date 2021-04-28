@@ -7,10 +7,12 @@ public class HeatmapFrame {
     public static class HeatmapRoadState {
         public int roadId;
         public int congestion;
+        public double speedRatio;
 
-        public HeatmapRoadState(int roadId, int congestion) {
+        public HeatmapRoadState(int roadId, int congestion, double speedRatio) {
             this.roadId = roadId;
             this.congestion = congestion;
+            this.speedRatio = speedRatio;
         }
     }
 
@@ -23,7 +25,7 @@ public class HeatmapFrame {
         this.congestionList = new ArrayList<>();
     }
 
-    public void addHeatmapRoadState(int roadId, int congestion) {
-        congestionList.add(new HeatmapRoadState(roadId, congestion));
+    public void addHeatmapRoadState(int roadId, int congestion, double speedRatio) {
+        congestionList.add(new HeatmapRoadState(roadId, congestion, speedRatio));
     }
 }

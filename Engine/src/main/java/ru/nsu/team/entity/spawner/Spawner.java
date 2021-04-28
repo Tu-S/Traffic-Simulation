@@ -33,6 +33,7 @@ public class Spawner {
         this.configs = new ArrayList<>();
         this.spawningQueue = spawningQueue;
         this.rng = new Random();
+        spawningQueue.setEphemeral(true);
     }
 
     public Spawner(Node node) {
