@@ -150,7 +150,7 @@ public class RoadModelCreator {
                             }
                             var anotherLaneCourses = lanesCourses.get(another).getValue();
                             for (var cr : anotherLaneCourses) {
-                                if (cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId() && !haveSameIntersection(crFromLane, cr)) {
+                                if (/*cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId() &&*/ !haveSameIntersection(crFromLane, cr)) {
                                     var intersection = new Intersection(5);
                                     crFromLane.addIntersection(intersection);
                                     cr.addIntersection(intersection);
@@ -200,7 +200,6 @@ public class RoadModelCreator {
     }
 
     private double calculateAngle(NodeConfiguration n1, NodeConfiguration n2, NodeConfiguration n3, NodeConfiguration duplicate) {
-        assert !n2.equals(duplicate);
         double yDif = n3.getY() - n2.getY();
 
         double n2n1X = n1.getX() - n2.getX();
