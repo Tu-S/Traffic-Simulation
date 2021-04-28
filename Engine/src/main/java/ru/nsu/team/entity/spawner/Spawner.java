@@ -1,5 +1,6 @@
 package ru.nsu.team.entity.spawner;
 
+import org.apache.log4j.Logger;
 import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.PlaceOfInterest;
 import ru.nsu.team.entity.roadmap.Road;
@@ -7,7 +8,6 @@ import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
-import ru.nsu.team.pathfinder.DestinationUnreachable;
 import ru.nsu.team.pathfinder.DijkstraPathfinder;
 import ru.nsu.team.pathfinder.Pathfinder;
 
@@ -18,6 +18,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Spawner {
+
+    private static final Logger LOG = Logger.getRootLogger();
+
     private ArrayList<Configuration> configs;
     private Node node;
     private List<PlaceOfInterest> possibleDestinations;
@@ -78,7 +81,7 @@ public class Spawner {
             return;
         }
         int toSpawn = (rng.nextInt(bound) * duration) / 60;
-        //System.out.println("Will spawn " + toSpawn);
+        LOG.debug("Will spawn " + toSpawn + " cars");
         List<TrafficParticipant> queuedCars = spawningQueue.getLaneN(0).getParticipants();
         double spawnPosition;
         if (queuedCars.isEmpty()) {
@@ -90,6 +93,8 @@ public class Spawner {
             PlaceOfInterest destination = selectDestination();
             Path path = pathfinder.findPath(node, destination);
             while (path == null && !possibleDestinations.isEmpty()) {
+                LOG.debug("Destination " + destination.getId() + " can't be reached from spawner");
+                // TODO add id for spawners
                 possibleDestinations.remove(destination);
                 destination = selectDestination();
                 path = pathfinder.findPath(node, destination);

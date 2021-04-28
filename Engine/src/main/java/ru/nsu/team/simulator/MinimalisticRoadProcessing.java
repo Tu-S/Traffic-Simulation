@@ -17,7 +17,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class MinimalisticRoadProcessing implements Runnable {
 
-    private static Logger LOG = Logger.getRootLogger();
+    private static final Logger LOG = Logger.getRootLogger();
 
     private final Set<Node> activeNodes;
     private final Road targetRoad;
@@ -67,7 +67,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void processCar(TrafficParticipant car) {
-        //System.out.println(car);
+        LOG.debug("Processing car " + car);
         int timePassed = 2;
         if (checkLaneChange(car)) {
             int targetLane = desiredLane(car);
@@ -84,6 +84,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         moveCarStraight(car);
         setBlocking(car);
         saveCarState(car, timeFrameStart + timePassed);
+        LOG.debug(car);
     }
 
     private void moveCarStraight(TrafficParticipant participant) {
@@ -95,9 +96,9 @@ public class MinimalisticRoadProcessing implements Runnable {
         TrafficParticipant block = getBlocking(position.getCurrentLane());
         if (block != null) {
             // Node is blocked by another car
-
+            LOG.debug("Node is blocked by another car");
             distance = participant.getPosition().getPosition() - block.getPosition().getPosition()
-                            - block.getCar().getInterCarDistance() - car.getInterCarDistance();
+                    - block.getCar().getInterCarDistance() - car.getInterCarDistance();
 
             if (distance > possibleDistance) {
                 position.setPosition(position.getPosition() - possibleDistance);
@@ -111,6 +112,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         } else {
             // Node is not blocked by another car
             if (possibleDistance >= position.getPosition()) {
+                LOG.debug(car + " reached node");
                 // Car can reach the node
                 activeNodes.add(targetRoad.getExitNode());
                 targetRoad.getExitNode().addPendingCar(participant);
@@ -128,8 +130,6 @@ public class MinimalisticRoadProcessing implements Runnable {
             }
         }
         saveCarState(participant, timeFrameStart + timeInterval - participant.getCar().getTimeLeft());
-        //System.out.println(participant);
-        //System.out.println();
     }
 
     private double calculateDistanceByTime(TrafficParticipant participant, int time) {
@@ -162,7 +162,6 @@ public class MinimalisticRoadProcessing implements Runnable {
 
 
     private void updateAfterTime(Car car, int time) {
-        //System.out.println(time);
         double speed = car.getSpeed();
         double acceleration = car.getAcceleration();
         int timeOfAcceleration = (int) ((car.getMaxSpeed() - speed) / acceleration);
@@ -173,7 +172,6 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void updateAfterDistance(TrafficParticipant participant, double distance) {
-        //System.out.print(participant.toString() + " moved for " + distance + " in ");
         int time = calculateTimeByDistance(participant, distance);
         if (distance > 0) {
             time++;
@@ -195,9 +193,8 @@ public class MinimalisticRoadProcessing implements Runnable {
 
     @Override
     public void run() {
-        LOG.debug("Starting processing road "+targetRoad.getId());
+        LOG.debug("Starting processing road " + targetRoad.getId());
         try {
-            //System.out.println("Running RP");
             List<TrafficParticipant> queue = new ArrayList<>(targetRoad.getTrafficParticipants());
             queue.sort(TrafficParticipant::compareTo);
             for (TrafficParticipant car : queue) {

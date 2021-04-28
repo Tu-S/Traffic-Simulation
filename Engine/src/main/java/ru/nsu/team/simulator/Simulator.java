@@ -1,5 +1,6 @@
 package ru.nsu.team.simulator;
 
+import org.apache.log4j.Logger;
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.Node;
@@ -12,6 +13,8 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Simulator extends Thread {
+
+    private final Logger LOG = Logger.getRootLogger();
 
     private final int timeInterval;
     private final RoadMap map;
@@ -68,7 +71,7 @@ public class Simulator extends Thread {
 
     private void runCycle(ExecutorService executor) {
         Set<Road> activeRoads = Collections.synchronizedSet(map.getRoads().parallelStream().filter(r -> r.getTrafficParticipantsNumber() > 0).collect(Collectors.toCollection(HashSet::new)));
-        Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<Node>());
+        Set<Node> activeNodes = Collections.synchronizedSet(new HashSet<>());
         while (!activeRoads.isEmpty()) {
 
             //TODO check for edge-cases
@@ -112,8 +115,9 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        System.out.println("Simulating road map from " + map.getStart() + " to " + map.getEndTime());
+        ExecutorService executor = Executors.newFixedThreadPool(
+                Math.max(Runtime.getRuntime().availableProcessors()-1,1));
+        LOG.debug("Simulating road map from " + map.getStart() + " to " + map.getEndTime());
         try {
             Instant start = Instant.now();
             while (map.getCurrentTime() < map.getEndTime() && isSimulating()) {
@@ -125,9 +129,9 @@ public class Simulator extends Thread {
                 map.setCurrentTime(map.getCurrentTime() + timeInterval);
             }
             Instant end = Instant.now();
-            System.out.println("Simulation duration:" + (end.minusMillis(start.toEpochMilli()).toEpochMilli()) + "ms");
+            LOG.debug("Simulation duration:" + (end.minusMillis(start.toEpochMilli()).toEpochMilli()) + "ms");
         } catch (Throwable t) {
-            t.printStackTrace();
+            throw new RuntimeException(t);
         }
     }
 }
