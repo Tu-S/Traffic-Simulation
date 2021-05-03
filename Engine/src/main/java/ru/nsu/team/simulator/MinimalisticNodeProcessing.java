@@ -64,7 +64,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
         //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist /
         // (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
-        if (trafficLight == null || trafficLight.timeBlocked(road, time) == 0) {
+        if (trafficLight == null || trafficLight.timeBlocked(road, time + timeInterval - car.getTimeLeft()) == 0) {
             if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
                 reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
                 car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
@@ -81,6 +81,8 @@ public class MinimalisticNodeProcessing implements Runnable {
                 reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
                 return;
             }
+        } else {
+            car.setTimeLeft(Math.max(car.getTimeLeft() - trafficLight.timeBlocked(road, time + timeInterval - car.getTimeLeft()), 0));
         }
         // TODO deceleration
         car.setSpeed(0);

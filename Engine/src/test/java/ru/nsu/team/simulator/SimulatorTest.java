@@ -134,6 +134,27 @@ public class SimulatorTest {
 
     @Test
     public void testSimulator() {
+        RoadMap rm = createSampleLineRoadMap();
+        Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new HeatmapBuilder(rm, 100));
+        sim.setUncaughtExceptionHandler((thread, throwable) -> {
+            throwable.printStackTrace();
+            failTest();
+        });
+        sim.start();
+        try {
+            sim.join(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail();
+        }
+        if (sim.isAlive()) {
+            sim.interrupt();
+            fail();
+        }
+    }
+
+    @Test
+    public void testTrafficLights() {
         RoadMap rm = createSampleLineRoadMapTL();
         Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new HeatmapBuilder(rm, 100));
         sim.setUncaughtExceptionHandler((thread, throwable) -> {
