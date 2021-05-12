@@ -117,7 +117,7 @@ public class RoadModelCreator {
             Node node = this.nodes.get(i);
             //все курсы для одной lane
             List<KeyValuePair<Lane, List<Course>>> lanesCourses = new ArrayList<>();
-            Set<Course> createdCourses = new HashSet<>();
+            //Set<Course> createdCourses = new HashSet<>();
             int coursesNumber = nodeConfig.getCoursesNumber();
             for (int inId = 0; inId < coursesNumber; inId++) {
                 int inRoadId = inRoadsId.get(inId);
@@ -130,31 +130,27 @@ public class RoadModelCreator {
                         }
                         var outRoadId = outRoadsId.get(outId);
                         roads.get(outRoadId).getLanes().forEach(outLane -> {
-                            if (outLane.getLaneId() == inLane.getLaneId()) {
-                                createdCourses.add(new Course(inLane, outLane, 10));
-                                curCourses.add(new Course(inLane, outLane, 10));
-                            }
+                            //createdCourses.add(new Course(inLane, outLane, 10));
+                            curCourses.add(new Course(inLane, outLane, 10));
+
                         });
                     }
                     lanesCourses.add(new KeyValuePair(inLane, curCourses));
                 }
             }
-            //если входных дорог меньше 3, то пересечений не будет
-            if (coursesNumber > 2) {
-                for (int from = 0; from < lanesCourses.size(); from++) {
-                    var coursesFromLane = lanesCourses.get(from).getValue();
-                    for (Course crFromLane : coursesFromLane) {
-                        for (int another = 0; another < lanesCourses.size(); another++) {
-                            if (from == another) {
-                                continue;
-                            }
-                            var anotherLaneCourses = lanesCourses.get(another).getValue();
-                            for (var cr : anotherLaneCourses) {
-                                if (/*cr.getToLane().getParentRoad().getId() == crFromLane.getToLane().getParentRoad().getId() &&*/ !haveSameIntersection(crFromLane, cr)) {
-                                    var intersection = new Intersection(5);
-                                    crFromLane.addIntersection(intersection);
-                                    cr.addIntersection(intersection);
-                                }
+            for (int from = 0; from < lanesCourses.size(); from++) {
+                var coursesFromLane = lanesCourses.get(from).getValue();
+                for (Course crFromLane : coursesFromLane) {
+                    for (int another = 0; another < lanesCourses.size(); another++) {
+                        if (from == another) {
+                            continue;
+                        }
+                        var anotherLaneCourses = lanesCourses.get(another).getValue();
+                        for (var cr : anotherLaneCourses) {
+                            if (!haveSameIntersection(crFromLane, cr)) {
+                                var intersection = new Intersection(5);
+                                crFromLane.addIntersection(intersection);
+                                cr.addIntersection(intersection);
                             }
                         }
                     }
@@ -162,7 +158,7 @@ public class RoadModelCreator {
             }
             lanesCourses.forEach(pair -> pair.getValue().forEach(node::addCourse));
             //createdCourses.forEach(node::addCourse);
-            map.getCourseSet().addAll(createdCourses);
+            //map.getCourseSet().addAll(createdCourses);
         }
     }
 
