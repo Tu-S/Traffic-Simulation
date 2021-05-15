@@ -62,6 +62,7 @@ public class TrafficLight {
         }
         throw new IllegalArgumentException("Road is not controlled by traffic light");
     }
+
     /*public int getGreenDuration() {
         return greenDuration;
     }*/

@@ -11,6 +11,7 @@ public class TrafficLightConfig {
         return delay;
     }
 
+
     public List<Road> getRoads() {
         return roads;
     }
@@ -20,7 +21,12 @@ public class TrafficLightConfig {
         this.roads = new ArrayList<>();
     }
 
-    public void addRoad(Road r){
+    public void addRoad(Road r) {
         roads.add(r);
     }
+
+    public void setDelay(Integer delay) {
+        this.delay = delay;
+    }
+
 }
