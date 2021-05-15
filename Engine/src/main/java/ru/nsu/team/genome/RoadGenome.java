@@ -11,6 +11,9 @@ public class RoadGenome {
     private int id;
     private boolean isMainRoad;
 
+    private NodeGenome from;
+    private NodeGenome to;
+
     public RoadGenome(Road road) {
         this.id = road.getId();
         this.isMainRoad = road.isMainRoad();
@@ -20,6 +23,8 @@ public class RoadGenome {
         for(int i = 0 ; i < lNumber;i++){
             this.lanes.add(new LaneGenome(lanes.get(i)));
         }
+        this.from = new NodeGenome(road.getFrom());
+        this.to = new NodeGenome(road.getTo());
     }
 
     public List<LaneGenome> getLanes() {
@@ -44,5 +49,13 @@ public class RoadGenome {
 
     public void setMainRoad(boolean mainRoad) {
         isMainRoad = mainRoad;
+    }
+
+    public NodeGenome getFrom() {
+        return from;
+    }
+
+    public NodeGenome getTo() {
+        return to;
     }
 }
