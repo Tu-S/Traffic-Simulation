@@ -1,6 +1,8 @@
 package ru.nsu.team.entity.roadmap;
 
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
+import ru.nsu.team.genome.GenomeUtils;
+import ru.nsu.team.genome.NodeGenome;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,21 +15,23 @@ public class Node {
 
     private int id;
     private ArrayList<Course> courses;
-    private ArrayList<TrafficLight> trafficLights;
     private Position position;
+    private NodeGenome genome;
     private Set<TrafficParticipant> pendingCars;
-    //private List<Road> roads;
     private Map<Road, List<Road>> fromRoadToRoads = new HashMap<>();
+
 
     public Node(int id, Position position) {
         this.courses = new ArrayList<>();
-        this.trafficLights = new ArrayList<>();
         this.id = id;
         this.position = position;
         this.pendingCars = new HashSet<>();
-        //roads = new ArrayList<>();
+        this.genome = new NodeGenome(this.id);
     }
 
+    public NodeGenome getGenome() {
+        return genome;
+    }
 
     public void addFromTo(Road from, List<Road> to) {
         fromRoadToRoads.put(from, to);
@@ -35,9 +39,10 @@ public class Node {
 
     public Node(int id) {
         this.courses = new ArrayList<>();
-        this.trafficLights = new ArrayList<>();
+        //this.trafficLights = new ArrayList<>();
         this.id = id;
         this.pendingCars = new HashSet<>();
+        this.genome = new NodeGenome(this.id);
     }
 
     public Position getPosition() {
@@ -49,11 +54,11 @@ public class Node {
     }
 
     public int getId() {
-        return id;
+        return genome.getId();
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.genome.setId(id);
     }
 
     public void addCourse(Course course) {
@@ -61,7 +66,7 @@ public class Node {
     }
 
     public void addTrafficLight(TrafficLight trafficLight) {
-        trafficLights.add(trafficLight);
+        genome.getTrafficLights().add(trafficLight);
     }
 
     public int getCoursesNumber() {
@@ -69,11 +74,12 @@ public class Node {
     }
 
     public int getTrafficLightsNumber() {
-        return trafficLights.size();
+
+        return this.genome.getTrafficLights().size();
     }
 
     public List<TrafficLight> getTrafficLights() {
-        return trafficLights;
+        return genome.getTrafficLights();
     }
 
     /*public Course getCourseN(int n) {
@@ -116,4 +122,6 @@ public class Node {
     public String toString() {
         return "Node " + id;
     }
+
+
 }

@@ -6,8 +6,8 @@ public class LaneGenome {
 
     private double maxSpeed;
 
-    public LaneGenome(Lane lane){
-        this.maxSpeed = lane.getMaxSpeed();
+    public LaneGenome(double maxSpeed){
+        this.maxSpeed = maxSpeed;
     }
 
 

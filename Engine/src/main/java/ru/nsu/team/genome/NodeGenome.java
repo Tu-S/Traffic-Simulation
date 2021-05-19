@@ -12,24 +12,9 @@ public class NodeGenome {
     private List<TrafficLight> trafficLights;
     private int id;
 
-    public NodeGenome(Node node) {
-        this.id = node.getId();
-        List<TrafficLight> tr = new ArrayList<>(node.getTrafficLights().size());
-
-        for (var t : node.getTrafficLights()) {
-            tr.add(copyTrafficLight(t));
-        }
-
-        this.trafficLights = tr;
-
-    }
-
-    private TrafficLight copyTrafficLight(TrafficLight trafficLight) {
-        var res = new TrafficLight();
-        for (var c : trafficLight.getConfigs()) {
-            res.addConfig(new TrafficLightConfig(c.getDelay()));
-        }
-        return res;
+    public NodeGenome(int id) {
+        this.id = id;
+        this.trafficLights = new ArrayList<>();
     }
 
     public List<TrafficLight> getTrafficLights() {
@@ -47,6 +32,5 @@ public class NodeGenome {
     public void setId(int id) {
         this.id = id;
     }
-
 
 }
