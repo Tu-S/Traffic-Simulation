@@ -11,12 +11,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class RoadModelCreator {
-    private final List<Node> nodes = new ArrayList<>();
-    private final List<Road> roads = new ArrayList<>();
+    private List<Node> nodes;
+    private List<Road> roads;
     private int rId = 0;
 
     public RoadMap createRoadMap(RoadMapConfiguration roadMapConfig) {
         RoadMap map = new RoadMap();
+        nodes = new ArrayList<>();
+        roads = new ArrayList<>();
         createNodes(roadMapConfig.getNodes());
         createRoads(roadMapConfig.getRoads());
         createLights(roadMapConfig.getNodes());
@@ -56,8 +58,6 @@ public class RoadModelCreator {
             NodeConfiguration config = nodesConfig.get(i);
             Position pos = new Position(config.getX(), config.getY());
             Node n = new Node(i, pos);
-            //n.setRoadsIn(config.getRoadsIn());
-            //n.setRoadsOut(config.getRoadsOut());
             nodes.add(n);
         }
     }
@@ -158,7 +158,6 @@ public class RoadModelCreator {
     }
 
     private double calculateAngle(NodeConfiguration n1, NodeConfiguration n2, NodeConfiguration n3, NodeConfiguration duplicate) {
-        assert !n2.equals(duplicate);
         double yDif = n3.getY() - n2.getY();
 
         double n2n1X = n1.getX() - n2.getX();

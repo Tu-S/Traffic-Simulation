@@ -3,7 +3,7 @@ package ru.nsu.team.entity.roadmap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course {
+public class Course{
 
     private final Lane fromLane;
     private final Lane toLane;
@@ -54,4 +54,5 @@ public class Course {
             i.setTimeLeft(i.getTimeLeft() - timeUsed);
         }
     }
+
 }

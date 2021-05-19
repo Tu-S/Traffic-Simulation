@@ -38,6 +38,7 @@ public class Road {
         this.isEphemeral=false;
     }
 
+
     public void setMainRoad(boolean isMainRoad) {
         this.isMainRoad = isMainRoad;
     }
@@ -87,7 +88,6 @@ public class Road {
 
     public Lane getLaneN(int n) {
         return lanes.get(n);
-
     }
 
     public List<Lane> getIterator() {

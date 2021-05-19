@@ -88,6 +88,5 @@ public class TrafficLight {
         return time;
     }*/
 
-
     enum Color {GREEN, RED, YELLOW}
 }
