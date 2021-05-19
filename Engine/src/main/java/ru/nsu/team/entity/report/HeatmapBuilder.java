@@ -80,7 +80,7 @@ public class HeatmapBuilder {
         }
 
         if (!enterTimes.containsKey(participant.getPosition().getCurrentRoad())) {
-            throw new RuntimeException("No enter record fount for car " + participant);
+            throw new RuntimeException("No enter record found for car " + participant);
         }
         int enterTime = enterTimes.get(participant.getPosition().getCurrentRoad()).get(participant);
         int spentTime = time - enterTime;
