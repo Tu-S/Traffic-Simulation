@@ -123,28 +123,26 @@ public class RoadModelCreator {
                 int inRoadId = inRoadsId.get(inId);
                 for (Lane inLane : roads.get(inRoadId).getLanes()) {
                     var curCourses = new ArrayList<Course>();
-                    for (int outId = 0; outId < outRoadsId.size(); outId++) {
+                    for (Integer outRoadId : outRoadsId) {
                         //убираем случай с зеркальной дорогой(развоороты запрещены)
-                        if (inId == outId) {
-                            continue;
-                        }
-                        var outRoadId = outRoadsId.get(outId);
+//                        if (inId == outId) {
+//                            continue;
+//                        }
                         roads.get(outRoadId).getLanes().forEach(outLane -> {
                             //createdCourses.add(new Course(inLane, outLane, 10));
                             curCourses.add(new Course(inLane, outLane, 10));
-
                         });
                     }
-                    lanesCourses.add(new KeyValuePair(inLane, curCourses));
+                    lanesCourses.add(new KeyValuePair<Lane, List<Course>>(inLane, curCourses));
                 }
             }
             for (int from = 0; from < lanesCourses.size(); from++) {
                 var coursesFromLane = lanesCourses.get(from).getValue();
                 for (Course crFromLane : coursesFromLane) {
                     for (int another = 0; another < lanesCourses.size(); another++) {
-                        if (from == another) {
-                            continue;
-                        }
+//                        if (from == another) {
+//                            continue;
+//                        }
                         var anotherLaneCourses = lanesCourses.get(another).getValue();
                         for (var cr : anotherLaneCourses) {
                             if (!haveSameIntersection(crFromLane, cr)) {

@@ -94,6 +94,10 @@ public class SimulationController implements Runnable {
         saver.saveHeatMap(reporterBuilder.build(), fileName);
     }
 
+    public RoadMap getRoadMap() {
+        return roadMap;
+    }
+
     @Override
     public void run() {
         prepareMap(this.mapLoadPath);
