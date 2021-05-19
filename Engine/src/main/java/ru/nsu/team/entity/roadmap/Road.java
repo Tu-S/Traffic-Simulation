@@ -17,6 +17,7 @@ public class Road {
     private Node to;
     private int id;
     private boolean isMainRoad;
+    private boolean isEphemeral;
 
     public Road(int id, Node from, Node to) {
         this.from = from;
@@ -24,6 +25,7 @@ public class Road {
         this.lanes = new ArrayList<>();
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
+        this.isEphemeral=false;
     }
 
     public Road(int id, Node from, Node to, int lanes, double maxSpeed) {
@@ -35,6 +37,7 @@ public class Road {
         for (int i = 0; i < lanes; i++) {
             addLane(maxSpeed);
         }
+        this.isEphemeral=false;
     }
 
     public void setMainRoad(boolean isMainRoad) {
@@ -43,6 +46,14 @@ public class Road {
 
     public boolean isMainRoad() {
         return isMainRoad;
+    }
+
+    public boolean isEphemeral() {
+        return isEphemeral;
+    }
+
+    public void setEphemeral(boolean ephemeral) {
+        isEphemeral = ephemeral;
     }
 
     public int getId() {

@@ -19,13 +19,15 @@ import static org.junit.Assert.fail;
 
 public class SimulatorTest {
 
+    static Logger log = Logger.getRootLogger();
+
     @BeforeClass
     public static void initLogger() {
         Logger.getRootLogger().addAppender(
                 new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
     }
 
-    private RoadMap createSampleLineRoadMap() {
+    private RoadMap createSampleLineRoadMap(int spawnFrequency) {
         List<Node> nodes = Arrays.asList(new Node(0), new Node(1));
         RoadMap rm = new RoadMap();
         rm.setStart(0);
@@ -45,7 +47,7 @@ public class SimulatorTest {
         nodes.get(0).addCourse(course);
         Spawner spawner = new Spawner(nodes.get(0), queue);
         spawner.addPossibleDestination(poi);
-        spawner.addConfiguration(new Configuration(0, 150, 10));
+        spawner.addConfiguration(new Configuration(0, 150, spawnFrequency));
         rm.addSpawner(spawner);
 
         return rm;
@@ -134,8 +136,9 @@ public class SimulatorTest {
 
     @Test
     public void testSimulator() {
-        RoadMap rm = createSampleLineRoadMap();
-        Simulator sim = new Simulator(30, rm, new PlaybackBuilder(), new HeatmapBuilder(rm, 100));
+        RoadMap rm = createSampleLineRoadMap(15);
+        HeatmapBuilder hmb = new HeatmapBuilder(rm, 100);
+        Simulator sim = new Simulator(100, rm, new PlaybackBuilder(), hmb);
         sim.setUncaughtExceptionHandler((thread, throwable) -> {
             throwable.printStackTrace();
             failTest();
@@ -151,6 +154,7 @@ public class SimulatorTest {
             sim.interrupt();
             fail();
         }
+        log.debug("Score is " + hmb.getScore());
     }
 
     @Test

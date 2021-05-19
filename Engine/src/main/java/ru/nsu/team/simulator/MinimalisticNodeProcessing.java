@@ -40,8 +40,7 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processCar(TrafficParticipant participant) {
         //TODO add traffic lights
-        //System.out.println("Node " + targetNode.getId());
-        //System.out.println(participant);
+        LOG.debug("Processing car " + participant);
         Car car = participant.getCar();
         PositionOnRoad position = participant.getPosition();
         Road road = participant.getPosition().getCurrentRoad();
@@ -75,7 +74,7 @@ public class MinimalisticNodeProcessing implements Runnable {
                 position.setCurrentLane(findLaneNumber(course.getToLane()));
                 activeRoads.add(course.getToLane().getParentRoad());
                 position.getCurrentRoad().addTrafficParticipant(participant);
-                //System.out.println("Moved " + car + " to road:" + course.getToLane().getParentRoad());
+                LOG.debug("Car has passed intersection " + car);
                 car.getPath().popRoad();
                 playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
                 reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
@@ -87,7 +86,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         // TODO deceleration
         car.setSpeed(0);
         playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
-
+        LOG.debug("Finished processing car " + participant);
     }
 
     private int findLaneNumber(Lane lane) {
@@ -114,12 +113,13 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processDestination(TrafficParticipant car) {
         playbackBuilder.addCarState(car, time + timeInterval - car.getCar().getTimeLeft(), false);
-        //System.out.println("Car \"" + car.getCar() + "\" has reached destination " + targetNode + "!)");
+        LOG.debug("Car has reached destination "+car);
         //TODO process point of interest
     }
 
     @Override
     public void run() {
+        LOG.debug("Processing node " + targetNode.getId() + " with " + targetNode.getPendingCars().size() + " cars");
         try {
             List<TrafficParticipant> queue = new ArrayList<>();
             for (TrafficParticipant participant : targetNode.getPendingCars()) {
@@ -137,6 +137,7 @@ public class MinimalisticNodeProcessing implements Runnable {
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
+            LOG.debug("Finished processing node " + targetNode.getId());
             latch.countDown();
         }
     }
