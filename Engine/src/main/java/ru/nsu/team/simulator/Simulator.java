@@ -113,6 +113,10 @@ public class Simulator extends Thread {
         return alive;
     }
 
+    public HeatmapBuilder getReporterBuilder() {
+        return reporterBuilder;
+    }
+
     @Override
     public void run() {
         ExecutorService executor = Executors.newFixedThreadPool(
