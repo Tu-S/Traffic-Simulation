@@ -4,7 +4,7 @@ import java.util.List;
 import ru.nsu.team.simulator.Simulator;
 
 public class GenomeUtils {
-  public List<Simulator> selection(List<Simulator> simulators) {
+  public static List<Simulator> selection(List<Simulator> simulators) {
     int threshold = 1;
     if (simulators.size() > 3) {
       threshold = simulators.size() / 2;
