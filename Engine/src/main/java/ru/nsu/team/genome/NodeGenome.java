@@ -4,11 +4,12 @@ import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.TrafficLight;
 import ru.nsu.team.entity.roadmap.TrafficLightConfig;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class NodeGenome {
+public class NodeGenome implements Serializable {
     private List<TrafficLight> trafficLights;
     private int id;
 

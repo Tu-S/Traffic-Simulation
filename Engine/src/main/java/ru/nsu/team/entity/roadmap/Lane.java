@@ -4,11 +4,12 @@ import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.genome.LaneGenome;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class Lane {
+public class Lane implements Serializable {
     private Road parentRoad;
     private List<TrafficParticipant> trafficParticipants;
     private LaneGenome genome;

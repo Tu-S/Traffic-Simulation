@@ -3,7 +3,9 @@ package ru.nsu.team.entity.trafficparticipant;
 import ru.nsu.team.entity.roadmap.Lane;
 import ru.nsu.team.entity.roadmap.Road;
 
-public class PositionOnRoad {
+import java.io.Serializable;
+
+public class PositionOnRoad implements Serializable {
     private int currentLane;
     private double position;
     private Road currentRoad;

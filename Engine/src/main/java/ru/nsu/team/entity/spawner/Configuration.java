@@ -1,6 +1,8 @@
 package ru.nsu.team.entity.spawner;
 
-public class Configuration {
+import java.io.Serializable;
+
+public class Configuration implements Serializable {
     private String distribution;
     private long start;
     private long end;

@@ -11,16 +11,15 @@ import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.pathfinder.DijkstraPathfinder;
 import ru.nsu.team.pathfinder.Pathfinder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class Spawner {
-
+public class Spawner implements Serializable {
     private static final Logger LOG = Logger.getRootLogger();
-
     private ArrayList<Configuration> configs;
     private Node node;
     private List<PlaceOfInterest> possibleDestinations;

@@ -4,6 +4,7 @@ import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.genome.GenomeUtils;
 import ru.nsu.team.genome.NodeGenome;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map;
 
-public class Node {
+public class Node implements Serializable {
 
     private int id;
     private ArrayList<Course> courses;

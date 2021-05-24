@@ -1,9 +1,10 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrafficLight {
+public class TrafficLight implements Serializable {
     //private int greenDuration;
     //private int redDuration;
     //private Color currentColor;

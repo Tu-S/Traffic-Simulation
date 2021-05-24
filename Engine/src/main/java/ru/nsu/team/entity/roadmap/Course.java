@@ -1,9 +1,10 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course{
+public class Course implements Serializable {
 
     private final Lane fromLane;
     private final Lane toLane;

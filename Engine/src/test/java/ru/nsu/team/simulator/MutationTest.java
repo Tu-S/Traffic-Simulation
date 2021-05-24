@@ -15,7 +15,7 @@ public class MutationTest {
         RoadMapReader roadMapReader = new RoadMapReader();
         var mapConfig = roadMapReader.getMapConfig("config/1.tsp");
         assert mapConfig != null;
-        List<RoadMap> maps = Copier.makeMapCopy(mapConfig, 5);
+        List<RoadMap> maps = Copier.makeMaps(mapConfig, 5);
         for (var m : maps) {
             for (var r : m.getRoads()) {
                 GenomeUtils.mutateRoad(r);

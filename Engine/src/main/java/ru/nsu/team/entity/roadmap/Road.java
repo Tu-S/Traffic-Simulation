@@ -1,12 +1,13 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.nsu.team.entity.trafficparticipant.*;
 
 
-public class Road {
+public class Road implements Serializable {
 
     private List<Lane> lanes;
     private List<TrafficParticipant> trafficParticipants;

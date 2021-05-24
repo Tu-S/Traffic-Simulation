@@ -2,7 +2,9 @@ package ru.nsu.team.entity.trafficparticipant;
 
 import ru.nsu.team.entity.roadmap.Node;
 
-public class Car {
+import java.io.Serializable;
+
+public class Car implements Serializable {
 
     static int nextId = 0;
 

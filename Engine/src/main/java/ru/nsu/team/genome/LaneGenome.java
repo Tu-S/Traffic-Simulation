@@ -2,7 +2,9 @@ package ru.nsu.team.genome;
 
 import ru.nsu.team.entity.roadmap.Lane;
 
-public class LaneGenome {
+import java.io.Serializable;
+
+public class LaneGenome implements Serializable {
 
     private double maxSpeed;
 

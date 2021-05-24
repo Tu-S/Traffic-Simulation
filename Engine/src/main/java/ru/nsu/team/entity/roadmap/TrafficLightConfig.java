@@ -1,9 +1,10 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrafficLightConfig {
+public class TrafficLightConfig implements Serializable {
     private Integer delay;
     private List<Road> roads;
 

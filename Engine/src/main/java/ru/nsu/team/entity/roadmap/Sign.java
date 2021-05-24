@@ -1,6 +1,8 @@
 package ru.nsu.team.entity.roadmap;
 
-public class Sign {
+import java.io.Serializable;
+
+public class Sign implements Serializable {
     private String type;
     private int limit;
 
