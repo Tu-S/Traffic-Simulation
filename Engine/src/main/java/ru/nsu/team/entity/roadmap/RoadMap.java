@@ -26,6 +26,10 @@ public class RoadMap implements Serializable {
         this.courseSet = new HashSet<>();
     }
 
+    public void setRoads(ArrayList<Road> roads) {
+        this.roads = roads;
+    }
+
     public long getStart() {
         return start;
     }

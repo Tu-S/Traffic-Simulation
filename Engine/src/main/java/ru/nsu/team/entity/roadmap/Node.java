@@ -34,6 +34,10 @@ public class Node implements Serializable {
         return genome;
     }
 
+    public void setGenome(NodeGenome genome) {
+        this.genome = genome;
+    }
+
     public void addFromTo(Road from, List<Road> to) {
         fromRoadToRoads.put(from, to);
     }

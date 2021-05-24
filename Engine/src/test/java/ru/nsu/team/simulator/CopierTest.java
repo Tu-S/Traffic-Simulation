@@ -42,6 +42,22 @@ public class CopierTest {
             }
         }
 
+        RoadMap test = new RoadMap();
+        for(Road r : mapToCopy.getRoads()){
+            test.addRoad(r);
+
+        }
+        for(Road r : copiedMap.getRoads()){
+            test.addRoad(r);
+        }
+        mapToCopy.getRoads().get(0).setLength(666);
+        Assert.assertEquals(mapToCopy.getRoads().get(0).getLength(),test.getRoads().get(0).getLength(),0);
+        RoadMap copiedTest = Copier.copy(test);
+        mapToCopy.getRoads().get(0).setLength(777);
+
+        Assert.assertNotEquals(mapToCopy.getRoads().get(0).getLength(), copiedTest.getRoads().get(0).getLength(),0);
+        Assert.assertEquals(copiedTest.getRoads().get(0).getLength(),666,0);
+
 
     }
 

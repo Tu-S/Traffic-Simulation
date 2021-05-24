@@ -1,9 +1,10 @@
 package ru.nsu.team.genome;
 
-import ru.nsu.team.entity.roadmap.Lane;
-import ru.nsu.team.entity.roadmap.Node;
-import ru.nsu.team.entity.roadmap.Road;
-import ru.nsu.team.entity.roadmap.TrafficLight;
+import ru.nsu.team.entity.roadmap.*;
+import ru.nsu.team.roadmodelcreator.Copier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenomeUtils {
 
@@ -24,6 +25,88 @@ public class GenomeUtils {
             mutateLane(l);
         }
     }
+
+    /**
+     * Скрещиваем 2 карты
+     * @param parent1 - карта родитель 1
+     * @param parent2 - карта родитель 2
+     * @return результат скрещивания родителя_1 и родителя_2
+     */
+    public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2) {
+        int len = parent1.getRoads().size();
+        assert parent1.getRoads().size() == parent2.getRoads().size();
+        RoadMap childMap = Copier.copy(parent1);
+        childMap.setRoads(new ArrayList<>());
+        List<Road> roads1 = parent1.getRoads();
+        List<Road> roads2 = parent2.getRoads();
+        for (int i = 0; i < len; i++) {
+            Road r1 = roads1.get(i);
+            Road r2 = roads2.get(i);
+            Road childRoad = crossbreedRoads(r1, r2);
+            childMap.addRoad(childRoad);
+        }
+        return childMap;
+
+    }
+
+    /**
+     * Скрещиваем ноды дорог родителей
+     * @param r1 - родитей 1
+     * @param r2 - родитель 2
+     * @return результат скрещивания
+     */
+    private static Road crossbreedRoads(Road r1, Road r2) {
+        //Получаем новые ноды начала и конца путем срещивания соответвующих нод родителй
+        Node childFrom = crossbreedNodes(r1.getFrom(), r2.getFrom());
+        Node childTo = crossbreedNodes(r1.getTo(), r2.getTo());
+
+        Road rChild = new Road(r1.getId(), childFrom, childTo);
+        int numberOfLanes = r1.getLanesNumber();
+        assert r1.getLanesNumber() == r2.getLanesNumber();
+        //скрещиваем полосы дорог родителей
+        for (int i = 0; i < numberOfLanes; i++) {
+            Lane l1 = r1.getLanes().get(i);
+            Lane l2 = r2.getLanes().get(i);
+            Lane lChild = crossbreedLanes(l1, l2);
+            rChild.addLane(lChild);
+        }
+        return rChild;
+    }
+
+    /**
+     * Срещиваем ноды
+     * @param n1 родитель 1
+     * @param n2 родитель 2
+     * @return результат скрещивания
+     */
+    private static Node crossbreedNodes(Node n1, Node n2) {
+        assert n1.getId() == n2.getId();
+        Node child = Copier.copy(n1);
+        int a = (int) (20 + Math.random() * 41);
+        //выбираем геном одного из родителей
+        if (a % 2 == 0) {
+            child.setGenome(Copier.copy(n1.getGenome()));
+            return child;
+        }
+        child.setGenome(Copier.copy(n2.getGenome()));
+        return child;
+    }
+
+    /**
+     * Скрещиваем полосы
+     * @param l1 - родитель_1
+     * @param l2 - родитель_2
+     * @return результат скрещивания
+     */
+    private static Lane crossbreedLanes(Lane l1, Lane l2) {
+        int a = (int) (20 + Math.random() * 41);
+        //выбираем геном одного из родителей
+        if (a % 2 == 0) {
+            return Copier.copy(l1);
+        }
+        return Copier.copy(l2);
+    }
+
 
     /**
      * Изменяем случайным образом параметры ноды
