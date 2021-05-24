@@ -1,9 +1,11 @@
 package ru.nsu.team.genome;
 
 import ru.nsu.team.entity.roadmap.*;
-import ru.nsu.team.roadmodelcreator.Copier;
+import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
+import ru.nsu.team.roadmodelcreator.CopierUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class GenomeUtils {
@@ -28,6 +30,7 @@ public class GenomeUtils {
 
     /**
      * Скрещиваем 2 карты
+     *
      * @param parent1 - карта родитель 1
      * @param parent2 - карта родитель 2
      * @return результат скрещивания родителя_1 и родителя_2
@@ -35,7 +38,7 @@ public class GenomeUtils {
     public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2) {
         int len = parent1.getRoads().size();
         assert parent1.getRoads().size() == parent2.getRoads().size();
-        RoadMap childMap = Copier.copy(parent1);
+        RoadMap childMap = CopierUtils.copy(parent1);
         childMap.setRoads(new ArrayList<>());
         List<Road> roads1 = parent1.getRoads();
         List<Road> roads2 = parent2.getRoads();
@@ -51,6 +54,7 @@ public class GenomeUtils {
 
     /**
      * Скрещиваем ноды дорог родителей
+     *
      * @param r1 - родитей 1
      * @param r2 - родитель 2
      * @return результат скрещивания
@@ -70,41 +74,55 @@ public class GenomeUtils {
             Lane lChild = crossbreedLanes(l1, l2);
             rChild.addLane(lChild);
         }
+        rChild.setTrafficParticipants(new ArrayList<>());
+        assert rChild.getTrafficParticipants().size() == 0;
         return rChild;
     }
 
     /**
      * Срещиваем ноды
+     *
      * @param n1 родитель 1
      * @param n2 родитель 2
      * @return результат скрещивания
      */
     private static Node crossbreedNodes(Node n1, Node n2) {
         assert n1.getId() == n2.getId();
-        Node child = Copier.copy(n1);
+        Node child = CopierUtils.copy(n1);
+        child.setPendingCars(new HashSet<TrafficParticipant>());
         int a = (int) (20 + Math.random() * 41);
         //выбираем геном одного из родителей
         if (a % 2 == 0) {
-            child.setGenome(Copier.copy(n1.getGenome()));
+            child.setGenome(CopierUtils.copy(n1.getGenome()));
             return child;
         }
-        child.setGenome(Copier.copy(n2.getGenome()));
+        child.setGenome(CopierUtils.copy(n2.getGenome()));
+        assert child.getPendingCars().size() == 0;
         return child;
     }
 
     /**
      * Скрещиваем полосы
+     *
      * @param l1 - родитель_1
      * @param l2 - родитель_2
      * @return результат скрещивания
      */
     private static Lane crossbreedLanes(Lane l1, Lane l2) {
         int a = (int) (20 + Math.random() * 41);
+        Lane child;
         //выбираем геном одного из родителей
         if (a % 2 == 0) {
-            return Copier.copy(l1);
+            child = CopierUtils.copy(l1);
+            //убираем из полосы машинки
+            child.setTrafficParticipants(new ArrayList<>());
+            return child;
         }
-        return Copier.copy(l2);
+        child = CopierUtils.copy(l2);
+        //убираем из полосы машинки
+        child.setTrafficParticipants(new ArrayList<>());
+        assert child.getParticipants().size() == 0;
+        return child;
     }
 
 

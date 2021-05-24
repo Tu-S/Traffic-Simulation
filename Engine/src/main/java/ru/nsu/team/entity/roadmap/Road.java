@@ -75,6 +75,10 @@ public class Road implements Serializable {
         trafficParticipants.add(car);
     }
 
+    public void setTrafficParticipants(List<TrafficParticipant> trafficParticipants) {
+        this.trafficParticipants = trafficParticipants;
+    }
+
     public double getLength() {
         return length;
     }

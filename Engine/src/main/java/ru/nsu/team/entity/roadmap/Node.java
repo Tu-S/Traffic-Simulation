@@ -42,6 +42,10 @@ public class Node implements Serializable {
         fromRoadToRoads.put(from, to);
     }
 
+    public void setPendingCars(Set<TrafficParticipant> pendingCars) {
+        this.pendingCars = pendingCars;
+    }
+
     public Node(int id) {
         this.courses = new ArrayList<>();
         //this.trafficLights = new ArrayList<>();

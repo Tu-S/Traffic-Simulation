@@ -5,7 +5,7 @@ import org.junit.Test;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.genome.GenomeUtils;
 import ru.nsu.team.readers.RoadMapReader;
-import ru.nsu.team.roadmodelcreator.Copier;
+import ru.nsu.team.roadmodelcreator.CopierUtils;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class CrossbreedingTest {
         RoadMapReader roadMapReader = new RoadMapReader();
         var mapConfig = roadMapReader.getMapConfig("config/1.tsp");
         assert mapConfig != null;
-        List<RoadMap> maps = Copier.makeMaps(mapConfig, 2);
+        List<RoadMap> maps = CopierUtils.makeMaps(mapConfig, 2);
         var childMap = GenomeUtils.crossbreedMaps(maps.get(0), maps.get(1));
         Assert.assertNotEquals(childMap, maps.get(0));
         Assert.assertNotEquals(childMap, maps.get(1));
