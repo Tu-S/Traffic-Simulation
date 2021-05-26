@@ -15,12 +15,23 @@ public class GenomeUtils {
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
 
+
+
+    public static void mutateMap(RoadMap map) {
+        for(Road road : map.getRoads()){
+            mutateRoad(road);
+        }
+
+
+
+    }
+
     /**
      * Изменяем случайным образом параметры дороги
      *
      * @param roadGenome - дорога, которую меняем
      */
-    public static void mutateRoad(Road roadGenome) {
+    private static void mutateRoad(Road roadGenome) {
         mutateNode(roadGenome.getFrom());
         mutateNode(roadGenome.getTo());
         for (var l : roadGenome.getLanes()) {

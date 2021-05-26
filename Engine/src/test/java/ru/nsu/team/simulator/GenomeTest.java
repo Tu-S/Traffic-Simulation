@@ -25,7 +25,7 @@ public class GenomeTest {
         assert road.getTo().getId() == 1;
         assert road.getLanes().size() == 2;
 
-        GenomeUtils.mutateRoad(road);
+        //GenomeUtils.mutateRoad(road);
         System.out.println();
         System.out.println(tl.getConfigs().get(0).getDelay());
 
