@@ -1,5 +1,6 @@
 package ru.nsu.team.entity.trafficparticipant;
 
+import ru.nsu.team.entity.roadmap.Lane;
 import ru.nsu.team.entity.roadmap.Road;
 
 public class PositionOnRoad {
@@ -13,7 +14,7 @@ public class PositionOnRoad {
         this.currentLane = lane;
     }
 
-    public int getCurrentLane() {
+    public int getCurrentLaneId() {
         return currentLane;
     }
 
@@ -35,6 +36,10 @@ public class PositionOnRoad {
 
     public void setCurrentRoad(Road road) {
         this.currentRoad = road;
+    }
+
+    public Lane getCurrentLane() {
+        return currentRoad.getLaneN(currentLane);
     }
 
     @Override

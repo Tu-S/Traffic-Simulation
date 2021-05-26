@@ -1,9 +1,7 @@
 package ru.nsu.team.entity.roadmap;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import ru.nsu.team.entity.trafficparticipant.*;
 
@@ -61,7 +59,7 @@ public class Road {
     }
 
     synchronized public void deleteTrafficParticipant(TrafficParticipant car) {
-        lanes.get(car.getPosition().getCurrentLane()).removeTrafficParticipant(car);
+        lanes.get(car.getPosition().getCurrentLaneId()).removeTrafficParticipant(car);
         trafficParticipants.remove(car);
     }
 
@@ -70,7 +68,7 @@ public class Road {
     }
 
     synchronized public void addTrafficParticipant(TrafficParticipant car) {
-        Lane lane = lanes.get(car.getPosition().getCurrentLane());
+        Lane lane = lanes.get(car.getPosition().getCurrentLaneId());
         lane.addTrafficParticipant(car);
         trafficParticipants.add(car);
     }

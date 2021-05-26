@@ -115,8 +115,7 @@ public class Simulator extends Thread {
 
     @Override
     public void run() {
-        ExecutorService executor = Executors.newFixedThreadPool(
-                Math.max(Runtime.getRuntime().availableProcessors()-1,1));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         LOG.debug("Simulating road map from " + map.getStart() + " to " + map.getEndTime());
         try {
             Instant start = Instant.now();

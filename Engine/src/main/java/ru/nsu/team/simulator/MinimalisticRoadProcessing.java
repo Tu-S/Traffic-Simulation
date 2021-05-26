@@ -46,7 +46,7 @@ public class MinimalisticRoadProcessing implements Runnable {
     }
 
     private void setBlocking(TrafficParticipant tp) {
-        blockingVehicles.put(tp.getPosition().getCurrentLane(), tp);
+        blockingVehicles.put(tp.getPosition().getCurrentLaneId(), tp);
     }
 
 
@@ -54,7 +54,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         if (car.getCar().getPath().getRoads().isEmpty()) {
             return false;
         }
-        return !targetRoad.getLaneN(car.getPosition().getCurrentLane()).leadsTo(car.getCar().getPath().getNextRoad());
+        return !targetRoad.getLaneN(car.getPosition().getCurrentLaneId()).leadsTo(car.getCar().getPath().getNextRoad());
     }
 
     private int desiredLane(TrafficParticipant car) { // TODO: Change data structures for better performance
@@ -72,11 +72,11 @@ public class MinimalisticRoadProcessing implements Runnable {
         if (checkLaneChange(car)) {
             int targetLane = desiredLane(car);
             car.getCar().setTimeLeft(car.getCar().getTimeLeft() - timePassed);
-            int fromLane = car.getPosition().getCurrentLane();
+            int fromLane = car.getPosition().getCurrentLaneId();
             while (checkLaneChange(car)) {
                 //TODO check if space is empty
                 //TODO keep moving forward
-                int currentLane = car.getPosition().getCurrentLane();
+                int currentLane = car.getPosition().getCurrentLaneId();
                 car.getPosition().setCurrentLane(currentLane + (targetLane - currentLane > 0 ? 1 : -1));
                 saveCarState(car, timeFrameStart + timeInterval - car.getCar().getTimeLeft() + timePassed);
             }
@@ -91,9 +91,13 @@ public class MinimalisticRoadProcessing implements Runnable {
         //System.out.println(participant);
         PositionOnRoad position = participant.getPosition();
         Car car = participant.getCar();
+        if(car.getSpeed()>participant.getPosition().getCurrentLane().getMaxSpeed()){
+            car.setSpeed(participant.getPosition().getCurrentLane().getMaxSpeed());
+
+        }
         double distance;
         double possibleDistance = calculateDistanceByTime(participant, car.getTimeLeft());
-        TrafficParticipant block = getBlocking(position.getCurrentLane());
+        TrafficParticipant block = getBlocking(position.getCurrentLaneId());
         if (block != null) {
             // Node is blocked by another car
             LOG.debug("Node is blocked by another car");
@@ -112,7 +116,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         } else {
             // Node is not blocked by another car
             if (possibleDistance >= position.getPosition()) {
-                LOG.debug(car + " reached node");
+                LOG.debug("["+(timeFrameStart+timeInterval-car.getTimeLeft())+"] "+car + " reached node");
                 // Car can reach the node
                 activeNodes.add(targetRoad.getExitNode());
                 targetRoad.getExitNode().addPendingCar(participant);
@@ -136,7 +140,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         Car car = participant.getCar();
         double acceleration = car.getAcceleration();
         double maxSpeed = Math.min(car.getMaxSpeed(),
-                targetRoad.getLaneN(participant.getPosition().getCurrentLane()).getMaxSpeed());
+                targetRoad.getLaneN(participant.getPosition().getCurrentLaneId()).getMaxSpeed());
         int timeOfAcceleration = (int) ((maxSpeed - car.getSpeed()) / Car.DEFAULT_ACCELERATION);
         double distanceOfAcceleration =
                 acceleration * timeOfAcceleration * timeOfAcceleration / 2 + car.getSpeed() * timeOfAcceleration;
@@ -150,7 +154,7 @@ public class MinimalisticRoadProcessing implements Runnable {
         Car car = participant.getCar();
         double acceleration = car.getAcceleration();
         double maxSpeed = Math.min(car.getMaxSpeed(),
-                targetRoad.getLaneN(participant.getPosition().getCurrentLane()).getMaxSpeed());
+                targetRoad.getLaneN(participant.getPosition().getCurrentLaneId()).getMaxSpeed());
         int timeOfAcceleration = (int) ((maxSpeed - car.getSpeed()) / car.getAcceleration());
         double distanceOfAcceleration =
                 acceleration * timeOfAcceleration * timeOfAcceleration / 2 + car.getSpeed() * timeOfAcceleration;

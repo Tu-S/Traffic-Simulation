@@ -24,7 +24,7 @@ public class CarState {
         id = car.getId();
         position = positionOnRoad.getPosition();
         this.time = time;
-        currentLane = positionOnRoad.getCurrentLane();
+        currentLane = positionOnRoad.getCurrentLaneId();
         Road road = positionOnRoad.getCurrentRoad();
         currentRoad = road.getId();
         from = road.getFrom().getPosition();

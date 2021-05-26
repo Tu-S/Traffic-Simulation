@@ -49,13 +49,13 @@ public class MinimalisticNodeProcessing implements Runnable {
         Road road = participant.getPosition().getCurrentRoad();
         Path path = participant.getCar().getPath();
         if (path.getRoads().isEmpty()) {
-            processDestination(participant);
             reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
+            processDestination(participant);
             road.deleteTrafficParticipant(participant);
             return;
         }
         Road nextRoad = path.getNextRoad();
-        Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLane()), nextRoad);
+        Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLaneId()), nextRoad);
         int timeLeft = car.getTimeLeft();
         double dist = course.getLength();
         car.setSpeed(car.getSpeed() * 0.7);
@@ -72,7 +72,7 @@ public class MinimalisticNodeProcessing implements Runnable {
             position.setCurrentLane(findLaneNumber(course.getToLane()));
             activeRoads.add(course.getToLane().getParentRoad());
             position.getCurrentRoad().addTrafficParticipant(participant);
-            LOG.debug("Car has passed intersection " + car);
+            LOG.debug("["+(time + timeInterval - car.getTimeLeft())+"] Car has passed intersection " + car);
             car.getPath().popRoad();
             playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
             reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
@@ -108,7 +108,7 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processDestination(TrafficParticipant car) {
         playbackBuilder.addCarState(car, time + timeInterval - car.getCar().getTimeLeft(), false);
-        LOG.debug("Car has reached destination "+car);
+        LOG.debug("["+(time + timeInterval - car.getCar().getTimeLeft())+"] Car has reached destination "+car);
         //TODO process point of interest
     }
 

@@ -1,9 +1,9 @@
 package ru.nsu.team.entity.report;
 
 import org.apache.log4j.Logger;
+import ru.nsu.team.entity.roadmap.Lane;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
-import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.util.ArrayList;
@@ -11,18 +11,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HeatmapBuilder {
     private static Logger log = Logger.getRootLogger();
 
     static class Statistic {
         private double avgTime;
-        private int count;
+        private double count;
     }
 
     int frameStart, timeInterval, endTime;
-    Map<Road, Map<TrafficParticipant, Integer>> enterTimes;
-    Map<Road, Statistic> statisticMap;
+    Map<TrafficParticipant, EnteringState> enterStates;
+    Map<Lane, Statistic> statisticMap;
+    RoadMap map;
+    List<Road> observedRoads;
     int totalExits = 0;
 
     List<HeatmapFrame> frames;
@@ -31,29 +34,33 @@ public class HeatmapBuilder {
      * Time interval must be divisible by simulation interval
      */
     public HeatmapBuilder(RoadMap map, int timeInterval) {
-        this.enterTimes = new HashMap<>();
+        this.enterStates = new HashMap<>();
         this.statisticMap = new HashMap<>();
         this.frameStart = (int) map.getCurrentTime();
         this.timeInterval = timeInterval;
+        this.observedRoads = map.getRoads().stream().filter(r -> r.getFrom() != null).collect(Collectors.toList());
         this.frames = new ArrayList<>();
-        map.getRoads().stream().filter(r -> r.getFrom() != null).forEach(r -> {
-            enterTimes.put(r, new HashMap<>());
-            statisticMap.put(r, new Statistic());
+        observedRoads.stream().flatMap(r -> r.getLanes().stream()).forEach(l -> {
+            statisticMap.put(l, new Statistic());
         });
         this.endTime = (int) map.getEndTime();
+        this.map = map;
     }
 
     synchronized private void stashFrame() {
         HeatmapFrame frame = new HeatmapFrame(frameStart, Math.min(frameStart + timeInterval, endTime));
-        for (Map.Entry<Road, Statistic> entry : statisticMap.entrySet()) {
-            double length = entry.getKey().getLength();
-            double avgTime = entry.getValue().avgTime;
-            double avgSpeed = length / avgTime;
-            int score;
+        for (Road road : observedRoads) {
+            List<Double> speedRatios =
+                    road.getLanes().stream().filter(lane -> statisticMap.get(lane).count > 0).map(l -> {
+                        var stat = statisticMap.get(l);
+                        double length = l.getParentRoad().getLength();
+                        double avgTime = stat.avgTime;
+                        double avgSpeed = length / avgTime;
+                        return avgSpeed / l.getMaxSpeed();
+                    }).collect(Collectors.toList());
 
-            score = entry.getValue().count == 0 ? 0 : (int) (100 * avgSpeed / Car.DEFAULT_MAX_SPEED);
-            frame.addHeatmapRoadState(entry.getKey().getId(), score,
-                    avgSpeed / entry.getKey().getLaneN(0).getMaxSpeed());
+            double score = speedRatios.stream().mapToDouble(ratio -> ratio * 100).average().orElse(100);
+            frame.addHeatmapRoadState(road.getId(), (int) score, speedRatios);
         }
         frames.add(frame);
         statisticMap.forEach((k, v) -> {
@@ -67,7 +74,7 @@ public class HeatmapBuilder {
         if (time > frameStart + timeInterval) {
             stashFrame();
         }
-        enterTimes.get(participant.getPosition().getCurrentRoad()).put(participant, time);
+        enterStates.put(participant, new EnteringState(participant.getPosition().getPosition(), time));
     }
 
     synchronized public void markExit(TrafficParticipant participant, int time) {
@@ -79,30 +86,32 @@ public class HeatmapBuilder {
             return;
         }
 
-        if (!enterTimes.containsKey(participant.getPosition().getCurrentRoad())) {
+        if (!enterStates.containsKey(participant)) {
             throw new RuntimeException("No enter record found for car " + participant);
         }
-        int enterTime = enterTimes.get(participant.getPosition().getCurrentRoad()).get(participant);
-        int spentTime = time - enterTime;
-        Statistic stat = statisticMap.get(participant.getPosition().getCurrentRoad());
-        stat.avgTime = (stat.avgTime * stat.count + spentTime) / (stat.count + 1);
-        stat.count++;
+        var enterState = enterStates.get(participant);
+        int spentTime = time - enterState.getTimestamp();
+        Statistic stat = statisticMap.get(participant.getPosition().getCurrentLane());
+        double lengthRatio =
+                (enterState.getPosition() - participant.getPosition().getPosition())
+                        / participant.getPosition().getCurrentRoad().getLength();
+        stat.avgTime = (stat.avgTime * stat.count + spentTime) / (stat.count + lengthRatio);
+        stat.count += lengthRatio;
         totalExits++;
     }
 
-    public List<HeatmapFrame> build() {
+    synchronized public List<HeatmapFrame> build() {
         while (frameStart < endTime) {
             stashFrame();
         }
         return frames;
     }
 
-    public double getScore() {
-        int roadCount = statisticMap.size();
+    synchronized public double getScore() {
         double[] scores = frames.stream()
                 .flatMap(frame -> frame.congestionList.stream())
-                .mapToDouble(stat -> stat.speedRatio).filter(Double::isFinite).toArray();
-        double score = scores.length == 0 ? 0 : Arrays.stream(scores).sum() / scores.length;
-        return score;
+                .mapToDouble(stat -> stat.speedRatio.stream().mapToDouble(Double::doubleValue).average().orElse(0)).toArray();
+        log.debug("Scores: " + Arrays.stream(scores).mapToObj(String::valueOf).collect(Collectors.joining(", ")));
+        return Arrays.stream(scores).average().orElse(0);
     }
 }

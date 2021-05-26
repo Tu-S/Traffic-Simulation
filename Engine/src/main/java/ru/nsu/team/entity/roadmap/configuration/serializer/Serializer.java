@@ -19,7 +19,7 @@ public class Serializer {
         CarConfiguration car = toCarConfiguration(trafficParticipant.getCar());
         PositionOnRoad positionOnRoad = trafficParticipant.getPosition();
         int curRoad = positionOnRoad.getCurrentRoad().getId();
-        int curLane = positionOnRoad.getCurrentLane();
+        int curLane = positionOnRoad.getCurrentLaneId();
         double distanceFromRoadExit = positionOnRoad.getPosition();
         PositionOnRoadConfiguration position = new PositionOnRoadConfiguration(curRoad, curLane, distanceFromRoadExit);
         return new TrafficParticipantConfiguration(position, car);
