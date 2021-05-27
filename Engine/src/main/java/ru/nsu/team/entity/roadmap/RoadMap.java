@@ -18,6 +18,7 @@ public class RoadMap implements Serializable {
     private long start;
     private long currentTime;
     private long endTime;
+    private double score;
 
     public RoadMap() {
         this.roads = new ArrayList<>();
@@ -122,5 +123,13 @@ public class RoadMap implements Serializable {
 
     public Set<Course> getCourseSet() {
         return courseSet;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public double getScore() {
+        return score;
     }
 }

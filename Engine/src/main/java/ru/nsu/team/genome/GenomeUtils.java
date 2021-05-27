@@ -14,8 +14,25 @@ public class GenomeUtils {
     private static int MIN_SPEED = 20;
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
+    private static byte SURVIVOR_RATE = 50; // [0-100]%
 
+    public static List<RoadMap> selection(List<RoadMap> roadMaps) {
+        if (SURVIVOR_RATE < 0 || SURVIVOR_RATE > 100) {
+            return roadMaps;
+        }
+        int roadMapsSize = roadMaps.size();
+        int survivorsCount = (roadMapsSize * SURVIVOR_RATE) / 100;
+        roadMaps.sort((o1, o2) -> {
+            Double score1 = o1.getScore();
+            Double score2 = o2.getScore();
+            return score1.compareTo(score2);
+        });
+        return roadMaps.subList(roadMapsSize - survivorsCount, roadMapsSize);
+    }
 
+    public static void setSurvivorRate(byte survivorRate) {
+        SURVIVOR_RATE = survivorRate;
+    }
 
     public static void mutateMap(RoadMap map) {
         for(Road road : map.getRoads()){
@@ -66,7 +83,7 @@ public class GenomeUtils {
     /**
      * Скрещиваем ноды дорог родителей
      *
-     * @param r1 - родитей 1
+     * @param r1 - родитель 1
      * @param r2 - родитель 2
      * @return результат скрещивания
      */
@@ -163,6 +180,4 @@ public class GenomeUtils {
         var newSpeed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
         laneGenome.setMaxSpeed((int) newSpeed);
     }
-
-
 }
