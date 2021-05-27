@@ -3,6 +3,10 @@ package ru.nsu.team.simulator;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.nsu.team.entity.roadmap.RoadMap;
+import ru.nsu.team.entity.trafficparticipant.Car;
+import ru.nsu.team.entity.trafficparticipant.Path;
+import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
+import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.genome.GenomeUtils;
 import ru.nsu.team.readers.RoadMapReader;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
@@ -16,8 +20,23 @@ public class CrossbreedingTest {
         RoadMapReader roadMapReader = new RoadMapReader();
         var mapConfig = roadMapReader.getMapConfig("config/1.tsp");
         assert mapConfig != null;
+
         List<RoadMap> maps = CopierUtils.makeMaps(mapConfig, 2);
-        var childMap = GenomeUtils.crossbreedMaps(maps.get(0), maps.get(1));
+        RoadMap stdMap = CopierUtils.copy(maps.get(0));
+
+
+        maps.get(0).getRoadN(1).addTrafficParticipant(new TrafficParticipant(new Car(777, 78, null), new PositionOnRoad(maps.get(0).getRoadN(1), 999, 0)));
+
+        var childMap = GenomeUtils.crossbreedMaps(maps.get(0), maps.get(1), stdMap);
+
+        Assert.assertEquals(0, childMap.getRoads().get(1).getTrafficParticipants().size());
+        Assert.assertEquals(0, childMap.getRoads().get(1).getLanes().get(0).getParticipants().size());
+
+
+        var childMap2 = GenomeUtils.crossbreedMaps(maps.get(0), maps.get(1), maps.get(0));
+        Assert.assertEquals(1, childMap2.getRoads().get(1).getTrafficParticipants().size());
+        Assert.assertEquals(1, childMap2.getRoads().get(1).getLanes().get(0).getParticipants().size());
+
         Assert.assertNotEquals(childMap, maps.get(0));
         Assert.assertNotEquals(childMap, maps.get(1));
         Assert.assertEquals(childMap.getRoads().size(), maps.get(0).getRoads().size());

@@ -35,13 +35,58 @@ public class GenomeUtils {
     }
 
     public static void mutateMap(RoadMap map) {
-        for(Road road : map.getRoads()){
+        for (Road road : map.getRoads()) {
             mutateRoad(road);
         }
+    }
 
+
+    public static void setDefaultState(RoadMap child, RoadMap standard) {
+
+        /**
+         * возвращаем время на дефолтные значения
+         */
+        child.setStart(standard.getStart());
+        child.setCurrentTime(standard.getCurrentTime());
+        child.setCurrentTime(standard.getCurrentTime());
+        /**
+         * Устанавливаем дефолтные значения светофоров и машинок
+         */
+        setDefaultRoadStats(child, standard);
+
+    }
+
+    private static void setDefaultRoadStats(RoadMap child, RoadMap standard) {
+        int rNum = child.getRoadsNumber();
+        int stdRNum = standard.getRoadsNumber();
+        assert rNum == stdRNum;
+        for (int i = 0; i < rNum; i++) {
+            Road chR = child.getRoadN(i);
+            Road stdR = standard.getRoadN(i);
+            setDefaultTrafficLights(chR.getFrom(), stdR.getFrom());
+            setDefaultTrafficLights(chR.getTo(), stdR.getTo());
+            int lNum = chR.getLanesNumber();
+            int stdLNum = stdR.getLanesNumber();
+            assert lNum == stdLNum;
+            for (int j = 0; j < lNum; j++) {
+                Lane stdL = stdR.getLaneN(j);
+                var tr = stdL.getParticipants();
+                List<TrafficParticipant> ls = CopierUtils.copy(tr);
+                assert ls != null;
+                for (var t : ls) {
+                    chR.addTrafficParticipant(t);
+                }
+            }
+
+        }
+    }
+
+    //TODO какие значения должны быть дефолтные?
+    private static void setDefaultTrafficLights(Node child, Node standard) {
 
 
     }
+
 
     /**
      * Изменяем случайным образом параметры дороги
@@ -63,7 +108,7 @@ public class GenomeUtils {
      * @param parent2 - карта родитель 2
      * @return результат скрещивания родителя_1 и родителя_2
      */
-    public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2) {
+    public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2, RoadMap std) {
         int len = parent1.getRoads().size();
         assert parent1.getRoads().size() == parent2.getRoads().size();
         RoadMap childMap = CopierUtils.copy(parent1);
@@ -76,6 +121,7 @@ public class GenomeUtils {
             Road childRoad = crossbreedRoads(r1, r2);
             childMap.addRoad(childRoad);
         }
+        setDefaultState(childMap, std);
         return childMap;
 
     }
@@ -102,8 +148,8 @@ public class GenomeUtils {
             Lane lChild = crossbreedLanes(l1, l2);
             rChild.addLane(lChild);
         }
-        rChild.setTrafficParticipants(new ArrayList<>());
-        assert rChild.getTrafficParticipants().size() == 0;
+        //rChild.setTrafficParticipants(new ArrayList<>());
+        //assert rChild.getTrafficParticipants().size() == 0;
         return rChild;
     }
 
