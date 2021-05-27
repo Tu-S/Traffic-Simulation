@@ -148,8 +148,8 @@ public class GenomeUtils {
             Lane lChild = crossbreedLanes(l1, l2);
             rChild.addLane(lChild);
         }
-        //rChild.setTrafficParticipants(new ArrayList<>());
-        //assert rChild.getTrafficParticipants().size() == 0;
+        rChild.setTrafficParticipants(new ArrayList<>());
+        assert rChild.getTrafficParticipants().size() == 0;
         return rChild;
     }
 
@@ -212,9 +212,13 @@ public class GenomeUtils {
     }
 
     private static void mutateTrafficLight(TrafficLight trafficLight) {
+        int newPeriod = 0;
         for (var c : trafficLight.getConfigs()) {
-            c.setDelay((int) (MIN_DELAY + Math.random() * (MAX_DELAY - MIN_DELAY)));
+            var newVal = (int) (MIN_DELAY + Math.random() * (MAX_DELAY - MIN_DELAY));
+            newPeriod += newVal;
+            c.setDelay(newVal);
         }
+        trafficLight.setPeriod(newPeriod);
     }
 
     /**

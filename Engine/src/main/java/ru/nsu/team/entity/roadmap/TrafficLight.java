@@ -21,6 +21,14 @@ public class TrafficLight implements Serializable {
         period += c.getDelay();
     }
 
+    public int getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+
     public List<TrafficLightConfig> getConfigs() {
         return configs;
     }
