@@ -2,19 +2,18 @@ package ru.nsu.team.genome;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
-import ru.nsu.team.entity.roadmap.RoadMap;
+import ru.nsu.team.entity.roadmap.*;
+import ru.nsu.team.entity.spawner.Configuration;
+import ru.nsu.team.entity.spawner.Spawner;
 import ru.nsu.team.readers.RoadMapReader;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
 import ru.nsu.team.simulator.Simulator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AlgorithmVersion1 {
 
-    private static final int MAX_POPULATION_SIZE = 100;
+    private static final int MAX_POPULATION_SIZE = 10;
     private static RoadMap stdMap;
 
     public static void runAlgorithm() {
@@ -24,7 +23,16 @@ public class AlgorithmVersion1 {
         int maxGeneration = 100;
         double requiredScore = 100;
         int curGeneration = 0;
-        List<RoadMap> generation = CopierUtils.makeMaps(mapConfig, MAX_POPULATION_SIZE);
+
+
+        var simT = createSampleLineRoadMap(15);
+
+        List<RoadMap> generation = new ArrayList<>(MAX_POPULATION_SIZE);
+        for(int i = 0; i < MAX_POPULATION_SIZE; i++){
+            RoadMap copy = CopierUtils.copy(simT);
+            generation.add(copy);
+        }
+
         stdMap = CopierUtils.copy(generation.get(0));
         stdMap.setScore(0);
 
@@ -92,4 +100,32 @@ public class AlgorithmVersion1 {
         }
         return children;
     }
+
+    private static RoadMap createSampleLineRoadMap(int spawnFrequency) {
+        List<Node> nodes = Arrays.asList(new Node(0), new Node(1));
+        RoadMap rm = new RoadMap();
+        rm.setStart(0);
+        rm.setEndTime(1000);
+        Road road = new Road(0, nodes.get(0), nodes.get(1), 1, 25);
+        road.setLength(1000);
+        rm.addRoad(road);
+
+        PlaceOfInterest poi = new PlaceOfInterest(0, 100500, 100);
+        poi.addNode(nodes.get(1));
+
+        Road queue = new Road(1, null, nodes.get(0), 1, 100);
+        rm.addRoad(queue);
+        Course course = new Course(queue.getLaneN(0), road.getLaneN(0),
+                Collections.singletonList(new Intersection(0)), 10);
+        rm.addCourse(course);
+        nodes.get(0).addCourse(course);
+        Spawner spawner = new Spawner(nodes.get(0), queue);
+        spawner.addPossibleDestination(poi);
+        spawner.addConfiguration(new Configuration(0, 150, spawnFrequency));
+        rm.addSpawner(spawner);
+
+        return rm;
+    }
+
+
 }

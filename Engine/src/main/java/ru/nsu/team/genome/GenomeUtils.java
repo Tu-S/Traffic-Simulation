@@ -36,7 +36,9 @@ public class GenomeUtils {
 
     public static void mutateMap(RoadMap map) {
         for (Road road : map.getRoads()) {
-            mutateRoad(road);
+            if (road.getFrom() != null) {
+                mutateRoad(road);
+            }
         }
     }
 
@@ -118,8 +120,14 @@ public class GenomeUtils {
         for (int i = 0; i < len; i++) {
             Road r1 = roads1.get(i);
             Road r2 = roads2.get(i);
-            Road childRoad = crossbreedRoads(r1, r2);
-            childMap.addRoad(childRoad);
+            if (r1.getFrom() != null) {
+                Road childRoad = crossbreedRoads(r1, r2);
+                childMap.addRoad(childRoad);
+            } else {
+                childMap.addRoad(r1);
+
+
+            }
         }
         setDefaultState(childMap, std);
         return childMap;
