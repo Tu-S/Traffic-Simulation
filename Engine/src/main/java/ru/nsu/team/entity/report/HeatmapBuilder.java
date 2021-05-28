@@ -6,6 +6,7 @@ import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HeatmapBuilder {
+public class HeatmapBuilder implements Serializable {
     private static Logger log = Logger.getRootLogger();
 
     static class Statistic {

@@ -7,12 +7,13 @@ import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class Simulator extends Thread {
+public class Simulator extends Thread implements Serializable {
 
     private final Logger LOG = Logger.getRootLogger();
 
@@ -29,7 +30,7 @@ public class Simulator extends Thread {
         super();
         this.timeInterval = timeInterval;
         this.map = map;
-        this.runPermission = new Semaphore(1,true);
+        this.runPermission = new Semaphore(1, true);
         this.paused = false;
         this.playbackBuilder = playbackBuilder;
         this.reporterBuilder = reporterBuilder;

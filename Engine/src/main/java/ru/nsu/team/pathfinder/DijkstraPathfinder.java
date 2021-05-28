@@ -14,7 +14,7 @@ public class DijkstraPathfinder implements Pathfinder, Serializable {
     private final Set<Node> knownUnreachable;
     private final Set<Node> possibleDestinations;
 
-    private static class PathNode implements Comparable<PathNode> {
+    private static class PathNode implements Comparable<PathNode>, Serializable {
         Node node;
         double distance;
         ArrayList<Road> path;

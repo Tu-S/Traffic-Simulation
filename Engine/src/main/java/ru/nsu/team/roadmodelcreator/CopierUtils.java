@@ -20,6 +20,7 @@ public class CopierUtils {
     }
 
     public static <T> T copy(Object target) {
+        assert target != null;
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ObjectOutputStream objectOut = new ObjectOutputStream(out);
@@ -30,7 +31,7 @@ public class CopierUtils {
             byte[] byteData = out.toByteArray();
             ByteArrayInputStream bIn = new ByteArrayInputStream(byteData);
             return (T) new ObjectInputStream(bIn).readObject();
-        } catch (Exception ex) {
+       } catch (Exception ex) {
             System.out.println(ex.getMessage());
 
         }

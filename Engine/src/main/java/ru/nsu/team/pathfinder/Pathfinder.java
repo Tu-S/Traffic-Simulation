@@ -4,6 +4,7 @@ import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.PlaceOfInterest;
 import ru.nsu.team.entity.trafficparticipant.Path;
 
+import java.io.Serializable;
 import java.util.Set;
 
 public interface Pathfinder {

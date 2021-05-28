@@ -10,6 +10,7 @@ import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.jsonparser.JsonProvider;
 import ru.nsu.team.other.KeyValuePair;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CarStateSaver {
+public class CarStateSaver implements Serializable {
 
 
     public void saveCarsState(List<CarState> carStates, String fileName) {

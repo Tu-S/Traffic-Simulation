@@ -36,7 +36,6 @@ public class CrossbreedingTest {
         var childMap2 = GenomeUtils.crossbreedMaps(maps.get(0), maps.get(1), maps.get(0));
         Assert.assertEquals(1, childMap2.getRoads().get(1).getTrafficParticipants().size());
         Assert.assertEquals(1, childMap2.getRoads().get(1).getLanes().get(0).getParticipants().size());
-
         Assert.assertNotEquals(childMap, maps.get(0));
         Assert.assertNotEquals(childMap, maps.get(1));
         Assert.assertEquals(childMap.getRoads().size(), maps.get(0).getRoads().size());

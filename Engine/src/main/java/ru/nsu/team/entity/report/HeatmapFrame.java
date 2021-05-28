@@ -1,10 +1,11 @@
 package ru.nsu.team.entity.report;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeatmapFrame {
-    public static class HeatmapRoadState {
+public class HeatmapFrame implements Serializable {
+    public static class HeatmapRoadState implements Serializable {
         public int roadId;
         public int congestion;
         public List<Double> speedRatio;

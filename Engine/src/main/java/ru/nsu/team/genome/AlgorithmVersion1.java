@@ -13,22 +13,21 @@ import java.util.*;
 
 public class AlgorithmVersion1 {
 
-    private static final int MAX_POPULATION_SIZE = 10;
+    private static final int MAX_POPULATION_SIZE = 5;
+    private static final int MAX_GENERATION_NUMBER = 1;
     private static RoadMap stdMap;
 
     public static void runAlgorithm() {
         RoadMapReader roadMapReader = new RoadMapReader();
         var mapConfig = roadMapReader.getMapConfig("config/1.tsp");
         assert mapConfig != null;
-        int maxGeneration = 100;
         double requiredScore = 100;
         int curGeneration = 0;
-
 
         var simT = createSampleLineRoadMap(15);
 
         List<RoadMap> generation = new ArrayList<>(MAX_POPULATION_SIZE);
-        for(int i = 0; i < MAX_POPULATION_SIZE; i++){
+        for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
             RoadMap copy = CopierUtils.copy(simT);
             generation.add(copy);
         }
@@ -39,8 +38,6 @@ public class AlgorithmVersion1 {
         for (RoadMap m : generation) {
             GenomeUtils.mutateMap(m);
         }
-
-
         simulationBlock(generation);
         RoadMap bestMap;
         var selectedMaps = GenomeUtils.selection(generation);
@@ -50,12 +47,14 @@ public class AlgorithmVersion1 {
             return;
         }
         /*curGeneration < maxGeneration && bestMap.getScore() < requiredScore*/
-        while (bestMap.getScore() < requiredScore && curGeneration <= maxGeneration) {
+        while (bestMap.getScore() < requiredScore && curGeneration < MAX_GENERATION_NUMBER) {
             generation = breedingBlock(generation);
             simulationBlock(generation);
             selectedMaps = GenomeUtils.selection(generation);
             if (bestMap.getScore() < selectedMaps.get(selectedMaps.size() - 1).getScore()) {
                 bestMap = selectedMaps.get(selectedMaps.size() - 1);
+            } else {
+                mutationBlock(generation);
             }
             curGeneration++;
         }
@@ -69,6 +68,11 @@ public class AlgorithmVersion1 {
             HeatmapBuilder hmb = new HeatmapBuilder(m, 100);
             Simulator sim = new Simulator(100, m, new PlaybackBuilder(), hmb);
             sim.start();
+            try {
+                sim.join();
+            } catch (InterruptedException ex) {
+                System.out.println(ex.getMessage());
+            }
             m.setScore(hmb.getScore());
             System.out.println(m.getScore());
         }
@@ -88,12 +92,16 @@ public class AlgorithmVersion1 {
         int p2Id = 0;
         RoadMap p1 = null;
         RoadMap p2 = null;
+        int c = 0;
         for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
             while (p1Id == p2Id || (parents.containsKey(p1) && parents.containsValue(p2)) || (parents.containsKey(p2) && parents.containsValue(p1))) {
                 p1Id = (int) (Math.random() * max);
                 p2Id = (int) (Math.random() * max);
                 p1 = maps.get(p1Id);
                 p2 = maps.get(p2Id);
+                if (++c > 10) {
+                    break;
+                }
             }
             parents.put(p1, p2);
             children.add(GenomeUtils.crossbreedMaps(p1, p2, stdMap));
@@ -109,10 +117,8 @@ public class AlgorithmVersion1 {
         Road road = new Road(0, nodes.get(0), nodes.get(1), 1, 25);
         road.setLength(1000);
         rm.addRoad(road);
-
         PlaceOfInterest poi = new PlaceOfInterest(0, 100500, 100);
         poi.addNode(nodes.get(1));
-
         Road queue = new Road(1, null, nodes.get(0), 1, 100);
         rm.addRoad(queue);
         Course course = new Course(queue.getLaneN(0), road.getLaneN(0),
@@ -123,7 +129,6 @@ public class AlgorithmVersion1 {
         spawner.addPossibleDestination(poi);
         spawner.addConfiguration(new Configuration(0, 150, spawnFrequency));
         rm.addSpawner(spawner);
-
         return rm;
     }
 

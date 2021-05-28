@@ -9,13 +9,14 @@ import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
-public class MinimalisticRoadProcessing implements Runnable {
+public class MinimalisticRoadProcessing implements Runnable, Serializable {
 
     private static final Logger LOG = Logger.getRootLogger();
 

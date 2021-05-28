@@ -8,13 +8,14 @@ import ru.nsu.team.entity.roadmap.configuration.serializer.Serializer;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.jsonparser.JsonProvider;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RoadMapSaver {
+public class RoadMapSaver implements Serializable {
     public void saveMap(RoadMap map, RoadMapConfiguration mapConfiguration, String fileName) {
         Serializer serializer = new Serializer();
         List<TrafficParticipantConfiguration> trafficParticipantConfigurationList = new ArrayList<>();

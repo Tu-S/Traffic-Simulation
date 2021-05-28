@@ -1,5 +1,7 @@
 package ru.nsu.team.pathfinder;
 
-public class DestinationUnreachable extends RuntimeException {
+import java.io.Serializable;
+
+public class DestinationUnreachable extends RuntimeException implements Serializable {
 
 }

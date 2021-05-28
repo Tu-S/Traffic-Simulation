@@ -1,11 +1,12 @@
 package ru.nsu.team.entity.playback;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import ru.nsu.team.entity.statistics.CarState;
 
-public class Playback {
+public class Playback implements Serializable {
   private List<CarState> carStates;
 
   public Playback() {

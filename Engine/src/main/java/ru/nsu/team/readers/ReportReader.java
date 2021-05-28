@@ -7,10 +7,11 @@ import ru.nsu.team.jsonparser.JsonProvider;
 import ru.nsu.team.other.KeyValuePair;
 
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportReader {
+public class ReportReader implements Serializable {
 
     public List<KeyValuePair<Timeline, List<RoadCongestion>>> getReportFromJson(String filepath) throws FileNotFoundException {
         JsonProvider reader = new JsonProvider();

@@ -12,12 +12,13 @@ import ru.nsu.team.entity.trafficparticipant.Path;
 import ru.nsu.team.entity.trafficparticipant.PositionOnRoad;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
-public class MinimalisticNodeProcessing implements Runnable {
+public class MinimalisticNodeProcessing implements Runnable, Serializable {
 
     private static Logger LOG = Logger.getRootLogger();
 

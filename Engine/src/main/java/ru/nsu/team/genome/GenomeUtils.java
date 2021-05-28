@@ -114,6 +114,7 @@ public class GenomeUtils {
         int len = parent1.getRoads().size();
         assert parent1.getRoads().size() == parent2.getRoads().size();
         RoadMap childMap = CopierUtils.copy(parent1);
+        assert childMap != null;
         childMap.setRoads(new ArrayList<>());
         List<Road> roads1 = parent1.getRoads();
         List<Road> roads2 = parent2.getRoads();
@@ -171,6 +172,9 @@ public class GenomeUtils {
     private static Node crossbreedNodes(Node n1, Node n2) {
         assert n1.getId() == n2.getId();
         Node child = CopierUtils.copy(n1);
+        if( child == null){
+            assert  child != null;
+        }
         child.setPendingCars(new HashSet<TrafficParticipant>());
         int a = (int) (20 + Math.random() * 41);
         //выбираем геном одного из родителей
@@ -197,11 +201,13 @@ public class GenomeUtils {
         if (a % 2 == 0) {
             child = CopierUtils.copy(l1);
             //убираем из полосы машинки
+            assert child != null;
             child.setTrafficParticipants(new ArrayList<>());
             return child;
         }
         child = CopierUtils.copy(l2);
         //убираем из полосы машинки
+        assert child != null;
         child.setTrafficParticipants(new ArrayList<>());
         assert child.getParticipants().size() == 0;
         return child;

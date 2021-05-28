@@ -1,5 +1,6 @@
 package ru.nsu.team.entity.report;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import ru.nsu.team.entity.statistics.HeatMap;
@@ -9,7 +10,7 @@ import ru.nsu.team.entity.statistics.Timeline;
 import ru.nsu.team.entity.statistics.TrafficStatistics;
 import ru.nsu.team.other.KeyValuePair;
 
-public class Reporter {
+public class Reporter implements Serializable {
   private TrafficStatistics trafficStatistics;
   private List<KeyValuePair<Timeline, List<RoadCongestion>>> heatmap;
 
