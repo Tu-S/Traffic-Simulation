@@ -14,25 +14,28 @@ import java.util.*;
 public class AlgorithmVersion1 {
 
     private static final int MAX_POPULATION_SIZE = 5;
-    private static final int MAX_GENERATION_NUMBER = 1;
+    private static final int MAX_GENERATION_NUMBER = 2;
     private static RoadMap stdMap;
 
     public static void runAlgorithm() {
         RoadMapReader roadMapReader = new RoadMapReader();
-        var mapConfig = roadMapReader.getMapConfig("config/1.tsp");
+        var mapConfig = roadMapReader.getMapConfig("config/test_map.tsp");
         assert mapConfig != null;
         double requiredScore = 100;
         int curGeneration = 0;
 
         var simT = createSampleLineRoadMap(15);
 
-        List<RoadMap> generation = new ArrayList<>(MAX_POPULATION_SIZE);
-        for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
+        List<RoadMap> generation = CopierUtils.makeMaps(mapConfig,MAX_POPULATION_SIZE);// new ArrayList<>(MAX_POPULATION_SIZE);
+
+
+        /*for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
             RoadMap copy = CopierUtils.copy(simT);
             generation.add(copy);
-        }
+        }*/
 
         stdMap = CopierUtils.copy(generation.get(0));
+        assert stdMap != null;
         stdMap.setScore(0);
 
         for (RoadMap m : generation) {
@@ -48,7 +51,8 @@ public class AlgorithmVersion1 {
         }
         /*curGeneration < maxGeneration && bestMap.getScore() < requiredScore*/
         while (bestMap.getScore() < requiredScore && curGeneration < MAX_GENERATION_NUMBER) {
-            generation = breedingBlock(generation);
+            System.out.println("GENERATION #" + curGeneration);
+            //generation = breedingBlock(generation);
             simulationBlock(generation);
             selectedMaps = GenomeUtils.selection(generation);
             if (bestMap.getScore() < selectedMaps.get(selectedMaps.size() - 1).getScore()) {
@@ -56,6 +60,7 @@ public class AlgorithmVersion1 {
             } else {
                 mutationBlock(generation);
             }
+
             curGeneration++;
         }
         System.out.println("size = " + generation.size());
@@ -74,7 +79,7 @@ public class AlgorithmVersion1 {
                 System.out.println(ex.getMessage());
             }
             m.setScore(hmb.getScore());
-            System.out.println(m.getScore());
+            System.out.println("Map score " + m.getScore());
         }
     }
 
