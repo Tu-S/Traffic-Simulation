@@ -51,12 +51,28 @@ public class GenomeUtils {
          */
         child.setStart(standard.getStart());
         child.setCurrentTime(standard.getCurrentTime());
-        child.setCurrentTime(standard.getCurrentTime());
+        child.setEndTime(standard.getEndTime());
+        //child.setScore(standard.getScore());
+        //child.setCurrentTime(standard.getCurrentTime());
         /**
          * Устанавливаем дефолтные значения светофоров и машинок
          */
         setDefaultRoadStats(child, standard);
         setDefaultPlaceStats(child, standard);
+        //setDefaultCourseStats(child, standard);
+        //setDefaultSpawnerStats(child, standard);
+    }
+
+    private static void setDefaultSpawnerStats(RoadMap child, RoadMap standard) {
+        int spNum = child.getSpawnersNumber();
+        assert spNum == standard.getSpawnersNumber();
+        child.setSpawners(CopierUtils.copy(standard.getSpawners()));
+    }
+
+    private static void setDefaultCourseStats(RoadMap child, RoadMap standard) {
+        int csNum = child.getCourseSet().size();
+        assert csNum == standard.getCourseSet().size();
+        child.setCourseSet(CopierUtils.copy(standard.getCourseSet()));
     }
 
     private static void setDefaultPlaceStats(RoadMap child, RoadMap standard) {
@@ -77,6 +93,10 @@ public class GenomeUtils {
             int lNum = chR.getLanesNumber();
             int stdLNum = stdR.getLanesNumber();
             assert lNum == stdLNum;
+            chR.setTrafficParticipants(new ArrayList<>());
+            for (Lane lane : chR.getLanes()) {
+                lane.setTrafficParticipants(new ArrayList<>());
+            }
             for (int j = 0; j < lNum; j++) {
                 Lane stdL = stdR.getLaneN(j);
                 var tr = stdL.getParticipants();

@@ -13,8 +13,8 @@ import java.util.*;
 
 public class AlgorithmVersion1 {
 
-    private static final int MAX_POPULATION_SIZE = 3;
-    private static final int MAX_GENERATION_NUMBER = 100;
+    private static final int MAX_POPULATION_SIZE = 5;
+    private static final int MAX_GENERATION_NUMBER = 2;
     private static RoadMap stdMap;
 
     public static void runAlgorithm() {
@@ -24,33 +24,39 @@ public class AlgorithmVersion1 {
         double requiredScore = 100;
         int curGeneration = 0;
 
-        var simT = createSampleLineRoadMap(15);
-
-        List<RoadMap> generation = CopierUtils.makeMaps(mapConfig, MAX_POPULATION_SIZE);// new ArrayList<>(MAX_POPULATION_SIZE);
+        List<RoadMap> generation = CopierUtils.makeMaps(mapConfig, MAX_POPULATION_SIZE);
         stdMap = CopierUtils.copy(generation.get(0));
         assert stdMap != null;
         stdMap.setScore(0);
         mutationBlock(generation);
-        //simulationBlock(generation);
+        simulationBlock(generation);
+//        for (RoadMap map : generation) {
+//            GenomeUtils.setDefaultState(map, stdMap);
+//        }
         RoadMap bestMap;
-        var selectedMaps = GenomeUtils.selection(generation);
-        bestMap = selectedMaps.get(selectedMaps.size() - 1);
+        generation = GenomeUtils.selection(generation);
+        for (RoadMap map : generation) {
+            System.out.println(map.getScore());
+        }
+        bestMap = generation.get(generation.size() - 1);
         if (bestMap.getScore() >= requiredScore) {
             System.out.println("bestMapScore = " + bestMap.getScore());
             return;
         }
-        /*curGeneration < maxGeneration && bestMap.getScore() < requiredScore*/
         while (bestMap.getScore() < requiredScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
-            breedingBlock(generation);
+            //generation = breedingBlock(generation);
             //mutationBlock(generation);
-            simulationBlock(generation);
-            selectedMaps = GenomeUtils.selection(generation);
-            if (bestMap.getScore() < selectedMaps.get(selectedMaps.size() - 1).getScore()) {
-                bestMap = selectedMaps.get(selectedMaps.size() - 1);
-            } else {
-                mutationBlock(generation);
+            for (RoadMap map : generation) {
+                GenomeUtils.setDefaultState(map, stdMap);
             }
+            simulationBlock(generation);
+            generation = GenomeUtils.selection(generation);
+//            if (bestMap.getScore() < generation.get(generation.size() - 1).getScore()) {
+//                bestMap = generation.get(generation.size() - 1);
+//            } else {
+//                //mutationBlock(generation);
+//            }
             curGeneration++;
         }
         System.out.println("size = " + generation.size());
@@ -108,29 +114,4 @@ public class AlgorithmVersion1 {
         }
         return children;
     }
-
-    private static RoadMap createSampleLineRoadMap(int spawnFrequency) {
-        List<Node> nodes = Arrays.asList(new Node(0), new Node(1));
-        RoadMap rm = new RoadMap();
-        rm.setStart(0);
-        rm.setEndTime(1000);
-        Road road = new Road(0, nodes.get(0), nodes.get(1), 1, 25);
-        road.setLength(1000);
-        rm.addRoad(road);
-        PlaceOfInterest poi = new PlaceOfInterest(0, 100500, 100);
-        poi.addNode(nodes.get(1));
-        Road queue = new Road(1, null, nodes.get(0), 1, 100);
-        rm.addRoad(queue);
-        Course course = new Course(queue.getLaneN(0), road.getLaneN(0),
-                Collections.singletonList(new Intersection(0)), 10);
-        rm.addCourse(course);
-        nodes.get(0).addCourse(course);
-        Spawner spawner = new Spawner(nodes.get(0), queue);
-        spawner.addPossibleDestination(poi);
-        spawner.addConfiguration(new Configuration(0, 150, spawnFrequency));
-        rm.addSpawner(spawner);
-        return rm;
-    }
-
-
 }

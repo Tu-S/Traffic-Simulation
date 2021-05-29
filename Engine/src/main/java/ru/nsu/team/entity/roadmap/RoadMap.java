@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class RoadMap implements Serializable {
 
-    private ArrayList<Spawner> spawners;
+    private List<Spawner> spawners;
     private List<PlaceOfInterest> placesOfInterest;
     private ArrayList<Road> roads;
     private Set<Course> courseSet;
@@ -126,6 +126,14 @@ public class RoadMap implements Serializable {
 
     public Set<Course> getCourseSet() {
         return courseSet;
+    }
+
+    public void setSpawners(List<Spawner> spawners) {
+        this.spawners = spawners;
+    }
+
+    public void setCourseSet(Set<Course> courseSet) {
+        this.courseSet = courseSet;
     }
 
     public void setScore(double score) {
