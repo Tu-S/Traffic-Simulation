@@ -15,6 +15,7 @@ public class GenomeUtils {
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
     private static byte SURVIVOR_RATE = 50; // [0-100]%
+    private static RoadMap std;
 
     public static List<RoadMap> selection(List<RoadMap> roadMaps) {
         if (SURVIVOR_RATE < 0 || SURVIVOR_RATE > 100) {
@@ -55,7 +56,13 @@ public class GenomeUtils {
          * Устанавливаем дефолтные значения светофоров и машинок
          */
         setDefaultRoadStats(child, standard);
+        setDefaultPlaceStats(child, standard);
+    }
 
+    private static void setDefaultPlaceStats(RoadMap child, RoadMap standard) {
+        int plNum = child.getPlacesOfInterestNumber();
+        assert plNum == standard.getPlacesOfInterestNumber();
+        child.setPlacesOfInterest(CopierUtils.copy(standard.getPlacesOfInterest()));
     }
 
     private static void setDefaultRoadStats(RoadMap child, RoadMap standard) {
@@ -112,6 +119,8 @@ public class GenomeUtils {
      */
     public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2, RoadMap std) {
         int len = parent1.getRoads().size();
+        clearPlaceOfInterests(parent1);
+        clearPlaceOfInterests(parent2);
         assert parent1.getRoads().size() == parent2.getRoads().size();
         RoadMap childMap = CopierUtils.copy(parent1);
         assert childMap != null;
@@ -121,18 +130,24 @@ public class GenomeUtils {
         for (int i = 0; i < len; i++) {
             Road r1 = roads1.get(i);
             Road r2 = roads2.get(i);
+            r1.clearCars();
+            r2.clearCars();
             if (r1.getFrom() != null) {
                 Road childRoad = crossbreedRoads(r1, r2);
                 childMap.addRoad(childRoad);
             } else {
-                childMap.addRoad(r1);
-
-
+                childMap.addRoad(CopierUtils.copy(r1));
             }
         }
         setDefaultState(childMap, std);
         return childMap;
 
+    }
+
+    private static void clearPlaceOfInterests(RoadMap map) {
+        for (var pl : map.getPlacesOfInterest()) {
+            pl.getCars().clear();
+        }
     }
 
     /**
@@ -171,10 +186,9 @@ public class GenomeUtils {
      */
     private static Node crossbreedNodes(Node n1, Node n2) {
         assert n1.getId() == n2.getId();
+        n1.getPendingCars().clear();
+        n2.getPendingCars().clear();
         Node child = CopierUtils.copy(n1);
-        if( child == null){
-            assert  child != null;
-        }
         child.setPendingCars(new HashSet<TrafficParticipant>());
         int a = (int) (20 + Math.random() * 41);
         //выбираем геном одного из родителей
@@ -202,13 +216,13 @@ public class GenomeUtils {
             child = CopierUtils.copy(l1);
             //убираем из полосы машинки
             assert child != null;
-            child.setTrafficParticipants(new ArrayList<>());
+            child.getParticipants().clear();
             return child;
         }
         child = CopierUtils.copy(l2);
         //убираем из полосы машинки
         assert child != null;
-        child.setTrafficParticipants(new ArrayList<>());
+        child.getParticipants().clear();
         assert child.getParticipants().size() == 0;
         return child;
     }

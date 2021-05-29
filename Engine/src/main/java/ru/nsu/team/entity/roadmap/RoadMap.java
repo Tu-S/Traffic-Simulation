@@ -12,7 +12,7 @@ import java.util.Set;
 public class RoadMap implements Serializable {
 
     private ArrayList<Spawner> spawners;
-    private ArrayList<PlaceOfInterest> placesOfInterest;
+    private List<PlaceOfInterest> placesOfInterest;
     private ArrayList<Road> roads;
     private Set<Course> courseSet;
     private long start;
@@ -39,7 +39,7 @@ public class RoadMap implements Serializable {
         this.start = start;
     }
 
-    public ArrayList<PlaceOfInterest> getPlacesOfInterest() {
+    public List<PlaceOfInterest> getPlacesOfInterest() {
         return placesOfInterest;
     }
 
@@ -81,6 +81,9 @@ public class RoadMap implements Serializable {
         return placesOfInterest.get(n);
     }*/
 
+    public void setPlacesOfInterest(List<PlaceOfInterest> placesOfInterest) {
+        this.placesOfInterest = placesOfInterest;
+    }
 
     public void addRoad(Road road) {
         roads.add(road);

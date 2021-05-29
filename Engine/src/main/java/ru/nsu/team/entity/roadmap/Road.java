@@ -24,7 +24,7 @@ public class Road implements Serializable {
         this.lanes = new ArrayList<>();
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
-        this.isEphemeral=false;
+        this.isEphemeral = false;
     }
 
     public Road(int id, Node from, Node to, int lanes, double maxSpeed) {
@@ -36,7 +36,7 @@ public class Road implements Serializable {
         for (int i = 0; i < lanes; i++) {
             addLane(maxSpeed);
         }
-        this.isEphemeral=false;
+        this.isEphemeral = false;
     }
 
 
@@ -121,6 +121,13 @@ public class Road implements Serializable {
 
     public Node getFrom() {
         return from;
+    }
+
+    public void clearCars() {
+        trafficParticipants.clear();
+        for (var l : lanes) {
+            l.getParticipants().clear();
+        }
     }
 
     public Node getTo() {

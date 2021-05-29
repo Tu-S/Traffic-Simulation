@@ -13,8 +13,8 @@ import java.util.*;
 
 public class AlgorithmVersion1 {
 
-    private static final int MAX_POPULATION_SIZE = 5;
-    private static final int MAX_GENERATION_NUMBER = 2;
+    private static final int MAX_POPULATION_SIZE = 3;
+    private static final int MAX_GENERATION_NUMBER = 100;
     private static RoadMap stdMap;
 
     public static void runAlgorithm() {
@@ -26,22 +26,12 @@ public class AlgorithmVersion1 {
 
         var simT = createSampleLineRoadMap(15);
 
-        List<RoadMap> generation = CopierUtils.makeMaps(mapConfig,MAX_POPULATION_SIZE);// new ArrayList<>(MAX_POPULATION_SIZE);
-
-
-        /*for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
-            RoadMap copy = CopierUtils.copy(simT);
-            generation.add(copy);
-        }*/
-
+        List<RoadMap> generation = CopierUtils.makeMaps(mapConfig, MAX_POPULATION_SIZE);// new ArrayList<>(MAX_POPULATION_SIZE);
         stdMap = CopierUtils.copy(generation.get(0));
         assert stdMap != null;
         stdMap.setScore(0);
-
-        for (RoadMap m : generation) {
-            GenomeUtils.mutateMap(m);
-        }
-        simulationBlock(generation);
+        mutationBlock(generation);
+        //simulationBlock(generation);
         RoadMap bestMap;
         var selectedMaps = GenomeUtils.selection(generation);
         bestMap = selectedMaps.get(selectedMaps.size() - 1);
@@ -52,7 +42,8 @@ public class AlgorithmVersion1 {
         /*curGeneration < maxGeneration && bestMap.getScore() < requiredScore*/
         while (bestMap.getScore() < requiredScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
-            //generation = breedingBlock(generation);
+            breedingBlock(generation);
+            //mutationBlock(generation);
             simulationBlock(generation);
             selectedMaps = GenomeUtils.selection(generation);
             if (bestMap.getScore() < selectedMaps.get(selectedMaps.size() - 1).getScore()) {
@@ -60,7 +51,6 @@ public class AlgorithmVersion1 {
             } else {
                 mutationBlock(generation);
             }
-
             curGeneration++;
         }
         System.out.println("size = " + generation.size());
@@ -86,6 +76,7 @@ public class AlgorithmVersion1 {
     private static void mutationBlock(List<RoadMap> maps) {
         for (var m : maps) {
             GenomeUtils.mutateMap(m);
+            GenomeUtils.setDefaultState(m, stdMap);
         }
     }
 
@@ -97,8 +88,9 @@ public class AlgorithmVersion1 {
         int p2Id = 0;
         RoadMap p1 = null;
         RoadMap p2 = null;
-        int c = 0;
-        for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
+        int c;
+        for (int i = 0; i < MAX_POPULATION_SIZE - 1; i++) {
+            c = 0;
             while (p1Id == p2Id || (parents.containsKey(p1) && parents.containsValue(p2)) || (parents.containsKey(p2) && parents.containsValue(p1))) {
                 p1Id = (int) (Math.random() * max);
                 p2Id = (int) (Math.random() * max);
@@ -108,8 +100,11 @@ public class AlgorithmVersion1 {
                     break;
                 }
             }
+
+            assert p1 != null && p2 != null;
             parents.put(p1, p2);
-            children.add(GenomeUtils.crossbreedMaps(p1, p2, stdMap));
+            var ch = GenomeUtils.crossbreedMaps(p1, p2, stdMap);
+            children.add(ch);
         }
         return children;
     }

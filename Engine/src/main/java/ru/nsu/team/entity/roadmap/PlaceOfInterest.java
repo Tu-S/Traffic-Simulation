@@ -31,6 +31,9 @@ public class PlaceOfInterest implements Serializable {
         return id;
     }
 
+    public void clearCar() {
+        trafficParticipants.clear();
+    }
 
     public double getWeight() {
         return weight;
