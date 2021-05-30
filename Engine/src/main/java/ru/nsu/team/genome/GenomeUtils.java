@@ -5,6 +5,7 @@ import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -23,11 +24,7 @@ public class GenomeUtils {
         }
         int roadMapsSize = roadMaps.size();
         int survivorsCount = (roadMapsSize * SURVIVOR_RATE) / 100;
-        roadMaps.sort((o1, o2) -> {
-            Double score1 = o1.getScore();
-            Double score2 = o2.getScore();
-            return score1.compareTo(score2);
-        });
+        roadMaps.sort(Comparator.comparing(RoadMap::getScore));
         return roadMaps.subList(roadMapsSize - survivorsCount, roadMapsSize);
     }
 
