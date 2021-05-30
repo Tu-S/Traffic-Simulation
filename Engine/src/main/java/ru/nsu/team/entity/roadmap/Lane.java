@@ -26,6 +26,10 @@ public class Lane implements Serializable {
         this.genome = new LaneGenome(maxSpeed);
     }
 
+    public void setParentRoad(Road parentRoad) {
+        this.parentRoad = parentRoad;
+    }
+
     public void setTrafficParticipants(List<TrafficParticipant> trafficParticipants) {
         this.trafficParticipants = trafficParticipants;
     }

@@ -18,6 +18,15 @@ public class Road implements Serializable {
     private boolean isMainRoad;
     private boolean isEphemeral;
 
+
+    public void setFrom(Node from) {
+        this.from = from;
+    }
+
+    public void setTo(Node to) {
+        this.to = to;
+    }
+
     public Road(int id, Node from, Node to) {
         this.from = from;
         this.to = to;

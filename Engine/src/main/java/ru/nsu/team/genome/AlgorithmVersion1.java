@@ -48,7 +48,7 @@ public class AlgorithmVersion1 {
         while (bestMap.getScore() < okScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
             generation = breedingBlock(generation);
-            System.out.println("Generation size after breeding " + generation.size());
+            //System.out.println("Generation size after breeding " + generation.size());
             setDefaultStats(generation);
             simulationBlock(generation);
             generation = GenomeUtils.selection(generation);
@@ -112,6 +112,9 @@ public class AlgorithmVersion1 {
     private static List<RoadMap> breedingBlock(List<RoadMap> maps) {
         System.out.println("Start breeding");
         int max = maps.size();
+        for (var m : maps) {
+            GenomeUtils.clearMapFromCars(m);
+        }
         List<RoadMap> children = new ArrayList<>(MAX_POPULATION_SIZE);
         Map<RoadMap, RoadMap> parents = new HashMap<>(MAX_POPULATION_SIZE);
         int p1Id = 0;
@@ -130,7 +133,6 @@ public class AlgorithmVersion1 {
                     break;
                 }
             }
-
             assert p1 != null && p2 != null;
             parents.put(p1, p2);
             var ch = GenomeUtils.crossbreedMaps(p1, p2, stdMap);
