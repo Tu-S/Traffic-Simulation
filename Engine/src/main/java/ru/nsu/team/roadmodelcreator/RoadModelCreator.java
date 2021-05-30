@@ -34,7 +34,7 @@ public class RoadModelCreator {
         map.setCurrentTime(map.getStart());
         map.setEndTime(getValue(roadMapConfig.getEnd()));
         map.getSpawners().forEach(s -> s.addPossibleDestination(map.getPlacesOfInterest()));
-
+        rId = 0;
         return map;
     }
 

@@ -47,7 +47,7 @@ public class AlgorithmVersion1 {
         }
         while (bestMap.getScore() < okScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
-            //generation = breedingBlock(generation);
+            generation = breedingBlock(generation);
             //System.out.println("Generation size after breeding " + generation.size());
             setDefaultStats(generation);
             simulationBlock(generation);

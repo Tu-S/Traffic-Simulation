@@ -149,7 +149,7 @@ public class GenomeUtils {
                 Road childRoad = crossbreedRoads(r1, r2);
                 newRoads.add(childRoad);
             } else {
-                newRoads.add(CopierUtils.copy(r1));
+                newRoads.add(r1);
             }
         }
         parent1.setRoads(newRoads);
@@ -180,14 +180,9 @@ public class GenomeUtils {
      */
     private static Road crossbreedRoads(Road r1, Road r2) {
         //Получаем новые ноды начала и конца путем срещивания соответвующих нод родителй
-        Node childFrom = crossbreedNodes(r1.getFrom(), r2.getFrom());
-        Node childTo = crossbreedNodes(r1.getTo(), r2.getTo());
+        r1.setFrom(crossbreedNodes(r1.getFrom(), r2.getFrom()));
+        r1.setTo(crossbreedNodes(r1.getTo(), r2.getTo()));
 
-        Road rChild = CopierUtils.copy(r1);
-        rChild.getLanes().clear();
-        assert rChild != null;
-        rChild.setFrom(childFrom);
-        rChild.setTo(childTo);
         //new Road(r1.getId(), childFrom, childTo);
         int numberOfLanes = r1.getLanesNumber();
         assert r1.getLanesNumber() == r2.getLanesNumber();
@@ -195,14 +190,9 @@ public class GenomeUtils {
         for (int i = 0; i < numberOfLanes; i++) {
             Lane l1 = r1.getLanes().get(i);
             Lane l2 = r2.getLanes().get(i);
-            Lane lChild = crossbreedLanes(l1, l2);
-            lChild.setParentRoad(rChild);
-            rChild.addLane(lChild);
+            crossbreedLanes(l1, l2);
         }
-        //rChild.getTrafficParticipants().clear();
-        assert rChild.getTrafficParticipants().size() == 0;
-        assert rChild.getLanesNumber() == r1.getLanesNumber();
-        return rChild;
+        return r1;
     }
 
     /**
@@ -224,9 +214,25 @@ public class GenomeUtils {
             //n1.setGenome(CopierUtils.copy(n1.getGenome()));
             return n1;
         }
-        n1.setGenome(CopierUtils.copy(n2.getGenome()));
-        assert child.getPendingCars().size() == 0;
-        return child;
+        updTr(n1, n2);
+        return n1;
+    }
+
+    private static void updTr(Node child, Node parent) {
+        var chG = child.getGenome();
+        var pG = parent.getGenome();
+        for (int i = 0; i < pG.getTrafficLights().size(); i++) {
+            var pTr = pG.getTrafficLights().get(i);
+            var chTr = chG.getTrafficLights().get(i);
+            chTr.setPeriod(pTr.getPeriod());
+            for (int j = 0; j < pTr.getConfigs().size(); j++) {
+                var pConf = pTr.getConfigs().get(j);
+                var chConfig = pTr.getConfigs().get(j);
+                chConfig.setDelay(pConf.getDelay());
+            }
+        }
+
+
     }
 
     /**
@@ -234,26 +240,14 @@ public class GenomeUtils {
      *
      * @param l1 - родитель_1
      * @param l2 - родитель_2
-     * @return результат скрещивания
      */
-    private static Lane crossbreedLanes(Lane l1, Lane l2) {
+    private static void crossbreedLanes(Lane l1, Lane l2) {
         int a = (int) (20 + Math.random() * 41);
-        Lane child;
-        //выбираем геном одного из родителей
         if (a % 2 == 0) {
-            child = CopierUtils.copy(l1);
-            //убираем из полосы машинки
-            assert child != null;
-            child.getParticipants().clear();
-            return child;
+            l1.setMaxSpeed(l2.getMaxSpeed());
         }
-        child = CopierUtils.copy(l2);
-        //убираем из полосы машинки
-        assert child != null;
-        //child.getParticipants().clear();
-        assert child.getParticipants().size() == 0;
-        return child;
     }
+
 
 
     /**
