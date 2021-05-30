@@ -124,6 +124,10 @@ public class Road implements Serializable {
     }
 
     public void clearCars() {
+        if (this.from != null) {
+            this.from.getPendingCars().clear();
+        }
+        this.to.getPendingCars().clear();
         trafficParticipants.clear();
         for (var l : lanes) {
             l.getParticipants().clear();

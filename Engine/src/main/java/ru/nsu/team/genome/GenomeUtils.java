@@ -93,9 +93,9 @@ public class GenomeUtils {
             int lNum = chR.getLanesNumber();
             int stdLNum = stdR.getLanesNumber();
             assert lNum == stdLNum;
-            chR.setTrafficParticipants(new ArrayList<>());
+            chR.getTrafficParticipants().clear();
             for (Lane lane : chR.getLanes()) {
-                lane.setTrafficParticipants(new ArrayList<>());
+                lane.getParticipants().clear();
             }
             for (int j = 0; j < lNum; j++) {
                 Lane stdL = stdR.getLaneN(j);
@@ -139,19 +139,21 @@ public class GenomeUtils {
      */
     public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2, RoadMap std) {
         int len = parent1.getRoads().size();
-        clearPlaceOfInterests(parent1);
-        clearPlaceOfInterests(parent2);
+        clearMapFromCars(parent1);
+        clearMapFromCars(parent2);
+
         assert parent1.getRoads().size() == parent2.getRoads().size();
         RoadMap childMap = CopierUtils.copy(parent1);
         assert childMap != null;
+
         childMap.setRoads(new ArrayList<>());
         List<Road> roads1 = parent1.getRoads();
         List<Road> roads2 = parent2.getRoads();
         for (int i = 0; i < len; i++) {
             Road r1 = roads1.get(i);
             Road r2 = roads2.get(i);
-            r1.clearCars();
-            r2.clearCars();
+            //r1.clearCars();
+            //r2.clearCars();
             if (r1.getFrom() != null) {
                 Road childRoad = crossbreedRoads(r1, r2);
                 childMap.addRoad(childRoad);
@@ -167,6 +169,13 @@ public class GenomeUtils {
     private static void clearPlaceOfInterests(RoadMap map) {
         for (var pl : map.getPlacesOfInterest()) {
             pl.getCars().clear();
+        }
+    }
+
+    private static void clearMapFromCars(RoadMap map) {
+        clearPlaceOfInterests(map);
+        for (var r : map.getRoads()) {
+            r.clearCars();
         }
     }
 
@@ -192,7 +201,7 @@ public class GenomeUtils {
             Lane lChild = crossbreedLanes(l1, l2);
             rChild.addLane(lChild);
         }
-        rChild.setTrafficParticipants(new ArrayList<>());
+        rChild.getTrafficParticipants().clear();
         assert rChild.getTrafficParticipants().size() == 0;
         return rChild;
     }
