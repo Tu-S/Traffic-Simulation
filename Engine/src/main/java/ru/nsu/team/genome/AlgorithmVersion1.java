@@ -135,7 +135,7 @@ public class AlgorithmVersion1 {
             }
             assert p1 != null && p2 != null;
             parents.put(p1, p2);
-            var ch = GenomeUtils.crossbreedMaps(p1, p2, stdMap);
+            var ch = GenomeUtils.crossbreedMaps(p1, p2);
             children.add(ch);
         }
         return children;

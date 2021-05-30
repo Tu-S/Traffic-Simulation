@@ -135,12 +135,10 @@ public class GenomeUtils {
      * @param parent2 - карта родитель 2
      * @return результат скрещивания родителя_1 и родителя_2
      */
-    public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2, RoadMap std) {
+    public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2) {
         int len = parent1.getRoads().size();
+        List<Road> newRoads = new ArrayList<>(len);
         assert parent1.getRoads().size() == parent2.getRoads().size();
-        RoadMap childMap = CopierUtils.copy(parent1);
-        assert childMap != null;
-        childMap.getRoads().clear();
         List<Road> roads1 = parent1.getRoads();
         List<Road> roads2 = parent2.getRoads();
         for (int i = 0; i < len; i++) {
@@ -149,13 +147,14 @@ public class GenomeUtils {
             assert r1.getTrafficParticipants().size() == 0 && r2.getTrafficParticipants().size() == 0;
             if (r1.getFrom() != null) {
                 Road childRoad = crossbreedRoads(r1, r2);
-                childMap.addRoad(childRoad);
+                newRoads.add(childRoad);
             } else {
-                childMap.addRoad(CopierUtils.copy(r1));
+                newRoads.add(CopierUtils.copy(r1));
             }
         }
+        parent1.setRoads(newRoads);
         //setDefaultState(childMap, std);
-        return childMap;
+        return parent1;
 
     }
 
@@ -217,16 +216,15 @@ public class GenomeUtils {
         assert n1.getId() == n2.getId();
 //        n1.getPendingCars().clear();
 //        n2.getPendingCars().clear();
-        Node child = CopierUtils.copy(n1);
         //child.setPendingCars(new HashSet<TrafficParticipant>());
-        assert child.getPendingCars().size() == 0;
+        assert n1.getPendingCars().size() == 0;
         int a = (int) (20 + Math.random() * 41);
         //выбираем геном одного из родителей
         if (a % 2 == 0) {
-            child.setGenome(CopierUtils.copy(n1.getGenome()));
-            return child;
+            //n1.setGenome(CopierUtils.copy(n1.getGenome()));
+            return n1;
         }
-        child.setGenome(CopierUtils.copy(n2.getGenome()));
+        n1.setGenome(CopierUtils.copy(n2.getGenome()));
         assert child.getPendingCars().size() == 0;
         return child;
     }

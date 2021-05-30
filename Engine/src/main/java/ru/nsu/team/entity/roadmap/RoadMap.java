@@ -13,7 +13,7 @@ public class RoadMap implements Serializable {
 
     private List<Spawner> spawners;
     private List<PlaceOfInterest> placesOfInterest;
-    private ArrayList<Road> roads;
+    private List<Road> roads;
     private Set<Course> courseSet;
     private long start;
     private long currentTime;
@@ -27,7 +27,7 @@ public class RoadMap implements Serializable {
         this.courseSet = new HashSet<>();
     }
 
-    public void setRoads(ArrayList<Road> roads) {
+    public void setRoads(List<Road> roads) {
         this.roads = roads;
     }
 
