@@ -8,11 +8,6 @@ import org.junit.Test;
 import ru.nsu.team.genome.AlgorithmVersion1;
 
 public class AlgoTest {
-    /*@BeforeClass
-    public static void initLogger() {
-        Logger.getRootLogger().addAppender(
-                new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
-    }*/
     @Test
     public void testAlgo() {
         AlgorithmVersion1.runAlgorithm();

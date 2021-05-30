@@ -154,7 +154,7 @@ public class GenomeUtils {
                 childMap.addRoad(CopierUtils.copy(r1));
             }
         }
-        setDefaultState(childMap, std);
+        //setDefaultState(childMap, std);
         return childMap;
 
     }
@@ -288,4 +288,5 @@ public class GenomeUtils {
         var newSpeed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
         laneGenome.setMaxSpeed((int) newSpeed);
     }
+
 }
