@@ -14,8 +14,8 @@ import java.util.*;
 
 public class AlgorithmVersion1 {
 
-    private static final int MAX_POPULATION_SIZE = 5;
-    private static final int MAX_GENERATION_NUMBER = 2;
+    private static final int MAX_POPULATION_SIZE = 20;
+    private static final int MAX_GENERATION_NUMBER = 10;
     private static RoadMap stdMap;
     private static double requiredScore = 0.9d;
     private static double scoreDelta = 0.1d;
@@ -35,11 +35,16 @@ public class AlgorithmVersion1 {
 
 
         mutationBlock(generation);
+        System.out.println("sim 1");
         simulationBlock(generation);
 
         //generation = GenomeUtils.selection(generation);
         showScore(generation);
         setDefaultStats(generation);
+//        System.out.println("sim 2");
+//        simulationBlock(generation);
+//        showScore(generation);
+
         bestMap = generation.get(generation.size() - 1);
         if (bestMap.getScore() >= okScore) {
             System.out.println("bestMapScore = " + bestMap.getScore());
@@ -47,11 +52,12 @@ public class AlgorithmVersion1 {
         }
         while (bestMap.getScore() < okScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
-            generation = breedingBlock(generation);
-            //System.out.println("Generation size after breeding " + generation.size());
             setDefaultStats(generation);
+            generation = breedingBlock(generation);
+            System.out.println("Generation size after breeding " + generation.size());
             simulationBlock(generation);
             generation = GenomeUtils.selection(generation);
+            System.out.println("Generation size after selection " + generation.size());
             showScore(generation);
             if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {
                 mutationBlock(generation);
@@ -59,9 +65,10 @@ public class AlgorithmVersion1 {
                 System.out.println("old best score = " + bestMap.getScore() + " new score = " + generation.get(generation.size() - 1).getScore());
                 bestMap = generation.get(generation.size() - 1);
             }
-            System.out.println("Generation size before breeding " + generation.size());
+
             curGeneration++;
         }
+        System.out.println("Best score = " + bestMap.getScore());
         System.out.println("size = " + generation.size());
 
 
@@ -112,9 +119,9 @@ public class AlgorithmVersion1 {
     private static List<RoadMap> breedingBlock(List<RoadMap> maps) {
         System.out.println("Start breeding");
         int max = maps.size();
-        for (var m : maps) {
+        /*for (var m : maps) {
             GenomeUtils.clearMapFromCars(m);
-        }
+        }*/
         List<RoadMap> children = new ArrayList<>(MAX_POPULATION_SIZE);
         Map<RoadMap, RoadMap> parents = new HashMap<>(MAX_POPULATION_SIZE);
         int p1Id = 0;
@@ -136,7 +143,7 @@ public class AlgorithmVersion1 {
             assert p1 != null && p2 != null;
             parents.put(p1, p2);
             var ch = GenomeUtils.crossbreedMaps(p1, p2);
-            children.add(ch);
+            children.add(CopierUtils.copy(ch));
         }
         return children;
     }

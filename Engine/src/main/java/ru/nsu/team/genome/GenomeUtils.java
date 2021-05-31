@@ -137,7 +137,6 @@ public class GenomeUtils {
      */
     public static RoadMap crossbreedMaps(RoadMap parent1, RoadMap parent2) {
         int len = parent1.getRoads().size();
-        List<Road> newRoads = new ArrayList<>(len);
         assert parent1.getRoads().size() == parent2.getRoads().size();
         List<Road> roads1 = parent1.getRoads();
         List<Road> roads2 = parent2.getRoads();
@@ -146,13 +145,9 @@ public class GenomeUtils {
             Road r2 = roads2.get(i);
             assert r1.getTrafficParticipants().size() == 0 && r2.getTrafficParticipants().size() == 0;
             if (r1.getFrom() != null) {
-                Road childRoad = crossbreedRoads(r1, r2);
-                newRoads.add(childRoad);
-            } else {
-                newRoads.add(r1);
+                crossbreedRoads(r1, r2);
             }
         }
-        parent1.setRoads(newRoads);
         //setDefaultState(childMap, std);
         return parent1;
 
@@ -176,12 +171,13 @@ public class GenomeUtils {
      *
      * @param r1 - родитель 1
      * @param r2 - родитель 2
-     * @return результат скрещивания
      */
-    private static Road crossbreedRoads(Road r1, Road r2) {
+    private static void crossbreedRoads(Road r1, Road r2) {
         //Получаем новые ноды начала и конца путем срещивания соответвующих нод родителй
-        r1.setFrom(crossbreedNodes(r1.getFrom(), r2.getFrom()));
-        r1.setTo(crossbreedNodes(r1.getTo(), r2.getTo()));
+        var n1 = crossbreedNodes(r1.getFrom(), r2.getFrom());
+        var n2 = crossbreedNodes(r1.getTo(), r2.getTo());
+        r1.setFrom(n1);
+        r1.setTo(n2);
 
         //new Road(r1.getId(), childFrom, childTo);
         int numberOfLanes = r1.getLanesNumber();
@@ -192,7 +188,6 @@ public class GenomeUtils {
             Lane l2 = r2.getLanes().get(i);
             crossbreedLanes(l1, l2);
         }
-        return r1;
     }
 
     /**
@@ -214,7 +209,7 @@ public class GenomeUtils {
             //n1.setGenome(CopierUtils.copy(n1.getGenome()));
             return n1;
         }
-        updTr(n1, n2);
+        //updTr(n1, n2);
         return n1;
     }
 
