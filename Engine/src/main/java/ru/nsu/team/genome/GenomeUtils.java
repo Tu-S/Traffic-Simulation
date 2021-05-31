@@ -4,10 +4,9 @@ import ru.nsu.team.entity.roadmap.*;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class GenomeUtils {
 
@@ -19,9 +18,10 @@ public class GenomeUtils {
     private static RoadMap std;
 
     public static List<RoadMap> selection(List<RoadMap> roadMaps) {
-        if (SURVIVOR_RATE < 0 || SURVIVOR_RATE > 100) {
+        if (SURVIVOR_RATE < 0 || SURVIVOR_RATE >= 100) {
             return roadMaps;
         }
+        removeClones(roadMaps, RoadMap::getScore);
         int roadMapsSize = roadMaps.size();
         int survivorsCount = (roadMapsSize * SURVIVOR_RATE) / 100;
         roadMaps.sort(Comparator.comparing(RoadMap::getScore));
@@ -30,6 +30,23 @@ public class GenomeUtils {
 
     public static void setSurvivorRate(byte survivorRate) {
         SURVIVOR_RATE = survivorRate;
+    }
+
+    @SafeVarargs
+    private static <T> void removeClones(List<T> list, Function<T, ?>... functions) {
+        Set<List<?>> set = new HashSet<>();
+        ListIterator<T> iterator = list.listIterator();
+
+        while (iterator.hasNext()) {
+            T element = iterator.next();
+            List<?> functionResults = Arrays.stream(functions)
+                .map(function -> function.apply(element))
+                .collect(Collectors.toList());
+
+            if (!set.add(functionResults)) {
+                iterator.remove();
+            }
+        }
     }
 
     public static void mutateMap(RoadMap map) {

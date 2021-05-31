@@ -12,7 +12,7 @@ public class SelectionTest {
   @Test
   public void selectionTest() {
     List<RoadMap> roadMaps = new LinkedList<>();
-    var values = new double[]{0.0383, 0.0430, 0.0469, 0.0288, 0.0309, 0.0488, 0.0235, 0.0272, 0.0202, 0.0413};
+    var values = new double[]{0.0383, 0.0430, 0.0469, 0.0288, 0.0309, 0.0488, 0.0235, 0.0272, 0.0202, 0.0413, 0.0488, 0.0488};
     for (double value : values) {
       RoadMap roadMap = new RoadMap();
       roadMap.setScore(value);
