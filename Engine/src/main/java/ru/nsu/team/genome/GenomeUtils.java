@@ -14,7 +14,7 @@ public class GenomeUtils {
     private static int MIN_SPEED = 20;
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
-    private static byte SURVIVOR_RATE = 50; // [0-100]%
+    private static int SURVIVOR_RATE = 50; // [0-100]%
     private static RoadMap std;
 
     public static List<RoadMap> selection(List<RoadMap> roadMaps) {
@@ -28,7 +28,7 @@ public class GenomeUtils {
         return roadMaps.subList(roadMapsSize - survivorsCount, roadMapsSize);
     }
 
-    public static void setSurvivorRate(byte survivorRate) {
+    public static void setSurvivorRate(int survivorRate) {
         SURVIVOR_RATE = survivorRate;
     }
 

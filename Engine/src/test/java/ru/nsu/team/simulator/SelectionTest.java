@@ -18,7 +18,7 @@ public class SelectionTest {
       roadMap.setScore(value);
       roadMaps.add(roadMap);
     }
-    GenomeUtils.setSurvivorRate((byte)50);
+    GenomeUtils.setSurvivorRate(50);
     roadMaps = GenomeUtils.selection(roadMaps);
     double[] scores = new double[5];
     int i = 0;
