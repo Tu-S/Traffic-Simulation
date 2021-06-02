@@ -2,6 +2,7 @@ package ru.nsu.team.genome;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
+import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.other.KeyValuePair;
 import ru.nsu.team.readers.RoadMapReader;
@@ -41,14 +42,9 @@ public class AlgorithmVersion2 {
         System.out.println("GENERATION #" + curGeneration);
         simulationBlock(generation);
         generation = GenomeUtils.selection(generation);
-
         curGeneration++;
-        //generation = GenomeUtils.selection(generation);
         showScore(generation);
         setDefaultStats(generation);
-//        System.out.println("sim 2");
-//        simulationBlock(generation);
-//        showScore(generation);
 
         bestMap = generation.get(generation.size() - 1);
         if (bestMap.getScore() >= okScore) {
@@ -59,17 +55,17 @@ public class AlgorithmVersion2 {
             System.out.println("GENERATION #" + curGeneration);
             setDefaultStats(generation);
             generation = breedingBlock(generation);
-            System.out.println("Generation size after breeding " + generation.size());
             simulationBlock(generation);
             generation = GenomeUtils.selection(generation);
-            System.out.println("Generation size after selection " + generation.size());
             showScore(generation);
             if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {
                 mutationBlock(generation);
             } else {
-                System.out.println("old best score = " + bestMap.getScore() + " new score = " + generation.get(generation.size() - 1).getScore());
-                bestMap = CopierUtils.copy(generation.get(generation.size() - 1));
-                bestMaps.add(CopierUtils.copy(generation.get(generation.size() - 1)));
+                var m = generation.get(generation.size() - 1);
+                System.out.println("old best score = " + bestMap.getScore() + " new score = " + m.getScore());
+                RoadMap c = CopierUtils.copy(m);
+                bestMap = c;
+                bestMaps.add(c);
             }
 
             curGeneration++;
@@ -118,15 +114,15 @@ public class AlgorithmVersion2 {
     }
 
     private static void mutationBlock(List<RoadMap> maps) {
-        System.out.println("Start mutation");
+        //System.out.println("Start mutation");
         for (var m : maps) {
             GenomeUtils.mutateMap(m);
-            GenomeUtils.setDefaultState(m, stdMap);
+            //GenomeUtils.setDefaultState(m, stdMap);
         }
     }
 
     private static List<RoadMap> breedingBlock(List<RoadMap> maps) {
-        System.out.println("Start breeding");
+        //System.out.println("Start breeding");
         int max = maps.size();
         /*for (var m : maps) {
             GenomeUtils.clearMapFromCars(m);

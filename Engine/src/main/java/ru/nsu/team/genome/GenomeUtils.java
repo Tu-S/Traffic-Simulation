@@ -226,7 +226,7 @@ public class GenomeUtils {
             //n1.setGenome(CopierUtils.copy(n1.getGenome()));
             return n1;
         }
-        //updTr(n1, n2);
+        updTr(n1, n2);
         return n1;
     }
 
@@ -290,6 +290,9 @@ public class GenomeUtils {
      */
     private static void mutateLane(Lane laneGenome) {
         var newSpeed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
+//        while(newSpeed < laneGenome.getMaxSpeed()){
+//            newSpeed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
+//        }
         laneGenome.setMaxSpeed((int) newSpeed);
     }
 
