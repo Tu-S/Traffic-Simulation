@@ -39,6 +39,6 @@ public class PositionOnRoad {
 
     @Override
     public String toString() {
-        return currentRoad.toString() + ":" + currentLane + ":" + position;
+        return "{" + currentRoad.toString() + ":" + currentLane + ":" + position + "}";
     }
 }

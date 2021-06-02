@@ -96,7 +96,6 @@ public class MinimalisticRoadProcessing implements Runnable {
         TrafficParticipant block = getBlocking(position.getCurrentLane());
         if (block != null) {
             // Node is blocked by another car
-            LOG.debug("Node is blocked by another car");
             distance = participant.getPosition().getPosition() - block.getPosition().getPosition()
                     - block.getCar().getInterCarDistance() - car.getInterCarDistance();
 
@@ -104,6 +103,7 @@ public class MinimalisticRoadProcessing implements Runnable {
                 position.setPosition(position.getPosition() - possibleDistance);
                 updateAfterDistance(participant, possibleDistance);
             } else {
+                LOG.debug("Node is blocked by another car: " + block);
                 position.setPosition(position.getPosition() - distance);
                 updateAfterDistance(participant, distance);
             }
@@ -128,6 +128,9 @@ public class MinimalisticRoadProcessing implements Runnable {
                 updateAfterDistance(participant, possibleDistance);
                 //TODO update speed
             }
+        }
+        if (participant.getCar().getTimeLeft() < 0) {
+            participant.getCar().setTimeLeft(0);
         }
         saveCarState(participant, timeFrameStart + timeInterval - participant.getCar().getTimeLeft());
     }

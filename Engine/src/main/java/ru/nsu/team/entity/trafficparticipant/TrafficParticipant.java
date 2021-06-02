@@ -30,6 +30,6 @@ public class TrafficParticipant implements Comparable<TrafficParticipant> {
 
     @Override
     public String toString() {
-        return car.toString()+":"+position.toString();
+        return "{" + car.toString() + ":" + position.toString() + "}";
     }
 }

@@ -61,27 +61,22 @@ public class MinimalisticNodeProcessing implements Runnable {
         double dist = course.getLength();
         car.setSpeed(car.getSpeed() * 0.7);
         playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
-        //System.out.println("" + (timeLeft >= dist / (car.getSpeed() + 1)) + " " + (course.getTimeLeft() >= dist /
-        // (car.getSpeed() + 1)) + " " + (!targetBlocked(participant, course.getToLane())));
         if (trafficLight == null || trafficLight.timeBlocked(road, time + timeInterval - car.getTimeLeft()) == 0) {
-            if (timeLeft >= dist / (car.getSpeed() + 5) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
-                reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
-                car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
-                position.getCurrentRoad().deleteTrafficParticipant(participant);
-                course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
-                position.setCurrentRoad(course.getToLane().getParentRoad());
-                position.setPosition(course.getToLane().getParentRoad().getLength());
-                position.setCurrentLane(findLaneNumber(course.getToLane()));
-                activeRoads.add(course.getToLane().getParentRoad());
-                position.getCurrentRoad().addTrafficParticipant(participant);
-                LOG.debug("Car has passed intersection " + car);
-                car.getPath().popRoad();
-                playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
-                reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
+            if(tryPassIntersection(participant)){
                 return;
             }
         } else {
-            car.setTimeLeft(Math.max(car.getTimeLeft() - trafficLight.timeBlocked(road, time + timeInterval - car.getTimeLeft()), 0));
+            LOG.debug("Car " + participant + " is blocked by traffic light for " + trafficLight.timeBlocked(road,
+                    time + timeInterval - car.getTimeLeft()));
+            car.setTimeLeft(Math.max(car.getTimeLeft() - trafficLight.timeBlocked(road,
+                    time + timeInterval - car.getTimeLeft()), 0));
+            car.setSpeed(0);
+            playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
+            if(trafficLight.timeBlocked(road, time + timeInterval - car.getTimeLeft()) == 0){
+                if(tryPassIntersection(participant)){
+                    return;
+                }
+            }
         }
         // TODO deceleration
         car.setSpeed(0);
@@ -113,7 +108,7 @@ public class MinimalisticNodeProcessing implements Runnable {
 
     private void processDestination(TrafficParticipant car) {
         playbackBuilder.addCarState(car, time + timeInterval - car.getCar().getTimeLeft(), false);
-        LOG.debug("Car has reached destination "+car);
+        LOG.debug("Car has reached destination " + car);
         //TODO process point of interest
     }
 
@@ -121,15 +116,8 @@ public class MinimalisticNodeProcessing implements Runnable {
     public void run() {
         LOG.debug("Processing node " + targetNode.getId() + " with " + targetNode.getPendingCars().size() + " cars");
         try {
-            List<TrafficParticipant> queue = new ArrayList<>();
-            for (TrafficParticipant participant : targetNode.getPendingCars()) {
-                if (participant.getPosition().getCurrentRoad().isMainRoad()) {
-                    targetNode.removePendingCar(participant);
-                    queue.add(participant);
-                }
-            }
-            // TODO add priorities
-            queue.addAll(targetNode.getPendingCars());
+            List<TrafficParticipant> queue = new ArrayList<>(targetNode.getPendingCars());
+            queue.sort((tp1, tp2) -> getCarPriority(tp2) - getCarPriority(tp1));
             targetNode.clearPendingCars();
             for (TrafficParticipant car : queue) {
                 processCar(car);
@@ -140,5 +128,35 @@ public class MinimalisticNodeProcessing implements Runnable {
             LOG.debug("Finished processing node " + targetNode.getId());
             latch.countDown();
         }
+    }
+
+    private boolean tryPassIntersection(TrafficParticipant participant) {
+        Car car = participant.getCar();
+        var position = participant.getPosition();
+        Road nextRoad = car.getPath().getNextRoad();
+        Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLane()), nextRoad);
+        int timeLeft = car.getTimeLeft();
+        double dist = course.getLength();
+        if (timeLeft >= dist / (car.getSpeed() + 8) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {
+            reporterBuilder.markExit(participant, time + timeInterval - car.getTimeLeft());
+            car.setTimeLeft(car.getTimeLeft() - (int) (dist / (car.getSpeed() + 5) + 1));
+            position.getCurrentRoad().deleteTrafficParticipant(participant);
+            course.decreaseTime((int) (dist / (car.getSpeed() + 5)) + 1);
+            position.setCurrentRoad(course.getToLane().getParentRoad());
+            position.setPosition(course.getToLane().getParentRoad().getLength());
+            position.setCurrentLane(findLaneNumber(course.getToLane()));
+            activeRoads.add(course.getToLane().getParentRoad());
+            position.getCurrentRoad().addTrafficParticipant(participant);
+            LOG.debug("Car has passed intersection " + car);
+            car.getPath().popRoad();
+            playbackBuilder.addCarState(participant, time + timeInterval - car.getTimeLeft(), true);
+            reporterBuilder.markEnter(participant, time + timeInterval - car.getTimeLeft());
+            return true;
+        }
+        return false;
+    }
+
+    private int getCarPriority(TrafficParticipant tp) {
+        return tp.getPosition().getCurrentRoad().isMainRoad() ? 1 : 0;
     }
 }
