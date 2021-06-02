@@ -14,6 +14,7 @@ public class RoadModelCreator {
     private List<Node> nodes;
     private List<Road> roads;
     private int rId = 0;
+    private int mapId = 0;
 
     public RoadMap createRoadMap(RoadMapConfiguration roadMapConfig) {
         RoadMap map = new RoadMap();
@@ -35,6 +36,7 @@ public class RoadModelCreator {
         map.setEndTime(getValue(roadMapConfig.getEnd()));
         map.getSpawners().forEach(s -> s.addPossibleDestination(map.getPlacesOfInterest()));
         rId = 0;
+        map.setMapId(mapId++);
         return map;
     }
 

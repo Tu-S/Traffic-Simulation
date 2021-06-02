@@ -19,12 +19,21 @@ public class RoadMap implements Serializable {
     private long currentTime;
     private long endTime;
     private double score;
+    private int mapId;
 
     public RoadMap() {
         this.roads = new ArrayList<>();
         this.spawners = new ArrayList<>();
         this.placesOfInterest = new ArrayList<>();
         this.courseSet = new HashSet<>();
+    }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
+
+    public int getMapId() {
+        return mapId;
     }
 
     public void setRoads(List<Road> roads) {

@@ -6,11 +6,12 @@ import org.apache.log4j.PatternLayout;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.nsu.team.genome.AlgorithmVersion1;
+import ru.nsu.team.genome.AlgorithmVersion2;
 
 public class AlgoTest {
     @Test
     public void testAlgo() {
-        AlgorithmVersion1.runAlgorithm();
+        AlgorithmVersion2.runAlgorithm();
     }
 
 
