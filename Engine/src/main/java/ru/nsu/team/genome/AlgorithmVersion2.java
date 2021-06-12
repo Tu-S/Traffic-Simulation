@@ -4,6 +4,7 @@ import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
+import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.other.KeyValuePair;
 import ru.nsu.team.readers.RoadMapReader;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
@@ -18,17 +19,14 @@ public class AlgorithmVersion2 {
 
     private static final int MAX_POPULATION_SIZE = 20;
     private static final int MAX_GENERATION_NUMBER = 10;
+    private static final double requiredScore = 0.9d;
+    private static final double scoreDelta = 0.1d;
+    private static final double okScore = requiredScore - scoreDelta;
     private static RoadMap stdMap;
-    private static double requiredScore = 0.9d;
-    private static double scoreDelta = 0.1d;
-    private static double okScore = requiredScore - scoreDelta;
     private static RoadMap bestMap;
 
-    public static void runAlgorithm() {
+    public static void runAlgorithm(RoadMapConfiguration mapConfig) {
         List<RoadMap> bestMaps = new ArrayList<>(100);
-        RoadMapReader roadMapReader = new RoadMapReader();
-        var mapConfig = roadMapReader.getMapConfig("config/test_map.tsp");
-        assert mapConfig != null;
         int curGeneration = 0;
 
         List<RoadMap> generation = CopierUtils.makeMaps(mapConfig, MAX_POPULATION_SIZE);

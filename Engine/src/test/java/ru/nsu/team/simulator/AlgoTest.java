@@ -7,11 +7,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.nsu.team.genome.AlgorithmVersion1;
 import ru.nsu.team.genome.AlgorithmVersion2;
+import ru.nsu.team.readers.RoadMapReader;
 
 public class AlgoTest {
     @Test
     public void testAlgo() {
-        AlgorithmVersion2.runAlgorithm();
+        RoadMapReader roadMapReader = new RoadMapReader();
+        var mapConfig = roadMapReader.getMapConfig("config/test_map.tsp");
+        assert mapConfig != null;
+        AlgorithmVersion2.runAlgorithm(mapConfig);
     }
 
 
