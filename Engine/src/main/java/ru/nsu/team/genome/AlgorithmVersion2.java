@@ -56,7 +56,7 @@ public class AlgorithmVersion2 {
             showScore(generation);
             if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {
                 mutationBlock(generation);
-            } else {
+            } else if(generation.get(generation.size() - 1).getScore() > bestMap.getScore()){
                 var m = generation.get(generation.size() - 1);
                 System.out.println("old best score = " + bestMap.getScore() + " new score = " + m.getScore());
                 RoadMap c = CopierUtils.copy(m);
