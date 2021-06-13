@@ -56,7 +56,7 @@ public class AlgorithmVersion1 {
             generation = breedingBlock(generation);
             System.out.println("Generation size after breeding " + generation.size());
             simulationBlock(generation);
-            generation = GenomeUtils.selection(generation);
+            //generation = GenomeUtils.selection(generation);
             System.out.println("Generation size after selection " + generation.size());
             showScore(generation);
             if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {

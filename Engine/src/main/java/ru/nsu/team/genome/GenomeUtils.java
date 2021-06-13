@@ -17,15 +17,34 @@ public class GenomeUtils {
     private static int SURVIVOR_RATE = 50; // [0-100]%
     private static RoadMap std;
 
-    public static List<RoadMap> selection(List<RoadMap> roadMaps) {
+    public static List<RoadMap> selection(List<RoadMap> generation, List<RoadMap> oldGeneration) {
         if (SURVIVOR_RATE < 0 || SURVIVOR_RATE >= 100) {
-            return roadMaps;
+            return generation;
         }
-        removeClones(roadMaps, RoadMap::getScore);
-        int roadMapsSize = roadMaps.size();
+        removeClones(generation, RoadMap::getScore);
+        int roadMapsSize = generation.size();
         int survivorsCount = (roadMapsSize * SURVIVOR_RATE) / 100;
-        roadMaps.sort(Comparator.comparing(RoadMap::getScore));
-        return roadMaps.subList(roadMapsSize - survivorsCount, roadMapsSize);
+        generation.sort(Comparator.comparing(RoadMap::getScore));
+        oldGeneration.sort(Comparator.comparing(RoadMap::getScore));
+        List<RoadMap> newGeneration = new ArrayList<>();
+        Collections.reverse(generation);
+        int i = 0;
+        for (RoadMap roadMap : generation) {
+            if (i == survivorsCount) {
+                i = 0;
+                for (RoadMap roadMapOld : oldGeneration) {
+                    if (i != survivorsCount) {
+                        i++;
+                        continue;
+                    }
+                    newGeneration.add(roadMapOld);
+                }
+                break;
+            }
+            i++;
+            newGeneration.add(roadMap);
+        }
+        return newGeneration;
     }
 
     public static void setSurvivorRate(int survivorRate) {

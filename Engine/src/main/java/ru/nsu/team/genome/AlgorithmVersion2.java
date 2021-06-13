@@ -10,14 +10,11 @@ import ru.nsu.team.readers.RoadMapReader;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
 import ru.nsu.team.simulator.Simulator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AlgorithmVersion2 {
 
-    private static final int MAX_POPULATION_SIZE = 20;
+    private static final int MAX_POPULATION_SIZE = 10;
     private static final int MAX_GENERATION_NUMBER = 10;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
@@ -39,7 +36,7 @@ public class AlgorithmVersion2 {
         System.out.println("sim 1");
         System.out.println("GENERATION #" + curGeneration);
         simulationBlock(generation);
-        generation = GenomeUtils.selection(generation);
+        //generation = GenomeUtils.selection(generation);
         curGeneration++;
         showScore(generation);
         setDefaultStats(generation);
@@ -51,10 +48,11 @@ public class AlgorithmVersion2 {
         }
         while (bestMap.getScore() < okScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
+            List<RoadMap> oldGeneration = CopierUtils.copy(generation);
             setDefaultStats(generation);
             generation = breedingBlock(generation);
             simulationBlock(generation);
-            generation = GenomeUtils.selection(generation);
+            generation = GenomeUtils.selection(generation, oldGeneration);
             showScore(generation);
             if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {
                 mutationBlock(generation);
@@ -78,6 +76,7 @@ public class AlgorithmVersion2 {
     }
 
     private static void showScore(List<RoadMap> maps) {
+        maps.sort(Comparator.comparing(RoadMap::getScore));
         for (RoadMap map : maps) {
             System.out.println("Map score " + map.getScore());
         }
