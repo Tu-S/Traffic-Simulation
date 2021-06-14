@@ -11,4 +11,8 @@ public class SignConfiguration {
     public Integer getLimit() {
         return limit;
     }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 }

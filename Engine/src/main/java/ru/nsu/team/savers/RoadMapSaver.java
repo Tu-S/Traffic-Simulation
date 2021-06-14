@@ -1,7 +1,9 @@
 package ru.nsu.team.savers;
 
+import ru.nsu.team.entity.roadmap.Node;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
+import ru.nsu.team.entity.roadmap.configuration.NodeConfiguration;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.entity.roadmap.configuration.TrafficParticipantConfiguration;
 import ru.nsu.team.entity.roadmap.configuration.serializer.Serializer;
@@ -26,20 +28,23 @@ public class RoadMapSaver implements Serializable {
             }
         }
         long millis = map.getCurrentTime();
-        mapConfiguration.setCurrentTime(toDate(millis*1000));
+        mapConfiguration.setCurrentTime(toDate(millis * 1000));
         mapConfiguration.setTrafficParticipants(trafficParticipantConfigurationList);
         saveMapConfig(mapConfiguration, fileName);
     }
-    private String toDate(long milliseconds){
+
+    private String toDate(long milliseconds) {
         Date date = new Date(milliseconds);
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         return dateFormat.format(date);
 
     }
+
     private void saveMapConfig(RoadMapConfiguration config, String fileName) {
         JsonProvider writer = new JsonProvider();
         writer.writeRoadMapToJson(config, fileName);
 
     }
-
 }
+
+

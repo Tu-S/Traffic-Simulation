@@ -45,6 +45,7 @@ public class TrafficLight implements Serializable {
         throw new IllegalStateException("Broken traffic light configuration");
     }
 
+
     public int timeBlocked(Road road, int time) {
         time %= period;
         int start = 0;

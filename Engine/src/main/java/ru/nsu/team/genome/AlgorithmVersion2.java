@@ -14,15 +14,15 @@ import java.util.*;
 
 public class AlgorithmVersion2 {
 
-    private static final int MAX_POPULATION_SIZE = 10;
-    private static final int MAX_GENERATION_NUMBER = 10;
+    private static final int MAX_POPULATION_SIZE = 3;
+    private static final int MAX_GENERATION_NUMBER = 2;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
     private static final double okScore = requiredScore - scoreDelta;
     private static RoadMap stdMap;
     private static RoadMap bestMap;
 
-    public static void runAlgorithm(RoadMapConfiguration mapConfig) {
+    public static RoadMap runAlgorithm(RoadMapConfiguration mapConfig) {
         List<RoadMap> bestMaps = new ArrayList<>(100);
         int curGeneration = 0;
 
@@ -44,7 +44,7 @@ public class AlgorithmVersion2 {
         bestMap = generation.get(generation.size() - 1);
         if (bestMap.getScore() >= okScore) {
             System.out.println("bestMapScore = " + bestMap.getScore());
-            return;
+            return bestMap;
         }
         while (bestMap.getScore() < okScore && curGeneration < MAX_GENERATION_NUMBER) {
             System.out.println("GENERATION #" + curGeneration);
@@ -56,7 +56,7 @@ public class AlgorithmVersion2 {
             showScore(generation);
             if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {
                 mutationBlock(generation);
-            } else if(generation.get(generation.size() - 1).getScore() > bestMap.getScore()){
+            } else if (generation.get(generation.size() - 1).getScore() > bestMap.getScore()) {
                 var m = generation.get(generation.size() - 1);
                 System.out.println("old best score = " + bestMap.getScore() + " new score = " + m.getScore());
                 RoadMap c = CopierUtils.copy(m);
@@ -68,11 +68,11 @@ public class AlgorithmVersion2 {
         }
         System.out.println("Best score = " + bestMap.getScore());
         System.out.println("size = " + generation.size());
-        for(var m : bestMaps){
+        for (var m : bestMaps) {
             System.out.println("Map " + m.getMapId() + " score = " + m.getScore());
 
         }
-
+        return bestMap;
     }
 
     private static void showScore(List<RoadMap> maps) {
