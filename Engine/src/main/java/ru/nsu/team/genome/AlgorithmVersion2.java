@@ -14,8 +14,9 @@ import java.util.*;
 
 public class AlgorithmVersion2 {
 
-    private static final int MAX_POPULATION_SIZE = 3;
-    private static final int MAX_GENERATION_NUMBER = 2;
+    private static final int MAX_POPULATION_SIZE = 10;
+    private static final int MAX_GENERATION_NUMBER = 10;
+    private  static final int MUTATION_RATE = 15;//[0-100]%
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
     private static final double okScore = requiredScore - scoreDelta;
@@ -112,8 +113,13 @@ public class AlgorithmVersion2 {
 
     private static void mutationBlock(List<RoadMap> maps) {
         //System.out.println("Start mutation");
-        for (var m : maps) {
-            GenomeUtils.mutateMap(m);
+        var size = (maps.size() * MUTATION_RATE) / 100;
+        var nums = new HashSet<Integer>(size);
+        while (nums.size() != size){
+            nums.add((int)(Math.random() * (maps.size())));
+        }
+        for (var n : nums) {
+            GenomeUtils.mutateMap(maps.get(n));
             //GenomeUtils.setDefaultState(m, stdMap);
         }
     }
