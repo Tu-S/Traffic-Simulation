@@ -10,6 +10,8 @@ public class RoadMapConfiguration {
     private String start;
     private String currentTime = "00:00";
     private String end = "00:00";
+    private double width = 1000.0;
+    private double height = 1000.0;
 
     public int getNodeNumber() {
         return nodes.size();

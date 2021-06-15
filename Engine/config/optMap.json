@@ -10,7 +10,11 @@
         11
       ],
       "x": 131.9343493223432,
-      "y": 253.8483507493779
+      "y": 253.8483507493779,
+      "connector": {
+        "regionId": 0,
+        "connectorId": 0
+      }
     },
     {
       "roadsOut": [
@@ -24,7 +28,11 @@
         13
       ],
       "x": 611.2400809601373,
-      "y": 258.85851519158496
+      "y": 258.85851519158496,
+      "connector": {
+        "regionId": 0,
+        "connectorId": 0
+      }
     },
     {
       "roadsOut": [
@@ -93,14 +101,14 @@
       ],
       "trafficLight": [
         {
-          "delay": 67,
+          "delay": 20,
           "roads": [
             9,
             15
           ]
         },
         {
-          "delay": 22,
+          "delay": 30,
           "roads": [
             17,
             34
@@ -123,14 +131,14 @@
       ],
       "trafficLight": [
         {
-          "delay": 15,
+          "delay": 20,
           "roads": [
             19,
             25
           ]
         },
         {
-          "delay": 23,
+          "delay": 20,
           "roads": [
             26
           ]
@@ -223,14 +231,14 @@
       ],
       "trafficLight": [
         {
-          "delay": 28,
+          "delay": 30,
           "roads": [
             32,
             37
           ]
         },
         {
-          "delay": 52,
+          "delay": 30,
           "roads": [
             12,
             35
@@ -321,7 +329,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 83
+              "limit": 35
             }
           ]
         }
@@ -335,7 +343,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 76
+              "limit": 35
             }
           ]
         }
@@ -349,7 +357,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 56
+              "limit": 35
             }
           ]
         }
@@ -363,7 +371,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 99
+              "limit": 35
             }
           ]
         }
@@ -377,7 +385,7 @@
           "signs": [
             {
               "type": "MAIN_ROAD",
-              "limit": 60
+              "limit": 35
             }
           ]
         }
@@ -391,7 +399,7 @@
           "signs": [
             {
               "type": "MAIN_ROAD",
-              "limit": 109
+              "limit": 35
             }
           ]
         }
@@ -405,7 +413,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 128
+              "limit": 35
             }
           ]
         }
@@ -419,7 +427,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 80
+              "limit": 35
             }
           ]
         }
@@ -505,7 +513,7 @@
           "signs": [
             {
               "type": "MAIN_ROAD",
-              "limit": 57
+              "limit": 35
             }
           ]
         }
@@ -519,7 +527,7 @@
           "signs": [
             {
               "type": "MAIN_ROAD",
-              "limit": 48
+              "limit": 35
             }
           ]
         }
@@ -587,7 +595,7 @@
           "signs": [
             {
               "type": "MAIN_ROAD",
-              "limit": 78
+              "limit": 35
             }
           ]
         }
@@ -601,7 +609,7 @@
           "signs": [
             {
               "type": "MAIN_ROAD",
-              "limit": 42
+              "limit": 35
             }
           ]
         }
@@ -615,7 +623,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 38
+              "limit": 35
             }
           ]
         }
@@ -629,7 +637,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 31
+              "limit": 35
             }
           ]
         }
@@ -661,7 +669,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 45
+              "limit": 35
             }
           ]
         }
@@ -675,7 +683,7 @@
           "signs": [
             {
               "type": "SPEED_LIMIT",
-              "limit": 120
+              "limit": 35
             }
           ]
         }
@@ -708,5 +716,7 @@
   ],
   "start": "10:00",
   "currentTime": "10:00",
-  "end": "11:00"
+  "end": "11:00",
+  "width": 1000.0,
+  "height": 1000.0
 }

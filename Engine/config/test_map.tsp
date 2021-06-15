@@ -10,7 +10,11 @@
       "roadsOut": [
         0,
         10
-      ]
+      ],
+           "connector": {
+                "regionId": 0,
+                "connectorId": 0
+              }
     },
     {
       "x": 611.2400809601373,
@@ -24,7 +28,11 @@
         1,
         2,
         12
-      ]
+      ],
+                 "connector": {
+                      "regionId": 0,
+                      "connectorId": 0
+                    }
     },
     {
       "x": 1125.6169636933798,
@@ -702,5 +710,7 @@
   ],
     "start": "10:00",
     "currentTime": "10:00",
-    "end": "11:00"
+    "end": "11:00",
+    "width": 1000.0,
+    "height": 1000.0
 }
