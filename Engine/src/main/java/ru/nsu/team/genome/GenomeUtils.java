@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class GenomeUtils {
 
-    private static int MAX_SPEED = 110;
-    private static int MIN_SPEED = 20;
+    private static double MAX_SPEED = 110/3.6d;
+    private static double MIN_SPEED = 20/3.6d;
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
     private static int SURVIVOR_RATE = 50; // [0-100]%
@@ -309,7 +309,7 @@ public class GenomeUtils {
      * @param laneGenome - полоса, которую изменяем
      */
     private static void mutateLane(Lane laneGenome) {
-        var newSpeed = Math.max(MIN_DELAY, Math.min(MAX_DELAY, laneGenome.getMaxSpeed() + (rnd.nextInt(5) - 2) * 10));
+        var newSpeed = Math.max(MIN_SPEED, Math.min(MAX_SPEED, laneGenome.getMaxSpeed() + (rnd.nextInt(5) - 2) * (10/3.6d)));
         laneGenome.setMaxSpeed(newSpeed);
     }
 
