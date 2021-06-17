@@ -135,7 +135,7 @@ public class MinimalisticNodeProcessing implements Runnable, Serializable {
         Car car = participant.getCar();
         var position = participant.getPosition();
         Road nextRoad = car.getPath().getNextRoad();
-        Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLane()), nextRoad);
+        Course course = selectCourse(position.getCurrentRoad().getLaneN(position.getCurrentLaneId()), nextRoad);
         int timeLeft = car.getTimeLeft();
         double dist = course.getLength();
         if (timeLeft >= dist / (car.getSpeed() + 8) && course.getTimeLeft() >= dist / (car.getSpeed() + 5) && !targetBlocked(participant, course.getToLane())) {

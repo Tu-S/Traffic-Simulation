@@ -22,6 +22,11 @@ public class TrafficLightConfig implements Serializable {
         this.roads = new ArrayList<>();
     }
 
+    public TrafficLightConfig(Integer delay, List<Road> roads) {
+        this.delay = delay;
+        this.roads = roads;
+    }
+
     public void addRoad(Road r) {
         roads.add(r);
     }

@@ -16,6 +16,7 @@ public class GenomeUtils {
     private static int MIN_DELAY = 10;
     private static int SURVIVOR_RATE = 50; // [0-100]%
     private static RoadMap std;
+    private static final Random rnd = new Random();
 
     public static List<RoadMap> selection(List<RoadMap> generation, List<RoadMap> oldGeneration) {
         if (SURVIVOR_RATE < 0 || SURVIVOR_RATE >= 100) {
@@ -59,8 +60,8 @@ public class GenomeUtils {
         while (iterator.hasNext()) {
             T element = iterator.next();
             List<?> functionResults = Arrays.stream(functions)
-                .map(function -> function.apply(element))
-                .collect(Collectors.toList());
+                    .map(function -> function.apply(element))
+                    .collect(Collectors.toList());
 
             if (!set.add(functionResults)) {
                 iterator.remove();
@@ -261,9 +262,8 @@ public class GenomeUtils {
                 var chConfig = pTr.getConfigs().get(j);
                 chConfig.setDelay(pConf.getDelay());
             }
+            chTr.setPeriod(chTr.getConfigs().stream().mapToInt(TrafficLightConfig::getDelay).sum());
         }
-
-
     }
 
     /**
@@ -280,7 +280,6 @@ public class GenomeUtils {
     }
 
 
-
     /**
      * Изменяем случайным образом параметры ноды
      *
@@ -293,13 +292,15 @@ public class GenomeUtils {
     }
 
     private static void mutateTrafficLight(TrafficLight trafficLight) {
-        int newPeriod = 0;
-        for (var c : trafficLight.getConfigs()) {
-            var newVal = (int) (MIN_DELAY + Math.random() * (MAX_DELAY - MIN_DELAY));
-            newPeriod += newVal;
-            c.setDelay(newVal);
-        }
-        trafficLight.setPeriod(newPeriod);
+        List<TrafficLightConfig> configs = trafficLight.getConfigs().stream()
+                .map(GenomeUtils::mutateTrafficLightConfig).collect(Collectors.toList());
+        trafficLight.setConfigs(configs);
+        trafficLight.setPeriod(configs.stream().mapToInt(TrafficLightConfig::getDelay).sum());
+    }
+
+    private static TrafficLightConfig mutateTrafficLightConfig(TrafficLightConfig original) {
+        int delay = Math.max(MIN_DELAY, Math.min(MAX_DELAY, original.getDelay() + rnd.nextInt(21) - 10));
+        return new TrafficLightConfig(delay, original.getRoads());
     }
 
     /**
