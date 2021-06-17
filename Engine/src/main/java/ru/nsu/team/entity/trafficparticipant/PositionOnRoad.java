@@ -46,6 +46,6 @@ public class PositionOnRoad implements Serializable {
 
     @Override
     public String toString() {
-        return currentRoad.toString() + ":" + currentLane + ":" + position;
+        return "{" + currentRoad.toString() + ":" + currentLane + ":" + position + "}";
     }
 }

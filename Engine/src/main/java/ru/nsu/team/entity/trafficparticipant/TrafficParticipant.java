@@ -32,6 +32,6 @@ public class TrafficParticipant implements Comparable<TrafficParticipant>, Seria
 
     @Override
     public String toString() {
-        return car.toString()+":"+position.toString();
+        return "{" + car.toString() + ":" + position.toString() + "}";
     }
 }

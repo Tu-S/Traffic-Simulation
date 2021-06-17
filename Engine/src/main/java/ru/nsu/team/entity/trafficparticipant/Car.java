@@ -86,6 +86,6 @@ public class Car implements Serializable {
 
     @Override
     public String toString() {
-        return "Car " + id + " " + speed + "s "+timeLeft+"t";
+        return "{Car " + id + " " + speed + "s "+timeLeft+"t}";
     }
 }
