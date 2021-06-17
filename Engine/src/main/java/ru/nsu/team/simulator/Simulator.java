@@ -132,6 +132,8 @@ public class Simulator extends Thread implements Serializable {
             LOG.debug("Simulation duration:" + (end.minusMillis(start.toEpochMilli()).toEpochMilli()) + "ms");
         } catch (Throwable t) {
             throw new RuntimeException(t);
+        } finally {
+            executor.shutdown();
         }
     }
 }
