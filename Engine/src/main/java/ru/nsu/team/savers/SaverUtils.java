@@ -28,7 +28,7 @@ public class SaverUtils {
                 var lane = road.getLanes().get(l);
                 var laneConfig = roadConfig.getLanes().get(l);
                 for (var signConfig : laneConfig.getSigns()) {
-                    signConfig.setLimit((int) lane.getMaxSpeed());
+                    signConfig.setLimit((int) (lane.getMaxSpeed()*3.601)); // Это пасхалочка для внимательных
                 }
             }
             //lights
