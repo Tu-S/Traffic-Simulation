@@ -2,11 +2,9 @@ package ru.nsu.team.genome;
 
 import ru.nsu.team.entity.playback.PlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
-import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.other.KeyValuePair;
-import ru.nsu.team.readers.RoadMapReader;
 import ru.nsu.team.roadmodelcreator.CopierUtils;
 import ru.nsu.team.simulator.Simulator;
 
@@ -14,11 +12,11 @@ import java.util.*;
 
 public class AlgorithmVersion2 {
 
-    private static final int MAX_POPULATION_SIZE = 10;
-    private static final int MAX_GENERATION_NUMBER = 10;
-    private  static final int MUTATION_RATE = 15;//[0-100]%
+    private static final int MAX_POPULATION_SIZE = 20;
+    private static final int MAX_GENERATION_NUMBER = 50;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
+    private static final double mutationRate = 0.20d;
     private static final double okScore = requiredScore - scoreDelta;
     private static RoadMap stdMap;
     private static RoadMap bestMap;
@@ -112,15 +110,10 @@ public class AlgorithmVersion2 {
     }
 
     private static void mutationBlock(List<RoadMap> maps) {
-        //System.out.println("Start mutation");
-        var size = (maps.size() * MUTATION_RATE) / 100;
-        var nums = new HashSet<Integer>(size);
-        while (nums.size() != size){
-            nums.add((int)(Math.random() * (maps.size())));
-        }
-        for (var n : nums) {
-            GenomeUtils.mutateMap(maps.get(n));
-            //GenomeUtils.setDefaultState(m, stdMap);
+        for (var map: maps) {
+            if (Math.random() < mutationRate) {
+                GenomeUtils.mutateMap(map);
+            }
         }
     }
 
