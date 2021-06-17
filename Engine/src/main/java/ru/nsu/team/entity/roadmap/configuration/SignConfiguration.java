@@ -8,6 +8,10 @@ public class SignConfiguration {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Integer getLimit() {
         return limit;
     }

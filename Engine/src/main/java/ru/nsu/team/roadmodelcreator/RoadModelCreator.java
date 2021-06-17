@@ -240,8 +240,8 @@ public class RoadModelCreator {
         }
     }
 
-    private final String SPEED = "speed";
-    private final String MAIN_ROAD = "mainRoad";
+    private final String SPEED = "SPEED_LIMIT";
+    private final String MAIN_ROAD = "MAIN_ROAD";
     private final String LEFT = "left";
     private final String RIGHT = "right";
     private final String FORWARD = "forward";

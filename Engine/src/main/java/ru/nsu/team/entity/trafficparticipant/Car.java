@@ -1,7 +1,5 @@
 package ru.nsu.team.entity.trafficparticipant;
 
-import ru.nsu.team.entity.roadmap.Node;
-
 import java.io.Serializable;
 
 public class Car implements Serializable {
