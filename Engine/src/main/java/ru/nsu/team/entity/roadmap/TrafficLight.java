@@ -16,6 +16,10 @@ public class TrafficLight implements Serializable {
         this.configs = new ArrayList<>();
     }
 
+    public void setConfigs(List<TrafficLightConfig> configs) {
+        this.configs = configs;
+    }
+
     public void addConfig(TrafficLightConfig c) {
         configs.add(c);
         period += c.getDelay();
@@ -57,6 +61,9 @@ public class TrafficLight implements Serializable {
             start += configs.get(index).getDelay();
         }
 
+        if(configs.size()==index){
+            System.out.println("Error");
+        }
         if (configs.get(index).getRoads().contains(road)) {
             return 0;
         }

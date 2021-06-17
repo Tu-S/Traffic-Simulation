@@ -13,7 +13,7 @@ import java.util.*;
 public class AlgorithmVersion2 {
 
     private static final int MAX_POPULATION_SIZE = 20;
-    private static final int MAX_GENERATION_NUMBER = 50;
+    private static final int MAX_GENERATION_NUMBER = 30;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
     private static final double mutationRate = 0.20d;
