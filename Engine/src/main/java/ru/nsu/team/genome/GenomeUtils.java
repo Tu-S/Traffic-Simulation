@@ -10,12 +10,11 @@ import java.util.stream.Collectors;
 
 public class GenomeUtils {
 
-    private static double MAX_SPEED = 110/3.6d;
-    private static double MIN_SPEED = 20/3.6d;
+    private static double MAX_SPEED = 110 / 3.6d;
+    private static double MIN_SPEED = 20 / 3.6d;
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
     private static int SURVIVOR_RATE = 50; // [0-100]%
-    private static RoadMap std;
     private static final Random rnd = new Random();
 
     public static List<RoadMap> selection(List<RoadMap> generation, List<RoadMap> oldGeneration) {
@@ -69,10 +68,10 @@ public class GenomeUtils {
         }
     }
 
-    public static void mutateMap(RoadMap map) {
+    public static void mutateMap(RoadMap map, double mutationRate) {
         for (Road road : map.getRoads()) {
             if (road.getFrom() != null) {
-                mutateRoad(road);
+                mutateRoad(road, mutationRate);
             }
         }
     }
@@ -157,11 +156,11 @@ public class GenomeUtils {
      *
      * @param roadGenome - дорога, которую меняем
      */
-    private static void mutateRoad(Road roadGenome) {
-        mutateNode(roadGenome.getFrom());
-        mutateNode(roadGenome.getTo());
+    private static void mutateRoad(Road roadGenome, double mutationRate) {
+        mutateNode(roadGenome.getFrom(), mutationRate);
+        mutateNode(roadGenome.getTo(), mutationRate);
         for (var l : roadGenome.getLanes()) {
-            mutateLane(l);
+            mutateLane(l, mutationRate);
         }
     }
 
@@ -228,7 +227,7 @@ public class GenomeUtils {
     }
 
     /**
-     * Срещиваем ноды
+     * Скрещиваем ноды
      *
      * @param n1 родитель 1
      * @param n2 родитель 2
@@ -240,9 +239,8 @@ public class GenomeUtils {
 //        n2.getPendingCars().clear();
         //child.setPendingCars(new HashSet<TrafficParticipant>());
         assert n1.getPendingCars().size() == 0;
-        int a = (int) (20 + Math.random() * 41);
         //выбираем геном одного из родителей
-        if (a % 2 == 0) {
+        if (rnd.nextBoolean()) {
             //n1.setGenome(CopierUtils.copy(n1.getGenome()));
             return n1;
         }
@@ -273,8 +271,7 @@ public class GenomeUtils {
      * @param l2 - родитель_2
      */
     private static void crossbreedLanes(Lane l1, Lane l2) {
-        int a = (int) (20 + Math.random() * 41);
-        if (a % 2 == 0) {
+        if (rnd.nextBoolean()) {
             l1.setMaxSpeed(l2.getMaxSpeed());
         }
     }
@@ -284,21 +281,25 @@ public class GenomeUtils {
      * Изменяем случайным образом параметры ноды
      *
      * @param nodeGenome
+     * @param mutationRate
      */
-    private static void mutateNode(Node nodeGenome) {
+    private static void mutateNode(Node nodeGenome, double mutationRate) {
         for (var t : nodeGenome.getTrafficLights()) {
-            mutateTrafficLight(t);
+            mutateTrafficLight(t, mutationRate);
         }
     }
 
-    private static void mutateTrafficLight(TrafficLight trafficLight) {
+    private static void mutateTrafficLight(TrafficLight trafficLight, double mutationRate) {
         List<TrafficLightConfig> configs = trafficLight.getConfigs().stream()
-                .map(GenomeUtils::mutateTrafficLightConfig).collect(Collectors.toList());
+                .map(conf -> mutateTrafficLightConfig(conf, mutationRate)).collect(Collectors.toList());
         trafficLight.setConfigs(configs);
         trafficLight.setPeriod(configs.stream().mapToInt(TrafficLightConfig::getDelay).sum());
     }
 
-    private static TrafficLightConfig mutateTrafficLightConfig(TrafficLightConfig original) {
+    private static TrafficLightConfig mutateTrafficLightConfig(TrafficLightConfig original, double mutationRate) {
+        if (Math.random() < mutationRate) {
+            return original;
+        }
         int delay = Math.max(MIN_DELAY, Math.min(MAX_DELAY, original.getDelay() + rnd.nextInt(21) - 10));
         return new TrafficLightConfig(delay, original.getRoads());
     }
@@ -308,8 +309,12 @@ public class GenomeUtils {
      *
      * @param laneGenome - полоса, которую изменяем
      */
-    private static void mutateLane(Lane laneGenome) {
-        var newSpeed = Math.max(MIN_SPEED, Math.min(MAX_SPEED, laneGenome.getMaxSpeed() + (rnd.nextInt(5) - 2) * (10/3.6d)));
+    private static void mutateLane(Lane laneGenome, double mutationRate) {
+        if (Math.random() < mutationRate) {
+            return;
+        }
+        var newSpeed = Math.max(MIN_SPEED, Math.min(MAX_SPEED,
+                laneGenome.getMaxSpeed() + (rnd.nextInt(5) - 2) * (10 / 3.6d)));
         laneGenome.setMaxSpeed(newSpeed);
     }
 

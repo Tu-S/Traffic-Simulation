@@ -13,13 +13,23 @@ import java.util.*;
 public class AlgorithmVersion2 {
 
     private static final int MAX_POPULATION_SIZE = 20;
-    private static final int MAX_GENERATION_NUMBER = 30;
+    private static final int MAX_GENERATION_NUMBER = 50;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
-    private static final double mutationRate = 0.30d;
+    private static final double mutationRate = 0.75d;
     private static final double okScore = requiredScore - scoreDelta;
+
+    private static double STRONG_MUTATION_THRESHOLD = 0.15d;
+    private static double STRONG_MUTATION_RATE = 1;
+    private static double MEDIUM_MUTATION_THRESHOLD = 0.6d;
+    private static double MEDIUM_MUTATION_RATE = 0.3d;
+    private static double WEAK_MUTATION_THRESHOLD = 1d;
+    private static double WEAK_MUTATION_RATE = 0.1d;
+
     private static RoadMap stdMap;
     private static RoadMap bestMap;
+
+    private static final Random rnd = new Random();
 
     public static RoadMap runAlgorithm(RoadMapConfiguration mapConfig) {
         List<RoadMap> bestMaps = new ArrayList<>(100);
@@ -101,7 +111,7 @@ public class AlgorithmVersion2 {
             try {
                 s.getValue().getValue().join();
             } catch (InterruptedException ex) {
-                System.out.println(ex.getMessage());
+                throw new RuntimeException(ex);
             }
             s.getKey().setScore(s.getValue().getKey().getScore());
         }
@@ -110,9 +120,18 @@ public class AlgorithmVersion2 {
     }
 
     private static void mutationBlock(List<RoadMap> maps) {
-        for (var map: maps) {
+        for (var map : maps) {
             if (Math.random() < mutationRate) {
-                GenomeUtils.mutateMap(map);
+                double fieldMutationRate = 0;
+                double mutationScore = Math.random();
+                if (mutationScore < STRONG_MUTATION_THRESHOLD) {
+                    fieldMutationRate = STRONG_MUTATION_RATE;
+                } else if (mutationScore < MEDIUM_MUTATION_THRESHOLD) {
+                    fieldMutationRate = MEDIUM_MUTATION_RATE;
+                } else if (mutationScore <= WEAK_MUTATION_THRESHOLD) {
+                    fieldMutationRate = WEAK_MUTATION_RATE;
+                }
+                GenomeUtils.mutateMap(map, fieldMutationRate);
             }
         }
     }

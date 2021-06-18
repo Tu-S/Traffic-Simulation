@@ -23,7 +23,7 @@ public class MutationTest {
         for (var m : maps) {
             System.out.println("Old");
             show(m.getRoads());
-            GenomeUtils.mutateMap(m);
+            GenomeUtils.mutateMap(m,1);
             System.out.println("New");
             show(m.getRoads());
         }

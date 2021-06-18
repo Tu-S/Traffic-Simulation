@@ -31,10 +31,8 @@ public class CopierUtils {
             byte[] byteData = out.toByteArray();
             ByteArrayInputStream bIn = new ByteArrayInputStream(byteData);
             return (T) new ObjectInputStream(bIn).readObject();
-       } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
-        return null;
     }
 }

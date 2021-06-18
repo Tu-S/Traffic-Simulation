@@ -111,7 +111,7 @@ public class AlgorithmVersion1 {
     private static void mutationBlock(List<RoadMap> maps) {
         System.out.println("Start mutation");
         for (var m : maps) {
-            GenomeUtils.mutateMap(m);
+            GenomeUtils.mutateMap(m, 1);
             GenomeUtils.setDefaultState(m, stdMap);
         }
     }
