@@ -1,6 +1,6 @@
 package ru.nsu.team.genome;
 
-import ru.nsu.team.entity.playback.PlaybackBuilder;
+import ru.nsu.team.entity.playback.VoidPlaybackBuilder;
 import ru.nsu.team.entity.report.HeatmapBuilder;
 import ru.nsu.team.entity.roadmap.RoadMap;
 import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
@@ -102,7 +102,7 @@ public class AlgorithmVersion2 {
         List<KeyValuePair<RoadMap, KeyValuePair<HeatmapBuilder, Simulator>>> mapAndHeat = new ArrayList<>(maps.size());
         for (RoadMap m : maps) {
             HeatmapBuilder hmb = new HeatmapBuilder(m, 500);
-            var s = new Simulator(100, m, new PlaybackBuilder(), hmb);
+            var s = new Simulator(100, m, new VoidPlaybackBuilder(), hmb);
             mapAndHeat.add(new KeyValuePair<>(m, new KeyValuePair<>(hmb, s)));
         }
         for (var s : mapAndHeat) {
