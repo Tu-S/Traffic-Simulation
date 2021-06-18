@@ -57,10 +57,10 @@ public class HeatmapBuilder implements Serializable {
                         var stat = statisticMap.get(l);
                         double length = l.getParentRoad().getLength();
                         double avgTime = stat.avgTime;
-                        return (length / avgTime)/Car.DEFAULT_MAX_SPEED;
+                        return (length / avgTime) / Car.DEFAULT_MAX_SPEED;
                     }).collect(Collectors.toList());
 
-            double score = speedRatios.stream().mapToDouble(ratio -> ratio).average().orElse(1);
+            double score = speedRatios.stream().mapToDouble(ratio -> (1 - ratio) * 100).average().orElse(0);
             frame.addHeatmapRoadState(road.getId(), (int) score, speedRatios);
         }
         frames.add(frame);
