@@ -7,7 +7,6 @@ import ru.nsu.team.roadmodelcreator.CopierUtils;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GenomeUtils {
 
@@ -15,17 +14,41 @@ public class GenomeUtils {
     private static double MIN_SPEED = 20 / 3.6d;
     private static int MAX_DELAY = 120;
     private static int MIN_DELAY = 10;
+    private static int SURVIVOR_RATE = 50; // [0-100]%
     private static final Random rnd = new Random();
 
     public static List<RoadMap> selection(List<RoadMap> generation, List<RoadMap> oldGeneration) {
-        return Stream.concat(generation.stream(), oldGeneration.stream())
-                .sorted()
-                .limit(generation.size())
-                .collect(Collectors.toList());
+        if (SURVIVOR_RATE < 0 || SURVIVOR_RATE >= 100) {
+            return generation;
+        }
+        removeClones(generation, RoadMap::getScore);
+        int roadMapsSize = generation.size();
+        int survivorsCount = (roadMapsSize * SURVIVOR_RATE) / 100;
+        generation.sort(Comparator.comparing(RoadMap::getScore));
+        oldGeneration.sort(Comparator.comparing(RoadMap::getScore));
+        List<RoadMap> newGeneration = new ArrayList<>();
+        Collections.reverse(generation);
+        int i = 0;
+        for (RoadMap roadMap : generation) {
+            if (i == survivorsCount) {
+                i = 0;
+                for (RoadMap roadMapOld : oldGeneration) {
+                    if (i != survivorsCount) {
+                        i++;
+                        continue;
+                    }
+                    newGeneration.add(roadMapOld);
+                }
+                break;
+            }
+            i++;
+            newGeneration.add(roadMap);
+        }
+        return newGeneration;
     }
 
     public static void setSurvivorRate(int survivorRate) {
-        //SURVIVOR_RATE = survivorRate;
+        SURVIVOR_RATE = survivorRate;
     }
 
     @SafeVarargs
