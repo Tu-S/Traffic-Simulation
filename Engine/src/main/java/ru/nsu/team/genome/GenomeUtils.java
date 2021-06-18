@@ -20,7 +20,7 @@ public class GenomeUtils {
     public static List<RoadMap> selection(List<RoadMap> generation, List<RoadMap> oldGeneration) {
         return Stream.concat(generation.stream(), oldGeneration.stream())
                 .sorted()
-                .limit(generation.size())
+                .limit(oldGeneration.size())
                 .collect(Collectors.toList());
     }
 

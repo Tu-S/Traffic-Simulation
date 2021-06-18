@@ -9,10 +9,11 @@ import ru.nsu.team.roadmodelcreator.CopierUtils;
 import ru.nsu.team.simulator.Simulator;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class AlgorithmVersion2 {
 
-    private static final int MAX_POPULATION_SIZE = 25;
+    public static final int MAX_POPULATION_SIZE = 25;
     private static final int MAX_GENERATION_NUMBER = 50;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
@@ -60,6 +61,7 @@ public class AlgorithmVersion2 {
             List<RoadMap> oldGeneration = CopierUtils.copy(generation);
             setDefaultStats(generation);
             generation = breedingBlock(generation);
+            specialActionsBlock(generation);
             simulationBlock(generation);
             generation = GenomeUtils.selection(generation, oldGeneration);
             showScore(generation);
@@ -161,5 +163,17 @@ public class AlgorithmVersion2 {
         }
 
         return children;
+    }
+
+    private static List<RoadMap> specialActionsBlock(List<RoadMap> maps) {
+        Stream.of(STRONG_MUTATION_RATE, MEDIUM_MUTATION_RATE, WEAK_MUTATION_RATE).forEach(mr -> {
+            for (int i = 0; i < 2; i++) {
+                RoadMap map = CopierUtils.copy(bestMap);
+                GenomeUtils.mutateMap(map, mr);
+                maps.add(map);
+
+            }
+        });
+        return maps;
     }
 }
