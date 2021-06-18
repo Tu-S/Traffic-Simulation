@@ -24,7 +24,7 @@ public class CarState implements Serializable {
         PositionOnRoad positionOnRoad = trafficParticipant.getPosition();
         speed = car.getSpeed();
         id = car.getId();
-        position = positionOnRoad.getPosition();
+        position = positionOnRoad.getCurrentRoad().getLength()-positionOnRoad.getPosition();
         this.time = time;
         currentLane = positionOnRoad.getCurrentLaneId();
         Road road = positionOnRoad.getCurrentRoad();
