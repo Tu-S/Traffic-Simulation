@@ -4,8 +4,9 @@ import ru.nsu.team.entity.roadmap.configuration.RoadMapConfiguration;
 import ru.nsu.team.jsonparser.JsonProvider;
 
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
-public class RoadMapReader {
+public class RoadMapReader implements Serializable {
 
     public RoadMapConfiguration getMapConfig(String fileName) {
         JsonProvider parser = new JsonProvider();

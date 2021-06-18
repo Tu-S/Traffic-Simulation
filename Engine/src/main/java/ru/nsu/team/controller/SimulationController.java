@@ -95,6 +95,7 @@ public class SimulationController implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        roadMap.setScore(reporterBuilder.getScore());
         System.out.println("Saving stuff");
         saveHeatMap(this.heatMapSavePath);
         saveCarStates(this.carStateSavePath);

@@ -2,10 +2,11 @@ package ru.nsu.team.entity.trafficparticipant;
 
 import ru.nsu.team.entity.roadmap.Road;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Path {
+public class Path implements Serializable {
     private ArrayList<Road> roads;
     private int currentRoadNumber;
     private double length;

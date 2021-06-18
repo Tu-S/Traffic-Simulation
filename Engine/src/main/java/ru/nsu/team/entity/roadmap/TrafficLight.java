@@ -1,9 +1,11 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class TrafficLight {
+public class TrafficLight implements Serializable {
     //private int greenDuration;
     //private int redDuration;
     //private Color currentColor;
@@ -15,9 +17,21 @@ public class TrafficLight {
         this.configs = new ArrayList<>();
     }
 
+    public void setConfigs(List<TrafficLightConfig> configs) {
+        this.configs = configs;
+    }
+
     public void addConfig(TrafficLightConfig c) {
         configs.add(c);
         period += c.getDelay();
+    }
+
+    public int getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(int period) {
+        this.period = period;
     }
 
     public List<TrafficLightConfig> getConfigs() {
@@ -36,6 +50,7 @@ public class TrafficLight {
         throw new IllegalStateException("Broken traffic light configuration");
     }
 
+
     public int timeBlocked(Road road, int time) {
         time %= period;
         int start = 0;
@@ -46,7 +61,6 @@ public class TrafficLight {
             }
             start += configs.get(index).getDelay();
         }
-
         if (configs.get(index).getRoads().contains(road)) {
             return 0;
         }
@@ -60,8 +74,14 @@ public class TrafficLight {
             }
             waitTime += configs.get(i).getDelay();
         }
-        throw new IllegalArgumentException("Road is not controlled by traffic light");
+        throw new IllegalArgumentException("Road is not controlled by traffic light: RoadId=" + road.getId() + ", " +
+                "NodeIds="
+                + String.join(",",
+                configs.stream()
+                        .flatMap(c -> c.getRoads().stream().map(Road::getTo).map(Node::getId).map(Object::toString))
+                        .collect(Collectors.toSet())));
     }
+
     /*public int getGreenDuration() {
         return greenDuration;
     }*/
@@ -86,7 +106,6 @@ public class TrafficLight {
         time = 0;
         return time;
     }*/
-
 
     enum Color {GREEN, RED, YELLOW}
 }

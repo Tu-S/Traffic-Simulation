@@ -9,6 +9,7 @@ public class NodeConfiguration {
     private List<SpawnConfiguration> periodsOfSpawn;
     private double x;
     private double y;
+    private Connector connector;
 
     public NodeConfiguration(List<Integer> roadsIn, List<Integer> roadsOut) {
         this.roadsOut = roadsOut;

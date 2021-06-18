@@ -11,10 +11,11 @@ import ru.nsu.team.other.KeyValuePair;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeatMapSaver {
+public class HeatMapSaver implements Serializable {
     public void saveHeatMap(List<HeatmapFrame> heatMap, String fileName) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(fileName)) {

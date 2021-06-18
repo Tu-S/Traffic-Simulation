@@ -11,16 +11,16 @@ import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 import ru.nsu.team.pathfinder.DijkstraPathfinder;
 import ru.nsu.team.pathfinder.Pathfinder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class Spawner {
-
+public class Spawner implements Serializable {
     private static final Logger LOG = Logger.getRootLogger();
-
+    private final static int QUEUE_LIMIT = 20;
     private ArrayList<Configuration> configs;
     private Node node;
     private List<PlaceOfInterest> possibleDestinations;
@@ -51,14 +51,16 @@ public class Spawner {
     public Spawner(Node node, List<PlaceOfInterest> destinations) {
         this.node = node;
         this.possibleDestinations = destinations;
-        this.pathfinder = new DijkstraPathfinder(destinations.stream().flatMap(poi -> poi.getNodes().stream()).collect(Collectors.toList()));
+        this.pathfinder =
+                new DijkstraPathfinder(destinations.stream().flatMap(poi -> poi.getNodes().stream()).collect(Collectors.toList()));
         this.configs = new ArrayList<>();
         this.spawningQueue = new Road(-1, null, node);
         this.rng = new Random();
     }
 
     private PlaceOfInterest selectDestination() {
-        double weightSum = possibleDestinations.stream().map(PlaceOfInterest::getWeight).reduce(Double::sum).orElseThrow(() -> new IllegalStateException("No places of interest were provided for spawner"));
+        double weightSum =
+                possibleDestinations.stream().map(PlaceOfInterest::getWeight).reduce(Double::sum).orElseThrow(() -> new IllegalStateException("No places of interest were provided for spawner"));
         double selected = rng.nextDouble() * weightSum;
         double accumulated = 0;
         for (PlaceOfInterest poi : possibleDestinations) {
@@ -91,6 +93,9 @@ public class Spawner {
             spawnPosition = queuedCars.get(queuedCars.size() - 1).getPosition().getPosition() + Car.DEFAULT_DISTANCE;
         }
         for (int i = 0; i < toSpawn; i++) {
+            if (queuedCars.size() >= QUEUE_LIMIT) {
+                break;
+            }
             PlaceOfInterest destination = selectDestination();
             Path path = pathfinder.findPath(node, destination);
             while (path == null && !possibleDestinations.isEmpty()) {
@@ -103,17 +108,18 @@ public class Spawner {
             if (path == null) {
                 throw new IllegalStateException("Spawner has no reachable destinations");
             }
-            TrafficParticipant spawnedCar = new TrafficParticipant(new Car(Car.getNextId(), Car.DEFAULT_MAX_SPEED, path), new PositionOnRoad(spawningQueue, spawnPosition, 0));
+            TrafficParticipant spawnedCar = new TrafficParticipant(new Car(Car.getNextId(), Car.DEFAULT_MAX_SPEED,
+                    path), new PositionOnRoad(spawningQueue, spawnPosition, 0));
             spawningQueue.addTrafficParticipant(spawnedCar);
             spawnPosition += Car.DEFAULT_DISTANCE;
         }
     }
 
-    public void spawnCar(){
+    public void spawnCar() {
 
     }
 
-    public void spawnCar(double position){
+    public void spawnCar(double position) {
 
     }
 

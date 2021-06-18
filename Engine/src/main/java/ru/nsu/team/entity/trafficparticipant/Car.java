@@ -1,8 +1,8 @@
 package ru.nsu.team.entity.trafficparticipant;
 
-import ru.nsu.team.entity.roadmap.Node;
+import java.io.Serializable;
 
-public class Car {
+public class Car implements Serializable {
 
     static int nextId = 0;
 
@@ -86,6 +86,6 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car " + id + " " + speed + "s "+timeLeft+"t";
+        return "{Car " + id + " " + speed + "s "+timeLeft+"t}";
     }
 }

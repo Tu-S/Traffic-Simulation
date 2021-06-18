@@ -1,6 +1,8 @@
 package ru.nsu.team.entity.roadmap;
 
-public class Intersection {
+import java.io.Serializable;
+
+public class Intersection implements Serializable {
     private int timeLeft;
 
     //TODO design class :-)

@@ -2,26 +2,40 @@ package ru.nsu.team.entity.roadmap;
 
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
+import ru.nsu.team.genome.LaneGenome;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class Lane {
-    double maxSpeed;
+public class Lane implements Serializable {
     private Road parentRoad;
     private List<TrafficParticipant> trafficParticipants;
+    private LaneGenome genome;
 
     public Lane(Road parentRoad) {
         this.trafficParticipants = new ArrayList<>();
-        this.maxSpeed = Car.DEFAULT_MAX_SPEED;
         this.parentRoad = parentRoad;
+        this.genome = new LaneGenome(Car.DEFAULT_MAX_SPEED);
     }
 
     public Lane(double maxSpeed, Road parentRoad) {
         this.trafficParticipants = new ArrayList<>();
-        this.maxSpeed = maxSpeed;
         this.parentRoad = parentRoad;
+        this.genome = new LaneGenome(maxSpeed);
+    }
+
+    public void setParentRoad(Road parentRoad) {
+        this.parentRoad = parentRoad;
+    }
+
+    public void setTrafficParticipants(List<TrafficParticipant> trafficParticipants) {
+        this.trafficParticipants = trafficParticipants;
+    }
+
+    public LaneGenome getGenome() {
+        return genome;
     }
 
     public List<TrafficParticipant> getParticipants() {
@@ -37,11 +51,11 @@ public class Lane {
     }
 
     public double getMaxSpeed() {
-        return maxSpeed;
+        return this.genome.getMaxSpeed();
     }
 
     public void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
+        this.genome.setMaxSpeed(maxSpeed);
     }
 
     public Road getParentRoad() {

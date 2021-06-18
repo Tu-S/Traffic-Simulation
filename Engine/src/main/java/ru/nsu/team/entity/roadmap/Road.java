@@ -1,14 +1,13 @@
 package ru.nsu.team.entity.roadmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import ru.nsu.team.entity.trafficparticipant.*;
 
 
-public class Road {
+public class Road implements Serializable {
 
     private List<Lane> lanes;
     private List<TrafficParticipant> trafficParticipants;
@@ -19,13 +18,22 @@ public class Road {
     private boolean isMainRoad;
     private boolean isEphemeral;
 
+
+    public void setFrom(Node from) {
+        this.from = from;
+    }
+
+    public void setTo(Node to) {
+        this.to = to;
+    }
+
     public Road(int id, Node from, Node to) {
         this.from = from;
         this.to = to;
         this.lanes = new ArrayList<>();
         this.trafficParticipants = new ArrayList<>();
         this.id = id;
-        this.isEphemeral=false;
+        this.isEphemeral = false;
     }
 
     public Road(int id, Node from, Node to, int lanes, double maxSpeed) {
@@ -37,8 +45,9 @@ public class Road {
         for (int i = 0; i < lanes; i++) {
             addLane(maxSpeed);
         }
-        this.isEphemeral=false;
+        this.isEphemeral = false;
     }
+
 
     public void setMainRoad(boolean isMainRoad) {
         this.isMainRoad = isMainRoad;
@@ -61,7 +70,7 @@ public class Road {
     }
 
     synchronized public void deleteTrafficParticipant(TrafficParticipant car) {
-        lanes.get(car.getPosition().getCurrentLane()).removeTrafficParticipant(car);
+        lanes.get(car.getPosition().getCurrentLaneId()).removeTrafficParticipant(car);
         trafficParticipants.remove(car);
     }
 
@@ -70,9 +79,13 @@ public class Road {
     }
 
     synchronized public void addTrafficParticipant(TrafficParticipant car) {
-        Lane lane = lanes.get(car.getPosition().getCurrentLane());
+        Lane lane = lanes.get(car.getPosition().getCurrentLaneId());
         lane.addTrafficParticipant(car);
         trafficParticipants.add(car);
+    }
+
+    public void setTrafficParticipants(List<TrafficParticipant> trafficParticipants) {
+        this.trafficParticipants = trafficParticipants;
     }
 
     public double getLength() {
@@ -89,7 +102,6 @@ public class Road {
 
     public Lane getLaneN(int n) {
         return lanes.get(n);
-
     }
 
     public List<Lane> getIterator() {
@@ -118,6 +130,17 @@ public class Road {
 
     public Node getFrom() {
         return from;
+    }
+
+    public void clearCars() {
+        if (this.from != null) {
+            this.from.getPendingCars().clear();
+        }
+        this.to.getPendingCars().clear();
+        trafficParticipants.clear();
+        for (var l : lanes) {
+            l.getParticipants().clear();
+        }
     }
 
     public Node getTo() {

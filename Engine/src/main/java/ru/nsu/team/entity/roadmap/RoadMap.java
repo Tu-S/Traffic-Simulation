@@ -3,26 +3,41 @@ package ru.nsu.team.entity.roadmap;
 
 import ru.nsu.team.entity.spawner.Spawner;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RoadMap {
+public class RoadMap implements Serializable, Comparable<RoadMap> {
 
-    private ArrayList<Spawner> spawners;
-    private ArrayList<PlaceOfInterest> placesOfInterest;
-    private ArrayList<Road> roads;
+    private List<Spawner> spawners;
+    private List<PlaceOfInterest> placesOfInterest;
+    private List<Road> roads;
     private Set<Course> courseSet;
     private long start;
     private long currentTime;
     private long endTime;
+    private double score;
+    private int mapId;
 
     public RoadMap() {
         this.roads = new ArrayList<>();
         this.spawners = new ArrayList<>();
         this.placesOfInterest = new ArrayList<>();
         this.courseSet = new HashSet<>();
+    }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
+
+    public int getMapId() {
+        return mapId;
+    }
+
+    public void setRoads(List<Road> roads) {
+        this.roads = roads;
     }
 
     public long getStart() {
@@ -33,7 +48,7 @@ public class RoadMap {
         this.start = start;
     }
 
-    public ArrayList<PlaceOfInterest> getPlacesOfInterest() {
+    public List<PlaceOfInterest> getPlacesOfInterest() {
         return placesOfInterest;
     }
 
@@ -75,6 +90,9 @@ public class RoadMap {
         return placesOfInterest.get(n);
     }*/
 
+    public void setPlacesOfInterest(List<PlaceOfInterest> placesOfInterest) {
+        this.placesOfInterest = placesOfInterest;
+    }
 
     public void addRoad(Road road) {
         roads.add(road);
@@ -117,5 +135,26 @@ public class RoadMap {
 
     public Set<Course> getCourseSet() {
         return courseSet;
+    }
+
+    public void setSpawners(List<Spawner> spawners) {
+        this.spawners = spawners;
+    }
+
+    public void setCourseSet(Set<Course> courseSet) {
+        this.courseSet = courseSet;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    @Override
+    public int compareTo(RoadMap o) {
+        return -Double.compare(this.getScore(), o.getScore());
     }
 }

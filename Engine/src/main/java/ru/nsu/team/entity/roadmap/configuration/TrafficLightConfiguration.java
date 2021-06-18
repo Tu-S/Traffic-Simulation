@@ -13,4 +13,8 @@ public class TrafficLightConfiguration {
     public List<Integer> getRoads() {
         return roads;
     }
+
+    public void setDelay(Integer delay) {
+        this.delay = delay;
+    }
 }

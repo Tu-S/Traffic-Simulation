@@ -3,7 +3,9 @@ package ru.nsu.team.entity.playback;
 import ru.nsu.team.entity.statistics.CarState;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
-public class PlaybackBuilder {
+import java.io.Serializable;
+
+public class PlaybackBuilder implements Serializable {
     private Playback playback;
 
     public PlaybackBuilder() {

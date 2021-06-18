@@ -1,6 +1,8 @@
 package ru.nsu.team.entity.trafficparticipant;
 
-public class TrafficParticipant implements Comparable<TrafficParticipant> {
+import java.io.Serializable;
+
+public class TrafficParticipant implements Comparable<TrafficParticipant>, Serializable {
 
     private PositionOnRoad position;
     private Car car;
@@ -30,6 +32,6 @@ public class TrafficParticipant implements Comparable<TrafficParticipant> {
 
     @Override
     public String toString() {
-        return car.toString()+":"+position.toString();
+        return "{" + car.toString() + ":" + position.toString() + "}";
     }
 }

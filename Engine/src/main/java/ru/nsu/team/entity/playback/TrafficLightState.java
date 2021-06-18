@@ -1,4 +1,6 @@
 package ru.nsu.team.entity.playback;
 
-public class TrafficLightState {
+import java.io.Serializable;
+
+public class TrafficLightState implements Serializable {
 }

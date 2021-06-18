@@ -3,10 +3,11 @@ package ru.nsu.team.entity.roadmap;
 import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceOfInterest {
+public class PlaceOfInterest implements Serializable {
     private int parkingCapacity;
     private ArrayList<TrafficParticipant> trafficParticipants;
     private ArrayList<Node> nodes;
@@ -30,6 +31,9 @@ public class PlaceOfInterest {
         return id;
     }
 
+    public void clearCar() {
+        trafficParticipants.clear();
+    }
 
     public double getWeight() {
         return weight;

@@ -6,14 +6,15 @@ import ru.nsu.team.entity.roadmap.PlaceOfInterest;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.trafficparticipant.Path;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class DijkstraPathfinder implements Pathfinder {
+public class DijkstraPathfinder implements Pathfinder, Serializable {
     private final Map<Map.Entry<Node, Node>, Path> cache;
     private final Set<Node> knownUnreachable;
     private final Set<Node> possibleDestinations;
 
-    private static class PathNode implements Comparable<PathNode> {
+    private static class PathNode implements Comparable<PathNode>, Serializable {
         Node node;
         double distance;
         ArrayList<Road> path;

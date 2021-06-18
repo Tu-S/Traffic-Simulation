@@ -1,8 +1,11 @@
 package ru.nsu.team.entity.trafficparticipant;
 
+import ru.nsu.team.entity.roadmap.Lane;
 import ru.nsu.team.entity.roadmap.Road;
 
-public class PositionOnRoad {
+import java.io.Serializable;
+
+public class PositionOnRoad implements Serializable {
     private int currentLane;
     private double position;
     private Road currentRoad;
@@ -13,7 +16,7 @@ public class PositionOnRoad {
         this.currentLane = lane;
     }
 
-    public int getCurrentLane() {
+    public int getCurrentLaneId() {
         return currentLane;
     }
 
@@ -37,8 +40,12 @@ public class PositionOnRoad {
         this.currentRoad = road;
     }
 
+    public Lane getCurrentLane() {
+        return currentRoad.getLaneN(currentLane);
+    }
+
     @Override
     public String toString() {
-        return currentRoad.toString() + ":" + currentLane + ":" + position;
+        return "{" + currentRoad.toString() + ":" + currentLane + ":" + position + "}";
     }
 }
