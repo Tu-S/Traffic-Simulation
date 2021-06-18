@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import ru.nsu.team.entity.roadmap.Lane;
 import ru.nsu.team.entity.roadmap.Road;
 import ru.nsu.team.entity.roadmap.RoadMap;
+import ru.nsu.team.entity.trafficparticipant.Car;
 import ru.nsu.team.entity.trafficparticipant.TrafficParticipant;
 
 import java.io.Serializable;
@@ -56,11 +57,10 @@ public class HeatmapBuilder implements Serializable {
                         var stat = statisticMap.get(l);
                         double length = l.getParentRoad().getLength();
                         double avgTime = stat.avgTime;
-                        double avgSpeed = length / avgTime;
-                        return avgSpeed / l.getMaxSpeed();
+                        return (length / avgTime)/Car.DEFAULT_MAX_SPEED;
                     }).collect(Collectors.toList());
 
-            double score = speedRatios.stream().mapToDouble(ratio -> ratio * 100).average().orElse(100);
+            double score = speedRatios.stream().mapToDouble(ratio -> ratio).average().orElse(1);
             frame.addHeatmapRoadState(road.getId(), (int) score, speedRatios);
         }
         frames.add(frame);

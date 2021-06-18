@@ -3,6 +3,7 @@ package ru.nsu.team.entity.roadmap;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrafficLight implements Serializable {
     //private int greenDuration;
@@ -73,7 +74,12 @@ public class TrafficLight implements Serializable {
             }
             waitTime += configs.get(i).getDelay();
         }
-        throw new IllegalArgumentException("Road is not controlled by traffic light");
+        throw new IllegalArgumentException("Road is not controlled by traffic light: RoadId=" + road.getId() + ", " +
+                "NodeIds="
+                + String.join(",",
+                configs.stream()
+                        .flatMap(c -> c.getRoads().stream().map(Road::getTo).map(Node::getId).map(Object::toString))
+                        .collect(Collectors.toSet())));
     }
 
     /*public int getGreenDuration() {
