@@ -12,7 +12,7 @@ import java.util.*;
 
 public class AlgorithmVersion2 {
 
-    private static final int MAX_POPULATION_SIZE = 20;
+    private static final int MAX_POPULATION_SIZE = 25;
     private static final int MAX_GENERATION_NUMBER = 50;
     private static final double requiredScore = 0.9d;
     private static final double scoreDelta = 0.1d;
@@ -63,9 +63,8 @@ public class AlgorithmVersion2 {
             simulationBlock(generation);
             generation = GenomeUtils.selection(generation, oldGeneration);
             showScore(generation);
-            if (generation.get(generation.size() - 1).getScore() < bestMap.getScore()) {
-                mutationBlock(generation);
-            } else if (generation.get(generation.size() - 1).getScore() > bestMap.getScore()) {
+            mutationBlock(generation);
+            if (generation.get(generation.size() - 1).getScore() > bestMap.getScore()) {
                 var m = generation.get(generation.size() - 1);
                 System.out.println("old best score = " + bestMap.getScore() + " new score = " + m.getScore());
                 RoadMap c = CopierUtils.copy(m);
@@ -100,7 +99,7 @@ public class AlgorithmVersion2 {
     private static void simulationBlock(List<RoadMap> maps) {
         List<KeyValuePair<RoadMap, KeyValuePair<HeatmapBuilder, Simulator>>> mapAndHeat = new ArrayList<>(maps.size());
         for (RoadMap m : maps) {
-            HeatmapBuilder hmb = new HeatmapBuilder(m, 100);
+            HeatmapBuilder hmb = new HeatmapBuilder(m, 500);
             var s = new Simulator(100, m, new PlaybackBuilder(), hmb);
             mapAndHeat.add(new KeyValuePair<>(m, new KeyValuePair<>(hmb, s)));
         }
@@ -135,7 +134,6 @@ public class AlgorithmVersion2 {
             }
         }
     }
-
 
 
     private static int selectParentId(int totalWeight) {
