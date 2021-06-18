@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RoadMap implements Serializable {
+public class RoadMap implements Serializable, Comparable<RoadMap> {
 
     private List<Spawner> spawners;
     private List<PlaceOfInterest> placesOfInterest;
@@ -151,5 +151,10 @@ public class RoadMap implements Serializable {
 
     public double getScore() {
         return score;
+    }
+
+    @Override
+    public int compareTo(RoadMap o) {
+        return -Double.compare(this.getScore(), o.getScore());
     }
 }
