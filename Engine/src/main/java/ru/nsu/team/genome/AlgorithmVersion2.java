@@ -19,12 +19,12 @@ public class AlgorithmVersion2 {
     private static final double mutationRate = 0.75d;
     private static final double okScore = requiredScore - scoreDelta;
 
-    private static double STRONG_MUTATION_THRESHOLD = 0.15d;
+    private static double STRONG_MUTATION_THRESHOLD = 0.35d;
     private static double STRONG_MUTATION_RATE = 1;
-    private static double MEDIUM_MUTATION_THRESHOLD = 0.6d;
-    private static double MEDIUM_MUTATION_RATE = 0.3d;
+    private static double MEDIUM_MUTATION_THRESHOLD = 0.7d;
+    private static double MEDIUM_MUTATION_RATE = 0.5d;
     private static double WEAK_MUTATION_THRESHOLD = 1d;
-    private static double WEAK_MUTATION_RATE = 0.1d;
+    private static double WEAK_MUTATION_RATE = 0.15d;
 
     private static RoadMap stdMap;
     private static RoadMap bestMap;
