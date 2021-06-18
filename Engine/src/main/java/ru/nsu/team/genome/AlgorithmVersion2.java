@@ -117,35 +117,32 @@ public class AlgorithmVersion2 {
         }
     }
 
-    private static List<RoadMap> breedingBlock(List<RoadMap> maps) {
-        //System.out.println("Start breeding");
-        int max = maps.size();
-        /*for (var m : maps) {
-            GenomeUtils.clearMapFromCars(m);
-        }*/
-        List<RoadMap> children = new ArrayList<>(MAX_POPULATION_SIZE);
-        Map<RoadMap, RoadMap> parents = new HashMap<>(MAX_POPULATION_SIZE);
-        int p1Id = 0;
-        int p2Id = 0;
-        RoadMap p1 = null;
-        RoadMap p2 = null;
-        int c;
-        for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
-            c = 0;
-            while (p1Id == p2Id || (parents.containsKey(p1) && parents.containsValue(p2)) || (parents.containsKey(p2) && parents.containsValue(p1))) {
-                p1Id = (int) (Math.random() * max);
-                p2Id = (int) (Math.random() * max);
-                p1 = maps.get(p1Id);
-                p2 = maps.get(p2Id);
-                if (++c > 10) {
-                    break;
-                }
-            }
-            assert p1 != null && p2 != null;
-            parents.put(p1, p2);
-            var ch = GenomeUtils.crossbreedMaps(p1, p2);
-            children.add(CopierUtils.copy(ch));
+
+
+    private static int selectParentId(int totalWeight) {
+        int target = rnd.nextInt(totalWeight);
+        int cap = 1;
+        int id = 1;
+        while (target >= cap) {
+            id++;
+            cap += id;
         }
+        return id - 1;
+    }
+
+    private static List<RoadMap> breedingBlock(List<RoadMap> maps) {
+        int totalWeight = ((1 + maps.size()) * maps.size()) / 2;
+        List<RoadMap> children = new ArrayList<>(MAX_POPULATION_SIZE);
+        for (int i = 0; i < MAX_POPULATION_SIZE; i++) {
+            int parent1Id = selectParentId(totalWeight);
+            int parent2Id = parent1Id;
+            while (parent1Id == parent2Id) {
+                parent2Id = selectParentId(totalWeight);
+            }
+            RoadMap child = GenomeUtils.crossbreedMaps(CopierUtils.copy(maps.get(parent1Id)), maps.get(parent2Id));
+            children.add(child);
+        }
+
         return children;
     }
 }
